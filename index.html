@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spade — Learn ICSE &amp; CBSE, one card at a time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#ffffff;
+    --ink:#15151a;
+    --ink-soft:#5b5b66;
+    --line:#e7e5e1;
+    --orange:#f2600c;
+    --orange-deep:#c94a05;
+    --orange-tint:#fff1e7;
+    --green:#1e8e5a;
+    --green-tint:#e9f6ef;
+    --amber:#c9860f;
+    --amber-tint:#fbf1de;
+    --card-face:#fffdfa;
+    --shadow: 0 1px 2px rgba(21,21,26,.04), 0 8px 24px -12px rgba(21,21,26,.16);
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--orange-deep);
+    font-weight:500;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+  img,svg{display:block;}
+
+  /* ---------- shared layout bits ---------- */
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    border:none;border-radius:999px;
+    padding:13px 24px;
+    font-weight:700;font-size:15px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--orange);color:#fff;box-shadow:0 8px 20px -8px rgba(242,96,12,.55);}
+  .btn-primary:hover{background:var(--orange-deep);}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .btn-sm{padding:8px 16px;font-size:13px;border-radius:999px;}
+  .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible{
+    outline:3px solid var(--orange-tint); outline-offset:2px; box-shadow:0 0 0 2px var(--orange);
+  }
+
+  /* ---------- logo ---------- */
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;}
+  .logo-mark{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(155deg,var(--orange),var(--orange-deep));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px -6px rgba(201,74,5,.65);
+    flex:none;
+  }
+  .logo-mark svg{width:19px;height:19px;}
+
+  /* ================= TOP NAV (pre-login) ================= */
+  .topnav{
+    position:sticky;top:0;z-index:40;background:rgba(255,255,255,.88);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  }
+  .topnav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .topnav-links{display:flex;align-items:center;gap:28px;font-size:14px;font-weight:600;color:var(--ink-soft);}
+  .topnav-links a{text-decoration:none;}
+  .topnav-links a:hover{color:var(--ink);}
+
+  /* ================= LANDING ================= */
+  .hero{padding:88px 0 64px;position:relative;overflow:hidden;}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;}
+  .hero h1{font-size:clamp(34px,5vw,54px);line-height:1.06;}
+  .hero h1 em{font-style:normal;color:var(--orange);}
+  .hero p.lead{font-size:18px;color:var(--ink-soft);line-height:1.6;margin:20px 0 30px;max-width:46ch;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+  .hero-stats{display:flex;gap:28px;margin-top:38px;flex-wrap:wrap;}
+  .hero-stats div b{display:block;font-family:'Fraunces',serif;font-size:26px;}
+  .hero-stats div span{font-size:12px;color:var(--ink-soft);}
+
+  .card-stack{position:relative;height:360px;}
+  .demo-card{
+    position:absolute;width:240px;height:300px;border-radius:18px;
+    background:var(--card-face);border:1px solid var(--line);box-shadow:var(--shadow);
+    padding:22px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .demo-card .pip{font-size:20px;color:var(--orange);font-weight:800;}
+  .demo-card .q{font-family:'Fraunces',serif;font-size:19px;line-height:1.35;}
+  .demo-card .tag{align-self:flex-start;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--orange-tint);color:var(--orange-deep);}
+  .card-1{top:10px;left:40px;transform:rotate(-9deg);z-index:1;}
+  .card-2{top:40px;left:110px;transform:rotate(6deg);z-index:2;}
+  .card-3{top:0;left:180px;transform:rotate(-2deg);z-index:3;background:linear-gradient(160deg,#1c1c22,#111);color:#fff;}
+  .card-3 .pip{color:#fff;}
+
+  .features{padding:70px 0;border-top:1px solid var(--line);}
+  .features h2{font-size:30px;margin-bottom:10px;}
+  .features p.sub{color:var(--ink-soft);margin-bottom:40px;max-width:60ch;}
+  .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .feature{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .feature .icon{width:38px;height:38px;border-radius:9px;background:var(--orange-tint);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--orange-deep);}
+  .feature h3{font-size:16px;margin-bottom:6px;}
+  .feature p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin:0;}
+
+  .coverage{padding:70px 0;background:var(--orange-tint);border-top:1px solid var(--line);}
+  .coverage .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;}
+  .board-pill{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);padding:6px 14px 6px 6px;border-radius:999px;font-size:13px;font-weight:700;margin-right:10px;}
+  .board-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+  .board-pill.soon .dot{background:var(--ink-soft);}
+
+  footer.site{padding:34px 0;border-top:1px solid var(--line);color:var(--ink-soft);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  /* ================= LOGIN ================= */
+  .auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:
+    radial-gradient(circle at 20% 15%, var(--orange-tint), transparent 45%), var(--white);}
+  .auth-card{width:100%;max-width:400px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:36px 32px;}
+  .auth-card .logo{justify-content:center;margin-bottom:22px;}
+  .auth-card h1{font-size:23px;text-align:center;}
+  .auth-card p.sub{text-align:center;color:var(--ink-soft);font-size:13.5px;margin:8px 0 26px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--ink-soft);}
+  .field input, .field select{
+    width:100%;padding:12px 13px;border-radius:10px;border:1.5px solid var(--line);
+    font-family:inherit;font-size:14.5px;background:#fff;
+  }
+  .field input:focus, .field select:focus{outline:none;border-color:var(--orange);}
+  .auth-card .btn-primary{width:100%;justify-content:center;margin-top:6px;}
+  .auth-note{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:16px;line-height:1.5;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink-soft);text-decoration:none;margin-bottom:18px;}
+
+  /* ================= APP SHELL ================= */
+  .app-shell{display:flex;min-height:100vh;}
+  .sidebar{
+    width:236px;flex:none;border-right:1px solid var(--line);
+    padding:22px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;
+  }
+  .sidebar .logo{padding:6px 8px 22px;}
+  .side-link{
+    display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;
+    font-weight:700;font-size:14px;color:var(--ink-soft);text-decoration:none;border:none;background:none;width:100%;text-align:left;
+  }
+  .side-link svg{width:18px;height:18px;flex:none;}
+  .side-link:hover{background:#f6f5f2;color:var(--ink);}
+  .side-link.active{background:var(--orange-tint);color:var(--orange-deep);}
+  .side-meta{margin-top:auto;padding:12px;border-top:1px solid var(--line);}
+  .side-meta .who{font-size:13px;font-weight:700;}
+  .side-meta .board{font-size:11.5px;color:var(--ink-soft);}
+  .logout-btn{margin-top:10px;width:100%;}
+
+  .main{flex:1;min-width:0;padding:34px 40px 60px;}
+  .main-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:28px;flex-wrap:wrap;}
+  .main-head h1{font-size:27px;}
+  .main-head p{color:var(--ink-soft);margin-top:6px;font-size:14.5px;max-width:56ch;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---- dashboard ---- */
+  .kpi-row{display:grid;grid-template-columns:1.1fr repeat(3,1fr);gap:16px;margin-bottom:34px;}
+  .kpi-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .kpi-card .k-label{font-size:12px;color:var(--ink-soft);font-weight:700;}
+  .kpi-card .k-value{font-family:'Fraunces',serif;font-size:30px;margin-top:6px;}
+  .spade-kpi{display:flex;align-items:center;gap:18px;}
+  .spade-meter{width:58px;height:66px;flex:none;position:relative;}
+  .spade-meter svg{width:100%;height:100%;overflow:visible;}
+  #spade-fill-rect{transition:y 0.9s cubic-bezier(.4,0,.2,1), height 0.9s cubic-bezier(.4,0,.2,1);}
+
+  .chapter-progress{display:flex;flex-direction:column;gap:10px;}
+  .subject-block{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+  .subject-block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .subject-block-head h3{font-size:16px;}
+  .subject-block-head .pct{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:9px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-row .name{font-size:13px;width:230px;flex:none;color:var(--ink-soft);}
+  .bar-track{flex:1;height:8px;border-radius:99px;background:#f0efec;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;background:var(--orange);transition:width .5s ease;}
+  .bar-pct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);width:38px;text-align:right;flex:none;}
+
+  /* ---- memorize mode ---- */
+  .memorize-layout{display:grid;grid-template-columns:1fr 260px;gap:28px;}
+  .stage{display:flex;flex-direction:column;align-items:center;}
+  .flash-outer{width:100%;max-width:440px;height:280px;perspective:1400px;}
+  .flashcard{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);cursor:pointer;}
+  .flashcard.flipped{transform:rotateY(180deg);}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:26px;display:flex;flex-direction:column;box-shadow:var(--shadow);border:1px solid var(--line);}
+  .face-front{background:linear-gradient(155deg,#1c1c22,#111);color:#fff;justify-content:space-between;}
+  .face-front .corner{font-family:'IBM Plex Mono',monospace;font-size:13px;opacity:.65;}
+  .face-front .center-spade{align-self:center;margin:auto;opacity:.9;}
+  .face-front .center-spade svg{width:54px;height:54px;}
+  .face-front .prompt{font-family:'Fraunces',serif;font-size:20px;line-height:1.4;}
+  .face-back{background:var(--card-face);transform:rotateY(180deg);justify-content:space-between;}
+  .face-back .answer{font-family:'Fraunces',serif;font-size:19px;line-height:1.45;margin:auto 0;}
+  .face .tag{align-self:flex-start;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;}
+  .face-back .hint{font-size:12px;color:var(--ink-soft);}
+
+  .stage-actions{display:flex;gap:12px;margin-top:22px;}
+  .stage-hint{font-size:12.5px;color:var(--ink-soft);margin-top:14px;text-align:center;}
+  .btn-relearn{background:var(--amber-tint);color:var(--amber);}
+  .btn-gotit{background:var(--green-tint);color:var(--green);}
+
+  .side-panel{display:flex;flex-direction:column;gap:14px;}
+  .panel-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+  .panel-card h4{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:12px;}
+  .box-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .box-row:last-child{border-bottom:none;}
+  .box-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:8px;}
+  .subject-filter label{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:5px 0;}
+
+  /* ---- diagrams ---- */
+  .diagram-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:26px;}
+  .diagram-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:10px;}
+  .diagram-card-head h3{font-size:18px;}
+  .diagram-stage{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center;padding:20px 0;}
+  .diagram-label{opacity:0;transform:translateY(6px);animation:labelIn .5s forwards ease;}
+  .diagram-part{opacity:0;animation:drawIn .6s forwards ease;}
+  @keyframes labelIn{to{opacity:1;transform:translateY(0);}}
+  @keyframes drawIn{to{opacity:1;}}
+  .replay-btn{display:inline-flex;align-items:center;gap:6px;}
+
+  /* ---- formula sheet ---- */
+  .formula-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+  .formula-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .formula-card .eyebrow{margin-bottom:8px;display:block;}
+  .formula-expr{font-family:'IBM Plex Mono',monospace;background:#faf8f5;border:1px dashed var(--line);border-radius:10px;padding:16px;font-size:16px;text-align:center;margin:12px 0;}
+  .formula-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin:0;}
+
+  /* ---- checklist ---- */
+  .checklist-subject{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+  .checklist-subject h3{font-size:16px;margin-bottom:4px;}
+  .checklist-subject .sub-pct{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;}
+  .chapter-item{margin-top:14px;}
+  .chapter-item > .chap-title{font-weight:700;font-size:13.5px;margin-bottom:6px;}
+  .topic-row{display:flex;align-items:center;gap:10px;padding:6px 0 6px 4px;font-size:13.5px;border-bottom:1px solid #f4f3f0;}
+  .topic-row:last-child{border-bottom:none;}
+  .topic-row input{width:16px;height:16px;accent-color:var(--orange);}
+  .topic-row.done label{color:var(--ink-soft);text-decoration:line-through;}
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width:900px){
+    .hero .wrap{grid-template-columns:1fr;}
+    .card-stack{height:280px;margin-top:20px;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);}
+    .kpi-row{grid-template-columns:1fr 1fr;}
+    .memorize-layout{grid-template-columns:1fr;}
+    .formula-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:720px){
+    .app-shell{flex-direction:column;}
+    .sidebar{
+      position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;width:100%;
+      flex-direction:row;overflow-x:auto;padding:8px 10px;border-right:none;border-top:1px solid var(--line);
+      background:#fff;z-index:50;gap:2px;
+    }
+    .sidebar .logo, .side-meta{display:none;}
+    .side-link{flex-direction:column;gap:3px;font-size:10.5px;padding:8px 6px;white-space:nowrap;}
+    .side-link svg{width:17px;height:17px;}
+    .main{padding:22px 18px 100px;}
+    .bar-row .name{width:120px;}
+    .topnav-links{gap:16px;font-size:13px;}
+  }
+  @media (max-width:520px){
+    .feature-grid{grid-template-columns:1fr;}
+    .kpi-row{grid-template-columns:1fr 1fr;}
+    .hero{padding:56px 0 40px;}
+  }
+
+  /* ---- print (checklist) ---- */
+  @media print{
+    .sidebar, .topnav, .main-head .btn, .print-hide{display:none !important;}
+    .main{padding:0;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SVG symbol defs (spade icon reused everywhere)                -->
+<!-- ============================================================ -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="spade-icon" viewBox="0 0 24 24">
+    <path d="M12 2C9 7 3 10.5 3 15a5 5 0 0 0 8.2 3.8c-.3 1.6-1.1 2.9-2.7 3.9-.4.25-.2.85.25.85h6.5c.45 0 .65-.6.25-.85-1.6-1-2.4-2.3-2.7-3.9A5 5 0 0 0 21 15c0-4.5-6-8-9-13Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<!-- ============================================================ -->
+<!-- LANDING PAGE                                                   -->
+<!-- ============================================================ -->
+<div id="view-root-landing">
+  <nav class="topnav">
+    <div class="wrap">
+      <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="#fff"><use href="#spade-icon"/></svg></span>Spade</div>
+      <div class="topnav-links">
+        <a href="#features">How it works</a>
+        <a href="#coverage">Coverage</a>
+        <button class="btn btn-primary btn-sm" onclick="goTo('login')">Log in</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">ICSE &amp; CBSE · Grades 6–12</span>
+        <h1 style="margin-top:14px;">Study however your brain <em>actually</em> learns.</h1>
+        <p class="lead">Flashcards that resurface until they stick, fill-in-the-blanks, animated diagrams, formula sheets and printable checklists — all mapped straight to your syllabus. Free for students, always.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" onclick="goTo('login')">Start learning free</button>
+          <a href="#features" class="btn btn-ghost">See how it works</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>6</b><span>subjects loaded (Grade 6 ICSE)</span></div>
+          <div><b>5</b><span>ways to learn each topic</span></div>
+          <div><b>0</b><span>rupees to use it</span></div>
+        </div>
+      </div>
+      <div class="card-stack" aria-hidden="true">
+        <div class="demo-card card-1"><span class="pip">♠</span><span class="tag">Biology</span><span class="q">Name the four whorls of a flower.</span></div>
+        <div class="demo-card card-2"><span class="pip">♠</span><span class="tag">History</span><span class="q">Where did the Indus Valley civilization rise?</span></div>
+        <div class="demo-card card-3"><span class="pip">♠</span><span class="tag" style="background:#2a2a30;color:#fff;">Physics</span><span class="q">Load × Load arm = ?</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="wrap">
+      <h2>One topic, five doors in.</h2>
+      <p class="sub">Some students remember through repetition, some through pictures, some by filling in the gaps themselves. Spade doesn't force one style — it lets a student pick.</p>
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#spade-icon" fill="currentColor" stroke="none"/></svg></div>
+          <h3>Memorize Mode</h3>
+          <p>A Leitner-style flashcard queue — cards you fumble come back soon, cards you've mastered fade out slowly, never all at once.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg></div>
+          <h3>Fill in the blanks</h3>
+          <p>Text-completion drills for definitions and processes, so recall is active, not just recognition.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>Animated diagrams</h3>
+          <p>Step-by-step visual breakdowns for the diagrams your textbook only shows as one static picture.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg></div>
+          <h3>Formula sheets &amp; checklists</h3>
+          <p>Every chapter's formulas on one page, plus a printable syllabus checklist to track what's left.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="coverage" id="coverage">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Syllabus coverage</span>
+        <h2 style="margin-top:10px;font-size:24px;">Built chapter-by-chapter, honestly.</h2>
+        <p style="max-width:56ch;color:var(--ink-soft);margin-top:8px;font-size:14px;">Grade 6 ICSE (English, Physics, Biology, Chemistry, History, Civics) is fully loaded in this build. The other boards and grades use the same structure — they get filled in as source material is added.</p>
+      </div>
+      <div>
+        <span class="board-pill"><span class="dot"></span>ICSE · Grade 6</span>
+        <span class="board-pill soon"><span class="dot"></span>ICSE · Grades 7–12 (coming soon)</span>
+        <span class="board-pill soon"><span class="dot"></span>CBSE · Grades 6–12 (coming soon)</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:10px;">
+      <span>© Spade — a free study tool. We link out to a partner site for practice test papers.</span>
+      <span>Prototype build</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================================================ -->
+<!-- LOGIN                                                          -->
+<!-- ============================================================ -->
+<div id="view-root-login" class="hidden">
+  <div class="auth-screen">
+    <div class="auth-card">
+      <a href="#" class="back-link" onclick="goTo('landing');return false;">&larr; Back</a>
+      <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="#fff"><use href="#spade-icon"/></svg></span>Spade</div>
+      <h1>Welcome back</h1>
+      <p class="sub">No password needed in this demo — just tell us who's studying.</p>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="field">
+          <label for="login-name">Your name</label>
+          <input id="login-name" type="text" placeholder="e.g. Aanya Kapoor" required>
+        </div>
+        <div class="field">
+          <label for="login-board">Board</label>
+          <select id="login-board">
+            <option>ICSE</option>
+            <option>CBSE</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="login-grade">Grade</label>
+          <select id="login-grade">
+            <option>6</option><option>7</option><option>8</option><option>9</option>
+            <option>10</option><option>11</option><option>12</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Log in &amp; start studying</button>
+      </form>
+      <p class="auth-note" id="login-note">This is a working prototype: login just starts your session, it isn't connected to a real account system yet.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- APP SHELL                                                      -->
+<!-- ============================================================ -->
+<div id="view-root-app" class="hidden">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="#fff"><use href="#spade-icon"/></svg></span>Spade</div>
+
+      <button class="side-link" data-tab="dashboard" onclick="setTab('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="side-link" data-tab="memorize" onclick="setTab('memorize')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#spade-icon" fill="currentColor" stroke="none"/></svg>
+        Memorize Mode
+      </button>
+      <button class="side-link" data-tab="diagrams" onclick="setTab('diagrams')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+        Diagrams
+      </button>
+      <button class="side-link" data-tab="formulas" onclick="setTab('formulas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+        Formula sheet
+      </button>
+      <button class="side-link" data-tab="checklist" onclick="setTab('checklist')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Checklist
+      </button>
+
+      <div class="side-meta">
+        <div class="who" id="who-name">—</div>
+        <div class="board" id="who-board">—</div>
+        <button class="btn btn-ghost btn-sm logout-btn" onclick="handleLogout()">Log out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section class="view" id="tab-dashboard">
+        <div class="main-head">
+          <div>
+            <h1>Your syllabus, at a glance</h1>
+            <p>Overall completion across every subject, and a breakdown by chapter so you know exactly what's left.</p>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card spade-kpi">
+            <div class="spade-meter">
+              <svg viewBox="0 0 58 66">
+                <defs>
+                  <clipPath id="spade-clip"><path d="M29 3C22 15 6 24 6 35a13 13 0 0 0 21.5 9.9c-.7 4-2.8 7.3-6.8 9.8-1 .6-.5 2.1.6 2.1h16.4c1.1 0 1.6-1.5.6-2.1-4-2.5-6.1-5.8-6.8-9.8A13 13 0 0 0 53 35c0-11-16-20-24-32Z"/></clipPath>
+                </defs>
+                <path d="M29 3C22 15 6 24 6 35a13 13 0 0 0 21.5 9.9c-.7 4-2.8 7.3-6.8 9.8-1 .6-.5 2.1.6 2.1h16.4c1.1 0 1.6-1.5.6-2.1-4-2.5-6.1-5.8-6.8-9.8A13 13 0 0 0 53 35c0-11-16-20-24-32Z" fill="#f0efec"/>
+                <g clip-path="url(#spade-clip)">
+                  <rect id="spade-fill-rect" x="0" y="66" width="58" height="0" fill="#f2600c"/>
+                </g>
+              </svg>
+            </div>
+            <div>
+              <div class="k-label">Overall complete</div>
+              <div class="k-value" id="kpi-overall">0%</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="k-label">Topics mastered</div>
+            <div class="k-value" id="kpi-topics">0 / 0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="k-label">Flashcards mastered</div>
+            <div class="k-value" id="kpi-cards">0 / 0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="k-label">Subject furthest along</div>
+            <div class="k-value" id="kpi-best" style="font-size:20px;">—</div>
+          </div>
+        </div>
+
+        <div id="dashboard-subjects"></div>
+      </section>
+
+      <!-- MEMORIZE MODE -->
+      <section class="view" id="tab-memorize">
+        <div class="main-head">
+          <div>
+            <h1>Memorize Mode</h1>
+            <p>Answer honestly. Cards you're shaky on resurface soon; cards you've nailed drift further apart — but never disappear for good.</p>
+          </div>
+        </div>
+        <div class="memorize-layout">
+          <div class="stage">
+            <div class="flash-outer">
+              <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="face face-front">
+                  <div style="display:flex;justify-content:space-between;">
+                    <span class="corner" id="fc-subject-front">—</span>
+                    <span class="corner">♠</span>
+                  </div>
+                  <div class="center-spade"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#spade-icon"/></svg></div>
+                  <div class="prompt" id="fc-question">Loading…</div>
+                </div>
+                <div class="face face-back">
+                  <span class="tag" id="fc-status-tag">Learning</span>
+                  <div class="answer" id="fc-answer">—</div>
+                  <div class="hint">Tap the card to flip back</div>
+                </div>
+              </div>
+            </div>
+            <div class="stage-actions" id="stage-actions">
+              <button class="btn btn-relearn" onclick="answerCard(false)">Still learning</button>
+              <button class="btn btn-gotit" onclick="answerCard(true)">Got it</button>
+            </div>
+            <p class="stage-hint">Tap the card to reveal the answer, then grade yourself honestly — that's what makes the spacing work.</p>
+          </div>
+          <div class="side-panel">
+            <div class="panel-card">
+              <h4>Session boxes</h4>
+              <div id="box-breakdown"></div>
+            </div>
+            <div class="panel-card subject-filter">
+              <h4>Subjects in this session</h4>
+              <div id="subject-filters"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIAGRAMS -->
+      <section class="view" id="tab-diagrams">
+        <div class="main-head">
+          <div>
+            <h1>Animated diagrams</h1>
+            <p>Each part draws in step by step instead of dumping the whole picture on you at once.</p>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <div class="diagram-card-head">
+            <h3>The leaf — external structure <span class="eyebrow" style="margin-left:8px;">Biology · Plant Life</span></h3>
+            <button class="btn btn-ghost btn-sm replay-btn" onclick="playDiagram('leaf')">↺ Replay</button>
+          </div>
+          <div class="diagram-stage">
+            <svg id="leaf-diagram" width="320" height="280" viewBox="0 0 320 280">
+              <g class="diagram-part" style="animation-delay:.1s">
+                <path d="M160 250 C90 230 60 160 90 90 C120 30 160 20 160 20 C160 20 200 30 230 90 C260 160 230 230 160 250 Z" fill="#e9f6ef" stroke="#1e8e5a" stroke-width="2"/>
+              </g>
+              <g class="diagram-part" style="animation-delay:.6s">
+                <path d="M160 250 L160 20" stroke="#1e8e5a" stroke-width="3"/>
+                <path d="M160 60 L120 90 M160 60 L200 90 M160 110 L110 140 M160 110 L210 140 M160 165 L120 195 M160 165 L200 195" stroke="#1e8e5a" stroke-width="1.4" fill="none"/>
+              </g>
+              <g class="diagram-part" style="animation-delay:1.1s">
+                <line x1="160" y1="250" x2="160" y2="270" stroke="#8a5a2a" stroke-width="6" stroke-linecap="round"/>
+              </g>
+              <g class="diagram-label" style="animation-delay:1.6s"><line x1="230" y1="90" x2="270" y2="80" stroke="#5b5b66" stroke-width="1"/><text x="273" y="83" font-size="12" font-family="IBM Plex Mono, monospace" fill="#15151a">Lamina (blade)</text></g>
+              <g class="diagram-label" style="animation-delay:2s"><line x1="160" y1="60" x2="230" y2="45" stroke="#5b5b66" stroke-width="1"/><text x="233" y="48" font-size="12" font-family="IBM Plex Mono, monospace" fill="#15151a">Midrib</text></g>
+              <g class="diagram-label" style="animation-delay:2.4s"><line x1="120" y1="140" x2="40" y2="150" stroke="#5b5b66" stroke-width="1"/><text x="4" y="153" font-size="12" font-family="IBM Plex Mono, monospace" fill="#15151a">Veins</text></g>
+              <g class="diagram-label" style="animation-delay:2.8s"><line x1="160" y1="265" x2="230" y2="270" stroke="#5b5b66" stroke-width="1"/><text x="233" y="273" font-size="12" font-family="IBM Plex Mono, monospace" fill="#15151a">Petiole</text></g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <div class="diagram-card-head">
+            <h3>A simple lever <span class="eyebrow" style="margin-left:8px;">Physics · Energy</span></h3>
+            <button class="btn btn-ghost btn-sm replay-btn" onclick="playDiagram('lever')">↺ Replay</button>
+          </div>
+          <div class="diagram-stage">
+            <svg id="lever-diagram" width="320" height="200" viewBox="0 0 320 200">
+              <g class="diagram-part" style="animation-delay:.1s">
+                <polygon points="160,150 145,180 175,180" fill="#f2600c"/>
+              </g>
+              <g class="diagram-part" style="animation-delay:.6s">
+                <rect x="40" y="140" width="240" height="10" rx="4" fill="#15151a"/>
+              </g>
+              <g class="diagram-part" style="animation-delay:1.1s">
+                <circle cx="70" cy="140" r="16" fill="#e9f6ef" stroke="#1e8e5a" stroke-width="2"/>
+                <text x="70" y="145" font-size="11" text-anchor="middle" font-family="IBM Plex Mono, monospace">Load</text>
+              </g>
+              <g class="diagram-part" style="animation-delay:1.4s">
+                <circle cx="255" cy="140" r="12" fill="#fbf1de" stroke="#c9860f" stroke-width="2"/>
+                <text x="255" y="144" font-size="10" text-anchor="middle" font-family="IBM Plex Mono, monospace">Effort</text>
+              </g>
+              <g class="diagram-label" style="animation-delay:1.9s"><line x1="70" y1="140" x2="160" y2="150" stroke="#5b5b66" stroke-dasharray="3 3"/><text x="95" y="130" font-size="11" font-family="IBM Plex Mono, monospace">Load arm</text></g>
+              <g class="diagram-label" style="animation-delay:2.2s"><line x1="160" y1="150" x2="255" y2="140" stroke="#5b5b66" stroke-dasharray="3 3"/><text x="185" y="130" font-size="11" font-family="IBM Plex Mono, monospace">Effort arm</text></g>
+              <g class="diagram-label" style="animation-delay:2.5s"><text x="160" y="185" text-anchor="middle" font-size="12" font-family="IBM Plex Mono, monospace" fill="#c94a05">Fulcrum</text></g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMULA SHEET -->
+      <section class="view" id="tab-formulas">
+        <div class="main-head">
+          <div>
+            <h1>Formula sheet</h1>
+            <p>Pulled straight from the chapters you're studying — one page per chapter, no digging through the textbook.</p>
+          </div>
+        </div>
+        <div class="formula-grid">
+          <div class="formula-card">
+            <span class="eyebrow">Physics · Energy · Simple machines</span>
+            <div class="formula-expr">Load × Load arm = Effort × Effort arm</div>
+            <p>The principle of moments for a lever. Use it to solve for any one quantity when the other three are known.</p>
+          </div>
+          <div class="formula-card">
+            <span class="eyebrow">Physics · Energy · Simple machines</span>
+            <div class="formula-expr">Mechanical Advantage = Load ÷ Effort</div>
+            <p>Tells you how much a machine multiplies your effort. MA &gt; 1 means the machine is working in your favour.</p>
+          </div>
+          <div class="formula-card">
+            <span class="eyebrow">Chemistry · Elements, Compounds &amp; Mixtures</span>
+            <div class="formula-expr">Element + Element → Compound (fixed ratio)</div>
+            <p>Compounds form in a fixed, definite proportion; the elements lose their original properties entirely.</p>
+          </div>
+          <div class="formula-card">
+            <span class="eyebrow">Biology · The Cell</span>
+            <div class="formula-expr">Cell wall → Cell membrane → Cytoplasm → Nucleus</div>
+            <p>Not a formula so much as a boundary order — useful for remembering what a substance crosses first entering a plant cell.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHECKLIST -->
+      <section class="view" id="tab-checklist">
+        <div class="main-head">
+          <div>
+            <h1>Syllabus checklist</h1>
+            <p>Tick off topics as you finish them — this feeds the dashboard automatically. Print it for a paper copy.</p>
+          </div>
+          <button class="btn btn-ghost print-hide" onclick="window.print()">🖨 Print checklist</button>
+        </div>
+        <div id="checklist-container"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Grade 6 ICSE, transcribed from the syllabus provided.
+   ============================================================ */
+const SYLLABUS = [
+  { id:'english', name:'English', chapters:[
+    { id:'e1', title:'Listening & Speaking', topics:['Aural comprehension of stories, poems, narratives','Group discussions, debates, speeches, drama','Adapting speech: tone, gesture, stress, body language','Dictation of chunks of language'] },
+    { id:'e2', title:'Reading', topics:['Self, family, home, friends','The nation — diversity & heritage','Myths, legends & folktales','Science & technology','Environmental concerns & personal safety'] },
+    { id:'e3', title:'Writing', topics:['Messages, invitations, letters, applications','Narrative & descriptive writing','Creative writing: stories, poems, dialogues','Using linkers (firstly, then, finally)'] },
+    { id:'e4', title:'Grammar & Vocabulary', topics:['Pronouns & pronoun-antecedent agreement','Subject-verb agreement','Transitive & intransitive verbs','Tenses & verb-tense shifts','Vocabulary in context, affixes & roots'] },
+  ]},
+  { id:'physics', name:'Physics', chapters:[
+    { id:'p1', title:'Matter', topics:['Meaning & composition of matter','States: solids, liquids, gases','Distinguishing properties of each state'] },
+    { id:'p2', title:'Physical Quantities & Measurement', topics:['Measuring length, mass, time','Measuring temperature','Measuring area'] },
+    { id:'p3', title:'Force', topics:['Force as a push or pull','Effect of force on speed, direction, shape','Force of friction'] },
+    { id:'p4', title:'Energy — Simple Machines', topics:['Types of simple machines','Orders of levers','Numericals: Load × Load arm = Effort × Effort arm'] },
+    { id:'p5', title:'Light', topics:['Rectilinear propagation of light','Pinhole camera','Shadows'] },
+    { id:'p6', title:'Magnetism', topics:['Magnetic vs non-magnetic substances','Properties & magnetic field of a magnet',"Earth's magnetic field",'Making magnets & electromagnets','Demagnetization'] },
+  ]},
+  { id:'biology', name:'Biology', chapters:[
+    { id:'b1', title:'Plant Life — The Leaf & Flower', topics:['External structure & venation of a leaf','Functions and modifications of leaves','Parts of a flower (4 whorls)','Pollination & fertilization','Seed structure & germination'] },
+    { id:'b2', title:'The Cell', topics:['Plant cell organelles & functions','Animal cell organelles & functions','Differences between plant & animal cells'] },
+    { id:'b3', title:'Human Body', topics:['Digestive system & process of digestion','Respiratory system & mechanism of breathing','Circulatory system & components of blood'] },
+    { id:'b4', title:'Health & Hygiene', topics:['Types & modes of transmission of diseases','Ways to prevent communicable diseases','Hygiene practices'] },
+    { id:'b5', title:'Adaptation', topics:['Habitat — definition','Aquatic, desert, mountain & aerial adaptations'] },
+  ]},
+  { id:'chemistry', name:'Chemistry', chapters:[
+    { id:'c1', title:'Introduction to Chemistry', topics:['Meaning & historical development','Notable chemists & contributions','Chemistry in food, cosmetics, clothing, medicine'] },
+    { id:'c2', title:'Elements, Compounds & Mixtures', topics:['Elements, symbols & first 20 elements','Compounds vs mixtures','Separation techniques (filtration, sublimation, etc.)'] },
+    { id:'c3', title:'Matter', topics:['Classification into solid, liquid, gas','Arrangement of particles & intermolecular space','Effect of heat on matter'] },
+    { id:'c4', title:'Water', topics:['Importance & sources of water','Solute, solvent & solution','Water pollution & conservation'] },
+    { id:'c5', title:'Air & Atmosphere', topics:['Composition of air','Uses of components of air','Definition of atmosphere'] },
+  ]},
+  { id:'history', name:'History', chapters:[
+    { id:'h1', title:'The River Valley Civilizations', topics:['Meaning of "civilization" & reasons for river settlement','Indus Valley, Mesopotamian, Egyptian, Chinese civilizations','Society, town planning, trade, religion','Decline of the civilizations'] },
+    { id:'h2', title:'The Vedic Civilization', topics:['Aryans in the Sapta Sindhu & Gangetic valley','The four Vedas, Upanishads, Puranas','Brahmavarta & Aryavarta — political & social life'] },
+    { id:'h3', title:'Mahavira & Buddha', topics:['Social conditions for rise of Jainism & Buddhism','Teachings of Mahavira (Jainism)','Teachings of Buddha (Buddhism)','Comparative study & spread/decline'] },
+    { id:'h4', title:'Rise of Kingdoms & Republics', topics:['Janapadas & Mahajanapadas','Powerful kingdoms: Vatsa, Avanti, Kosala, Magadha','Magadha rulers & rise of Chandragupta Maurya'] },
+    { id:'h5', title:'The Mauryan & Gupta Empires', topics:['Chandragupta Maurya, Bindusara, Ashoka',"Ashoka's Dhamma & edicts, Mauryan administration",'The Golden Age — Gupta rulers & achievements'] },
+  ]},
+  { id:'civics', name:'Civics', chapters:[
+    { id:'cv1', title:'Rural Local Self-Government', topics:['Meaning of local self-government','Panchayati Raj: Gram Sabha, Gram Panchayat, Nyaya Panchayat','Block Samiti & Zila Parishad'] },
+    { id:'cv2', title:'Urban Local Self-Government', topics:['Meaning of "metropolitan" & major cities','Municipal Corporations — composition & functions','Municipalities'] },
+  ]},
+];
+
+/* Flashcard deck — hand-picked from the same syllabus content */
+const DECK = [
+  {subject:'Physics', q:'What is the rule for a balanced lever?', a:'Load × Load arm = Effort × Effort arm'},
+  {subject:'Physics', q:'Name the three effects a force can have on an object.', a:'Change its speed, change its direction, or change its shape/size'},
+  {subject:'Biology', q:'Name the four whorls of a flower, in order from outside in.', a:'Calyx, Corolla, Androecium, Gynoecium'},
+  {subject:'Biology', q:'What are the two conditions every seed needs to germinate?', a:'Moisture and warmth'},
+  {subject:'Chemistry', q:'What turns two elements into a compound?', a:'Combining in a fixed, definite proportion — the original properties are lost'},
+  {subject:'Chemistry', q:'Name three techniques used to separate a mixture.', a:'Any three of: sieving, sedimentation, decantation, filtration, evaporation, magnetic separation, sublimation'},
+  {subject:'History', q:'Why did early civilizations settle near rivers?', a:'Rivers gave fertile soil, water for farming, and a route for trade and transport'},
+  {subject:'History', q:'Who was the teacher/advisor credited with helping Chandragupta Maurya rise to power?', a:'Chanakya'},
+  {subject:'Civics', q:'What is the lowest unit of the Panchayati Raj system?', a:'The Gram Panchayat, elected by the Gram Sabha'},
+  {subject:'English', q:'Name two linkers used to show the passage of time in writing.', a:'Any two of: firstly, then, later, finally'},
+  {subject:'Biology', q:'Which organelle gives a plant cell its rigid shape, but is absent in animal cells?', a:'The cell wall'},
+  {subject:'Physics', q:'What is Mechanical Advantage?', a:'Load ÷ Effort — how much a machine multiplies your effort'},
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let session = { name:'', board:'ICSE', grade:'6' };
+let progress = {}; // progress[subjectId][chapterId] = [bool,...]
+SYLLABUS.forEach(s=>{
+  progress[s.id] = {};
+  s.chapters.forEach(c=>{ progress[s.id][c.id] = c.topics.map(()=>false); });
+});
+
+let queue = []; // working flashcard queue of indices into DECK, with a "box"
+let cardState = []; // per DECK-index: {box, mastered}
+DECK.forEach((_,i)=>{ cardState.push({box:1, mastered:false}); queue.push(i); });
+let activeCardIdx = null;
+let flipped = false;
+let activeSubjects = new Set(DECK.map(c=>c.subject));
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function goTo(view){
+  document.getElementById('view-root-landing').classList.toggle('hidden', view!=='landing');
+  document.getElementById('view-root-login').classList.toggle('hidden', view!=='login');
+  document.getElementById('view-root-app').classList.toggle('hidden', view!=='app');
+  window.scrollTo(0,0);
+}
+
+function handleLogin(e){
+  e.preventDefault();
+  session.name = document.getElementById('login-name').value.trim() || 'Student';
+  session.board = document.getElementById('login-board').value;
+  session.grade = document.getElementById('login-grade').value;
+  document.getElementById('who-name').textContent = session.name;
+  document.getElementById('who-board').textContent = session.board + ' · Grade ' + session.grade;
+
+  const note = document.getElementById('login-note');
+  if(session.board!=='ICSE' || session.grade!=='6'){
+    // still let them in, but be honest about content coverage
+    alert('Heads up: this prototype only has full content loaded for ICSE Grade 6. Logging you in there so you can see it in action.');
+  }
+  goTo('app');
+  setTab('dashboard');
+  renderChecklist();
+  renderDashboard();
+  buildFilterPanel();
+  nextCard();
+}
+
+function handleLogout(){
+  goTo('landing');
+}
+
+function setTab(tab){
+  document.querySelectorAll('.side-link').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='tab-'+tab));
+  if(tab==='dashboard') renderDashboard();
+  if(tab==='checklist') renderChecklist();
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function subjectStats(subjectId){
+  const chapters = SYLLABUS.find(s=>s.id===subjectId).chapters;
+  let done=0, total=0;
+  chapters.forEach(c=>{
+    progress[subjectId][c.id].forEach(v=>{ total++; if(v) done++; });
+  });
+  return {done, total, pct: total? Math.round(done/total*100):0};
+}
+
+function renderDashboard(){
+  let doneAll=0, totalAll=0;
+  let best = {name:'—', pct:-1};
+  const container = document.getElementById('dashboard-subjects');
+  container.innerHTML='';
+
+  SYLLABUS.forEach(s=>{
+    const stats = subjectStats(s.id);
+    doneAll += stats.done; totalAll += stats.total;
+    if(stats.pct>best.pct) best = {name:s.name, pct:stats.pct};
+
+    const block = document.createElement('div');
+    block.className='subject-block';
+    let rows = s.chapters.map(c=>{
+      const arr = progress[s.id][c.id];
+      const d = arr.filter(Boolean).length, t = arr.length;
+      const pct = t? Math.round(d/t*100):0;
+      return `<div class="bar-row">
+        <span class="name">${c.title}</span>
+        <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
+        <span class="bar-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    block.innerHTML = `<div class="subject-block-head"><h3>${s.name}</h3><span class="pct">${stats.pct}% complete</span></div>${rows}`;
+    container.appendChild(block);
+  });
+
+  const overallPct = totalAll? Math.round(doneAll/totalAll*100):0;
+  document.getElementById('kpi-overall').textContent = overallPct+'%';
+  document.getElementById('kpi-topics').textContent = doneAll+' / '+totalAll;
+  document.getElementById('kpi-best').textContent = best.name;
+
+  const masteredCards = cardState.filter(c=>c.mastered).length;
+  document.getElementById('kpi-cards').textContent = masteredCards+' / '+DECK.length;
+
+  // spade meter fill (58x66 viewbox, fill from bottom)
+  const rect = document.getElementById('spade-fill-rect');
+  const h = 66 * (overallPct/100);
+  rect.setAttribute('y', 66-h);
+  rect.setAttribute('height', h);
+}
+
+/* ============================================================
+   CHECKLIST
+   ============================================================ */
+function renderChecklist(){
+  const container = document.getElementById('checklist-container');
+  container.innerHTML='';
+  SYLLABUS.forEach(s=>{
+    const stats = subjectStats(s.id);
+    const box = document.createElement('div');
+    box.className='checklist-subject';
+    let chaptersHtml = s.chapters.map(c=>{
+      const topicsHtml = c.topics.map((t,i)=>{
+        const checked = progress[s.id][c.id][i];
+        const cid = `chk-${s.id}-${c.id}-${i}`;
+        return `<div class="topic-row ${checked?'done':''}">
+          <input type="checkbox" id="${cid}" ${checked?'checked':''} onchange="toggleTopic('${s.id}','${c.id}',${i})">
+          <label for="${cid}">${t}</label>
+        </div>`;
+      }).join('');
+      return `<div class="chapter-item"><div class="chap-title">${c.title}</div>${topicsHtml}</div>`;
+    }).join('');
+    box.innerHTML = `<h3>${s.name} <span class="sub-pct">${stats.pct}%</span></h3>${chaptersHtml}`;
+    container.appendChild(box);
+  });
+}
+
+function toggleTopic(subjectId, chapterId, idx){
+  progress[subjectId][chapterId][idx] = !progress[subjectId][chapterId][idx];
+  renderChecklist();
+  renderDashboard();
+}
+
+/* ============================================================
+   MEMORIZE MODE — simple Leitner-style spaced queue
+   ============================================================ */
+function buildFilterPanel(){
+  const wrap = document.getElementById('subject-filters');
+  wrap.innerHTML='';
+  [...new Set(DECK.map(c=>c.subject))].forEach(subj=>{
+    const id = 'filter-'+subj;
+    wrap.insertAdjacentHTML('beforeend', `<label><input type="checkbox" id="${id}" checked onchange="toggleSubjectFilter('${subj}')"> ${subj}</label>`);
+  });
+}
+
+function toggleSubjectFilter(subj){
+  if(activeSubjects.has(subj)) activeSubjects.delete(subj); else activeSubjects.add(subj);
+  if(activeSubjects.size===0) activeSubjects.add(subj); // don't allow empty
+  renderBoxBreakdown();
+}
+
+function renderBoxBreakdown(){
+  const boxLabels = ['','Box 1 · Learning','Box 2 · Learning','Box 3 · Reviewing','Box 4 · Reviewing','Mastered'];
+  const boxColors = ['','#c9860f','#c9860f','#f2600c','#f2600c','#1e8e5a'];
+  let counts = [0,0,0,0,0,0];
+  cardState.forEach((c,i)=>{
+    if(!activeSubjects.has(DECK[i].subject)) return;
+    if(c.mastered) counts[5]++; else counts[c.box]++;
+  });
+  const el = document.getElementById('box-breakdown');
+  el.innerHTML='';
+  for(let b=1;b<=5;b++){
+    el.insertAdjacentHTML('beforeend', `<div class="box-row"><span><span class="box-dot" style="background:${boxColors[b]}"></span>${boxLabels[b]}</span><span class="mono">${counts[b]}</span></div>`);
+  }
+}
+
+function eligibleIndices(){
+  return queue.filter(i => activeSubjects.has(DECK[i].subject));
+}
+
+function nextCard(){
+  flipped = false;
+  const el = document.getElementById('flashcard');
+  if(el) el.classList.remove('flipped');
+
+  let pool = eligibleIndices();
+  if(pool.length===0){ pool = queue.length? queue : DECK.map((_,i)=>i); }
+  activeCardIdx = pool[0];
+
+  const card = DECK[activeCardIdx];
+  const cs = cardState[activeCardIdx];
+  document.getElementById('fc-subject-front').textContent = card.subject;
+  document.getElementById('fc-question').textContent = card.q;
+  document.getElementById('fc-answer').textContent = card.a;
+  const tag = document.getElementById('fc-status-tag');
+  if(cs.mastered){ tag.textContent='Mastered — quick check-in'; tag.style.background='var(--green-tint)'; tag.style.color='var(--green)'; }
+  else if(cs.box<=2){ tag.textContent='Learning'; tag.style.background='var(--amber-tint)'; tag.style.color='var(--amber)'; }
+  else { tag.textContent='Reviewing'; tag.style.background='var(--orange-tint)'; tag.style.color='var(--orange-deep)'; }
+
+  renderBoxBreakdown();
+}
+
+function flipCard(){
+  flipped = !flipped;
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+}
+
+function answerCard(gotIt){
+  if(activeCardIdx===null) return;
+  // remove current card from front of queue
+  queue = queue.filter(i=>i!==activeCardIdx);
+  const cs = cardState[activeCardIdx];
+
+  if(gotIt){
+    cs.box = Math.min(cs.box+1, 4);
+    if(cs.box>=4 && !cs.mastered){ cs.mastered = true; }
+    // spacing: mastered cards reinserted far back (low frequency "again and again" check-in),
+    // others reinserted proportionally to box level
+    const gap = cs.mastered ? Math.max(queue.length, 8) : cs.box*2;
+    const pos = Math.min(gap, queue.length);
+    queue.splice(pos, 0, activeCardIdx);
+  } else {
+    cs.box = 1;
+    cs.mastered = false;
+    // wrong answers resurface soon
+    const pos = Math.min(2, queue.length);
+    queue.splice(pos, 0, activeCardIdx);
+  }
+  renderDashboard();
+  nextCard();
+}
+
+/* ============================================================
+   DIAGRAM REPLAY
+   ============================================================ */
+function playDiagram(which){
+  const id = which==='leaf' ? 'leaf-diagram' : 'lever-diagram';
+  const svg = document.getElementById(id);
+  const parts = svg.querySelectorAll('.diagram-part, .diagram-label');
+  parts.forEach(p=>{
+    p.style.animation='none';
+    void p.offsetWidth; // force reflow to restart animation
+    p.style.animation=null;
+  });
+}
+
+/* init */
+buildFilterPanel();
+renderBoxBreakdown();
+</script>
+</body>
+</html>
