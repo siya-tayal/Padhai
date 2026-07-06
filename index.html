@@ -420,6 +420,39 @@
   .diff-table tr:last-child td{border-bottom:none;}
   @media (max-width:760px){ .soc-def-grid{grid-template-columns:1fr;} }
 
+  /* ---- economics: interactive graphs ---- */
+  .graph-box{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow);}
+  .graph-title{font-family:'Fraunces',serif;font-weight:700;font-size:14.5px;margin-bottom:10px;}
+  .graph-box svg{display:block;margin:0 auto;}
+  .graph-controls{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+  .graph-slider-row{display:flex;flex-direction:column;gap:4px;}
+  .graph-slider-label{font-size:12px;font-weight:700;}
+  .graph-slider-row input[type=range]{width:100%;accent-color:var(--orange);}
+  .graph-note{font-size:12px;color:var(--ink-soft);margin-top:10px;margin-bottom:0;font-style:italic;}
+
+  /* ---- economics: numerical generator ---- */
+  .numerical-box{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow);}
+  .numerical-formula{margin-bottom:12px;}
+  .numerical-formula-expr{font-family:'IBM Plex Mono',monospace;background:#faf8f5;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;font-size:14px;margin-top:6px;}
+  .numerical-question{font-size:14px;line-height:1.6;margin:0 0 14px;}
+  .numerical-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .numerical-hint{margin-top:12px;font-size:13px;background:var(--amber-tint);border:1px solid var(--amber);border-radius:10px;padding:10px 14px;}
+  .numerical-steps{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
+  .numerical-answer{margin-top:10px;font-size:13.5px;background:var(--green-tint);border-radius:10px;padding:10px 14px;color:var(--green);}
+
+  /* ---- economics: formula handbook ---- */
+  .formula-hb-card{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+  .formula-hb-card .fhb-name{font-weight:800;font-size:14.5px;margin-bottom:6px;}
+  .formula-hb-card .fhb-expr{font-family:'IBM Plex Mono',monospace;background:#faf8f5;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;font-size:13.5px;margin-bottom:10px;}
+  .formula-hb-card .fhb-row{font-size:13px;line-height:1.55;margin-bottom:6px;}
+  .formula-hb-card .fhb-row b{color:var(--orange-deep);}
+
+  /* ---- economics: concept map (radial-ish list) ---- */
+  .concept-map{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:10px 0;}
+  .concept-node{background:var(--orange-tint);color:var(--orange-deep);border-radius:12px;padding:10px 16px;font-size:13px;font-weight:700;text-align:center;}
+  .concept-node.center{background:#15151a;color:#fff;font-size:14.5px;padding:14px 20px;}
+  .concept-arrow{align-self:center;color:var(--ink-soft);font-size:18px;}
+
   /* ================= RESPONSIVE ================= */
   @media (max-width:900px){
     .hero .wrap{grid-template-columns:1fr;}
@@ -665,7 +698,7 @@ const GRADES = [11, 12];
 const SUBJECTS = [
   { id:'english', name:'English', emoji:'📖', color:'#c94a05', bg:'#fff1e7', enabled:true },
   { id:'sociology', name:'Sociology', emoji:'👥', color:'#8B5CF6', bg:'#F3EEFF', enabled:true },
-  { id:'economics', name:'Economics', emoji:'⚖️', color:'#0EA5E9', bg:'#E8F7FF', enabled:false },
+  { id:'economics', name:'Economics', emoji:'⚖️', color:'#0EA5E9', bg:'#E8F7FF', enabled:true },
   { id:'physics', name:'Physics', emoji:'⚛️', color:'#3B82F6', bg:'#EAF2FF', enabled:false },
   { id:'biology', name:'Biology', emoji:'🌿', color:'#16A34A', bg:'#EAFBEF', enabled:false },
   { id:'math', name:'Mathematics', emoji:'∑', color:'#D97706', bg:'#FEF3E2', enabled:false },
@@ -2008,12 +2041,566 @@ const SOC_QA_BANK = [
 ];
 
 /* ============================================================
+   ECONOMICS — ISC Grades XI & XII. Same Chapter > Topic >
+   Subtopic hierarchy as Sociology, plus `grade` on each chapter
+   (11 or 12) and, where relevant, `formulas` (Formula Handbook),
+   `graph` (config for the InteractiveGraph engine) and
+   `numericalGen` (key into NUMERICAL_GENERATORS) on subtopics.
+   ============================================================ */
+const ECON_CHAPTERS = [
+  { id:'understanding-economics', grade:11, name:'Understanding Economics', icon:'📐',
+    topics:[
+      { id:'econ-basics', name:'What is Economics?',
+        subtopics:[
+          { id:'definition-economics', name:'Definition of Economics', keywords:['scarcity','resources','choice','allocate'],
+            def2:'Economics studies how society manages scarce resources to produce goods and services and distribute them.',
+            def3:'Economics is the study of choice under scarcity — how individuals and society allocate limited resources among unlimited wants. Example: a family allocating income between food and education.',
+            def5:'Economics analyses production, distribution and consumption under conditions of scarcity, covering both micro (individual/firm-level) and macro (national) decisions. Its scope includes assumptions such as rational choice and limited resources, and its importance lies in guiding policy-making — for instance, how a government budget affects resource allocation across competing needs. Robbins famously defined economics as the science of choice given scarce means with alternative uses, distinguishing it from Marshall\'s earlier "study of mankind in the ordinary business of life."',
+            memoryTrick:'Economics = choices forced by scarcity.',
+            example:"A government deciding how much of its budget to spend on healthcare versus defence is an economic choice forced by scarce resources." },
+          { id:'micro-vs-macro', name:'Microeconomics vs Macroeconomics', keywords:['individual market','aggregate','national income'],
+            def2:'Microeconomics studies individual markets (consumers/firms); Macroeconomics studies the economy as a whole (GDP, inflation).',
+            def3:'Micro analyses consumer behaviour and firm supply in a single market (e.g. the wheat market); Macro examines national aggregates such as GDP, inflation and unemployment. The key difference is the level and scope of analysis.',
+            def5:'Microeconomics analyses price and output determination in individual markets, using tools like demand and supply. Macroeconomics examines economy-wide aggregates such as national income, price levels, and employment, often using AD-AS analysis. Despite differing scope, both use similar equilibrium-based methods, and individual (micro) behaviour aggregates upward into macro outcomes — for example, millions of individual consumption decisions sum into national aggregate demand. Policy responses often differ: a microeconomic problem (a single firm\'s inefficiency) needs a different remedy than a macroeconomic one (national inflation).',
+            memoryTrick:'Micro = magnifying glass on one market; Macro = telescope on the whole economy.',
+            example:'Determining the price of rice in a local market is microeconomics; measuring India\'s overall GDP growth rate is macroeconomics.' },
+          { id:'basic-concepts', name:'Basic Concepts — Utility, Price, Wealth, Capital, Income', keywords:['utility','price','wealth','capital','income','saving'],
+            def2:'Utility: satisfaction from consumption. Price: money paid for a good. Wealth: stock of valuable assets. Capital: man-made resources used in production. Income: earnings from factors of production over a period.',
+            def3:'Utility is the want-satisfying power of a good (distinguish total vs marginal utility). Price is the money value at which a good exchanges. Capital includes machinery and factories used to produce further goods, distinct from money itself. Income is a flow concept (earned per period), while wealth is a stock concept (held at a point in time).',
+            def5:'These basic concepts recur throughout economics. Utility covers total utility (overall satisfaction) and marginal utility (satisfaction from one more unit), governed by the Law of Diminishing Marginal Utility — as consumption increases, each additional unit yields less extra satisfaction. Price is the money-value at which exchange occurs, distinct from a good\'s underlying value. Wealth is the stock of assets owned at a point in time, while income is the flow earned over a period (rent, wages, interest, profit as factor incomes). Capital refers to produced means of production (machinery, factories) — its formation, called capital formation, is central to a country\'s growth. Money serves as a store of value and functions to make all of these concepts measurable and comparable.',
+            memoryTrick:'Income = flow (per period); Wealth = stock (at a point in time).',
+            example:'A worker\'s monthly salary is income (a flow); the house and savings she owns are wealth (a stock).',
+            graph:{ title:'Law of Diminishing Marginal Utility', xLabel:'Units Consumed', yLabel:'Marginal Utility', xMax:10, yMax:50, shiftRange:15,
+              curves:[ {id:'mu', label:'Marginal Utility', color:'#c94a05', p1:[1,45], p2:[9,5], draggable:true} ],
+              note:'As units consumed increase, marginal utility falls — drag to see how the starting utility level can shift while the diminishing pattern remains.' } },
+        ]},
+      { id:'econ-problems-ppc', name:'Basic Economic Problems & PPC',
+        subtopics:[
+          { id:'central-problems', name:'What, How, For Whom to Produce', keywords:['what to produce','how to produce','for whom','scarcity'],
+            def2:'Every society must decide what to produce, how to produce it, and for whom, because resources are limited relative to wants.',
+            def3:'What: e.g. healthcare vs education. How: labour-intensive vs technology-intensive methods. For whom: distribution across income groups. These three problems arise directly from scarcity.',
+            def5:'The central economic problems exist in every society regardless of its economic system, because resources are always scarce relative to unlimited human wants. "What to produce" concerns which goods and in what quantities (e.g. guns vs butter). "How to produce" concerns the choice of production technique — labour-intensive methods create more employment while capital-intensive methods raise efficiency. "For whom to produce" concerns distribution — who gets to consume the output, often decided by income levels and government policy. A government\'s budget allocation across sectors like health, education and defence is a real-world illustration of all three problems operating together.',
+            memoryTrick:'What, How, For Whom — the three unavoidable questions of scarcity.',
+            example:'A country deciding whether to build hospitals or schools with a limited budget is answering "what to produce."' },
+          { id:'ppc', name:'Production Possibility Curve (PPC)', keywords:['opportunity cost','efficient','ppc','trade-off'],
+            def2:'The PPC shows the maximum combinations of two goods an economy can produce with given resources and technology.',
+            def3:'Any point inside the PPC means resources are unemployed or used inefficiently; any point on the curve is efficient; points outside are currently unattainable. Moving along the curve involves opportunity cost — producing more of one good means producing less of another.',
+            def5:'The Production Possibility Curve (PPC), also called the Production Possibility Frontier, illustrates the central economic problem using two goods. Points on the curve represent full and efficient use of resources; points inside represent unemployment or inefficiency; points outside are unattainable given current resources and technology. The curve is typically concave to the origin because of the Law of Increasing Opportunity Cost — as more resources shift into producing one good, increasingly unsuitable resources must be diverted from the other good, raising its opportunity cost. An outward shift of the entire PPC represents economic growth (from more resources, better technology, or more education/skills), while movement along the curve represents a reallocation decision. The PPC functions as a visual answer to "what" and "how" to produce, and is often illustrated with a "guns vs butter" example — a country choosing between defence spending and civilian goods.',
+            memoryTrick:'Inside PPC = wasteful; On PPC = efficient; Outside PPC = impossible (for now).',
+            example:"If India shifts resources from agriculture to manufacturing, moving along its PPC, the opportunity cost is the agricultural output given up.",
+            formulas:[{ name:'Opportunity Cost', expr:'Opportunity Cost = Value of the next-best alternative foregone', derivation:'Not a numeric formula but a comparative concept: whenever a choice is made, the value of the best alternative not chosen is the opportunity cost.', units:'Same units as the goods compared (e.g. units of the foregone good)', mistakes:'Students often confuse opportunity cost with the total cost of production — it is specifically the value of what is given up, not the price paid.' }],
+            graph:{ title:'Production Possibility Curve', xLabel:'Good A (e.g. Butter)', yLabel:'Good B (e.g. Guns)', xMax:100, yMax:100, shiftRange:20,
+              curves:[ {id:'ppc', label:'PPC', color:'#c94a05', p1:[0,90], p2:[90,0], draggable:true} ],
+              note:'Drag to shift the whole curve outward or inward — an outward shift represents economic growth (more resources or better technology).' } },
+        ]},
+      { id:'econ-systems', name:'Types of Economic Systems',
+        subtopics:[
+          { id:'capitalism-socialism-mixed', name:'Capitalism, Socialism & Mixed Economy', keywords:['capitalism','socialism','mixed economy','price mechanism'],
+            def2:'Capitalism: private ownership and free markets. Socialism: state ownership and central planning. Mixed economy: a combination of both markets and government intervention.',
+            def3:'Capitalism (e.g. USA) relies on private ownership, profit motive and the price mechanism to answer the central economic problems. Socialism (e.g. the pre-1991 USSR) relies on central planning and public ownership. Mixed economies (e.g. India) combine free markets with government intervention for social welfare.',
+            def5:'Each economic system answers the central problems of what, how, and for whom to produce differently. Under capitalism, the price mechanism — free interaction of demand and supply — allocates resources, rewarding efficiency but potentially widening inequality. Under socialism, a central planning authority decides production and distribution, aiming for equality but often at the cost of efficiency and consumer choice. A mixed economy, such as India\'s, uses markets for most production decisions while the government intervenes through taxation, subsidies, and public sector enterprises to correct market failures and pursue social welfare goals. India\'s own history illustrates this: the licence-permit-quota regime before 1991 leaned toward planning, while the 1991 liberalisation reforms shifted the balance toward market mechanisms.',
+            memoryTrick:'Capitalism = market decides; Socialism = state decides; Mixed = both decide together.',
+            example:"India's mixed economy allows private firms to operate (capitalism) while the government runs public sector banks and offers subsidies (socialism-influenced intervention).",
+            diffTable:{ title:'Capitalism vs Socialism vs Mixed Economy', columns:['Aspect','Capitalism','Socialism','Mixed Economy'], rows:[
+              ['Ownership','Private','State/Public','Both private and public'],
+              ['Decision-making','Price mechanism (markets)','Central planning','Markets plus government intervention'],
+              ['Example','United States','Pre-1991 USSR','India'],
+              ['Strength','Efficient, innovative','Equitable distribution','Balances efficiency and equity'],
+              ['Weakness','Can worsen inequality','Can be inefficient','Can suffer from both problems partially'],
+            ] } },
+        ]},
+    ]},
+  { id:'indian-economic-development', grade:11, name:'Indian Economic Development', icon:'🇮🇳',
+    topics:[
+      { id:'pre-independence-development', name:'Pre-Independence Economy & Development Indicators',
+        subtopics:[
+          { id:'pre-independence-economy', name:'The Indian Economy on the Eve of Independence', keywords:['agrarian','colonial','deindustrialization','zamindari'],
+            def2:'On the eve of 1947, India was largely agrarian with low industrial output and high poverty.',
+            def3:'Colonial policies caused deindustrialisation (destroying traditional handicrafts), an extractive zamindari land revenue system, and limited infrastructure investment focused mainly on serving British trade interests (e.g. railways built to move raw materials to ports).',
+            def5:'British colonial rule left India with a stagnant, agrarian economy: agriculture employed the vast majority of the workforce yet suffered from low productivity due to outdated techniques and exploitative land-tenure systems like zamindari. Colonial trade policy deliberately deindustrialised India — destroying competitive handicraft industries (like Bengal\'s textiles) to create a captive market for British manufactured goods, while exporting raw materials cheaply. Infrastructure such as railways was built primarily to facilitate this extraction and troop movement, not balanced national development. The result by 1947 was extremely low per capita income (roughly $70 by some estimates), widespread illiteracy, and periodic famines. This inherited structure shaped the priorities of post-independence economic planning.',
+            memoryTrick:'Colonial economy = agrarian + deindustrialised + extractive infrastructure.',
+            example:'The decline of Bengal\'s handloom textile industry under British trade policy is a classic example of colonial deindustrialisation.' },
+          { id:'development-indicators', name:'Development Indicators (Per Capita Income, HDI)', keywords:['per capita income','hdi','gini','human development'],
+            def2:'Per capita income = GDP divided by population. HDI (Human Development Index) is a composite of life expectancy, education, and income.',
+            def3:'Per capita income measures average income per person but says nothing about distribution. HDI combines health, education, and living standards into one index between 0 and 1, offering a broader welfare measure than income alone.',
+            def5:'Development indicators go beyond simple output figures to capture human welfare. Per capita income (GDP divided by population) is easy to compute but ignores income distribution and non-market activity. The Human Development Index (HDI), developed by the UNDP, combines life expectancy, mean years of schooling, and gross national income per capita into a single composite score, offering a fuller welfare picture. India\'s HDI has risen substantially — from roughly 0.4 in 1980 to about 0.64 in recent years — reflecting improvements in health and education alongside income growth. Limitations of these indicators include the exclusion of non-market production (like unpaid domestic work), informal-sector activity that is hard to measure, and inequality, which composite averages can mask; the Gini coefficient is often used alongside HDI to specifically measure income inequality.',
+            memoryTrick:'Per capita income = money only; HDI = money + health + education.',
+            example:"India's HDI rising from about 0.4 in 1980 to about 0.64 today reflects gains beyond income alone, such as better health and literacy." },
+        ]},
+      { id:'planning-liberalization', name:'Planning, Liberalization & Growth vs Development',
+        subtopics:[
+          { id:'five-year-plans', name:'Planning in India (Five-Year Plans)', keywords:['five year plan','planning commission','sectoral targets'],
+            def2:'Five-Year Plans were centrally-designed targets for growth in agriculture, industry, and social sectors, run from 1951 to 2017.',
+            def3:'Example: the First Plan (1951-56) focused on agriculture and irrigation; the Second Plan (1956-61) emphasised heavy industry; later plans (7th, 8th) shifted toward modernisation and, eventually, liberalisation.',
+            def5:'India adopted Five-Year Plans from 1951 under the Planning Commission, setting macroeconomic targets (growth rate, sectoral allocation) for the economy. The First Plan (1951-56) prioritised agriculture and irrigation to address post-independence food shortages. The Second Plan (1956-61), guided by the Mahalanobis model, emphasised heavy industry and public-sector-led industrialisation. Later plans progressively shifted focus: the Fifth Plan (1970s) targeted poverty alleviation directly, while the Seventh Plan (1980s) began emphasising modernisation and productivity. The planning era formally ended with the 12th Plan in 2017, replaced by NITI Aayog\'s more flexible policy approach. This history shows India\'s gradual shift from rigid central planning toward a more market-oriented framework.',
+            memoryTrick:'Plan 1 = agriculture; Plan 2 = heavy industry; Later plans = modernisation, then liberalisation.',
+            example:'The Second Five-Year Plan\'s emphasis on heavy industries like steel exemplifies planning aimed at rapid industrialisation.' },
+          { id:'lpg-reforms', name:'Liberalization, Privatization & Globalization (LPG)', keywords:['liberalization','privatization','globalization','1991 reforms'],
+            def2:'Liberalization: removing government controls on economic activity. Privatization: transferring public-sector ownership to private hands. Globalization: greater integration with world trade and investment.',
+            def3:'In 1991, facing a balance of payments crisis, India dismantled the licence-permit raj (liberalization), reduced trade tariffs and welcomed foreign investment (globalization), and began disinvesting in public sector undertakings like Air India (privatization).',
+            def5:'The 1991 LPG reforms were a decisive break from India\'s earlier planned-economy approach, triggered by a severe balance of payments crisis. Liberalization removed the licence-permit-quota system that had required government approval for most business decisions, freeing firms to expand and enter markets more easily. Privatization involved reducing state ownership through disinvestment in public sector undertakings, such as the sale of a majority stake in Air India decades later, and encouraging private participation in sectors once reserved for the state. Globalization opened India to foreign direct investment and reduced trade barriers, integrating the economy with global markets. Effects have included significantly higher GDP growth (averaging 6-7% in subsequent decades) alongside criticism that the benefits have been unevenly distributed, contributing to rising inequality even as absolute poverty fell.',
+            memoryTrick:'LPG = Liberalization (deregulate), Privatization (sell PSUs), Globalization (open borders).',
+            example:'The 1991 reduction of import tariffs and the later disinvestment of Air India illustrate globalization and privatization respectively.' },
+          { id:'growth-vs-development', name:'Growth vs Development (India & China)', keywords:['gdp growth','hdi','comparative','china'],
+            def2:'Growth is a quantitative rise in output (GDP); development is a broader, qualitative improvement in living standards.',
+            def3:'India\'s GDP growth (roughly 6%) has generally trailed China\'s (historically over 7%), but India also faces higher poverty and lower manufacturing share of GDP, showing growth and development do not always move together.',
+            def5:'Economic growth refers strictly to a rise in the quantity of output (real GDP), while economic development is a broader concept covering structural and qualitative changes — poverty reduction, health, education and equality. Comparing India and China illustrates the distinction: China\'s manufacturing sector has historically comprised a much larger share of GDP (around 40%) compared to India\'s (around 15%), and China has achieved faster poverty reduction and higher per-capita income. However, both countries share certain development challenges, including managing inflation and, at times, elevated unemployment. This comparison underscores why policy-makers track development indicators (HDI, poverty rates) alongside pure GDP growth figures — a country can grow without developing broadly if the gains are not translated into wider welfare improvements.',
+            memoryTrick:'Growth = more output; Development = better lives.',
+            example:"China's higher share of manufacturing in GDP compared to India illustrates a structural difference behind their differing growth and development paths." },
+        ]},
+      { id:'challenges-sustainability', name:'Current Challenges & Sustainable Development',
+        subtopics:[
+          { id:'poverty-unemployment', name:'Poverty & Unemployment', keywords:['poverty','unemployment','disguised unemployment','mgnrega'],
+            def2:'Poverty: inability to meet basic minimum needs. Unemployment: those willing and able to work but unable to find jobs.',
+            def3:'Types of unemployment include cyclical (due to falling demand), structural (skills mismatch), seasonal (agricultural off-season), and disguised (underemployment, common in Indian agriculture). MGNREGA is a key government response.',
+            def5:'Poverty in India is measured relative to a minimum consumption/income threshold, and remains a major challenge despite decades of growth. Unemployment takes several distinct forms: cyclical unemployment arises from economic downturns reducing labour demand; structural unemployment arises from a mismatch between workers\' skills and available jobs; seasonal unemployment is common in agriculture during the off-season; and disguised unemployment describes a situation, common on Indian farms, where more people work on a plot of land than are actually needed, so removing some workers would not reduce output. Government responses include MGNREGA, which guarantees 100 days of rural wage employment, and skill-development programmes aimed at reducing structural unemployment by better matching worker skills to market needs.',
+            memoryTrick:'Disguised unemployment = too many hands on too little land, with zero marginal product.',
+            example:'A family farm employing five members when only three are needed illustrates disguised unemployment.' },
+          { id:'sustainable-development', name:'Sustainable Development', keywords:['sustainable development','environment','renewable energy'],
+            def2:'Sustainable development means meeting present needs without compromising the ability of future generations to meet their own needs.',
+            def3:'It requires balancing economic growth with environmental protection — for example, promoting renewable energy (solar power in India) instead of relying solely on fossil fuels that deplete resources and pollute.',
+            def5:'Sustainable development, as defined by the Brundtland Commission, means meeting present needs without compromising future generations\' ability to meet theirs. Its scope requires balancing economic growth against ecological limits — described by economists as a "race between invention and depletion," where technological innovation must outpace resource depletion and environmental damage for growth to remain viable long-term. India\'s policy responses include a major push into renewable energy (solar and wind capacity expansion), afforestation programmes, and international commitments like the Paris Climate Accord. The concept functions to remind policymakers that GDP growth achieved by depleting natural capital (forests, clean water, stable climate) is not truly sustainable, since it borrows against future generations\' welfare.',
+            memoryTrick:'Sustainable development = growth today without stealing from tomorrow.',
+            example:"India's expansion of solar power capacity is a policy response aimed at sustainable development." },
+        ]},
+    ]},
+  { id:'statistics', grade:11, name:'Statistics', icon:'📊',
+    topics:[
+      { id:'stats-basics-presentation', name:'Scope of Statistics & Data Presentation',
+        subtopics:[
+          { id:'statistics-scope', name:'Definition & Scope of Statistics', keywords:['data','collection','analysis','mospi'],
+            def2:'Statistics is the collection, organisation, and analysis of data to support decision-making.',
+            def3:'In economics, statistics is used to collect and analyse data such as prices and incomes — for example, inflation data collected by the RBI or MOSPI for policy decisions.',
+            def5:'Statistics in economics covers the collection, presentation, and analysis of numerical data to identify trends (such as GDP growth or CPI inflation) and support forecasting and policy decisions. Key Indian data sources include MOSPI (Ministry of Statistics and Programme Implementation) and CMIE. Limitations include sample bias in surveys, time lags between data collection and publication, and the difficulty of capturing informal-sector activity, which is large in India. Despite these limitations, statistics remains essential for evidence-based economic policymaking, such as the National Sample Survey Office\'s (NSSO) household surveys informing poverty estimates.',
+            memoryTrick:'Statistics = turning raw data into decision-ready information.',
+            example:'The RBI uses CPI inflation data, collected and compiled by MOSPI, to decide whether to raise or lower interest rates.' },
+          { id:'data-presentation', name:'Data Presentation (Tables, Graphs)', keywords:['bar chart','pie chart','frequency distribution'],
+            def2:'Data can be presented as tables, bar charts, pie charts, histograms, or frequency distributions.',
+            def3:'Tables organise raw data into rows and columns; bar charts compare categories; pie charts show proportions of a whole; line graphs show trends over time — for example, a line graph of India\'s GDP growth over a decade.',
+            def5:'Effective data presentation makes patterns visible that raw numbers obscure. Tables systematically organise data (e.g. national income by year) for reference and further calculation. Bar charts are useful for comparing discrete categories (e.g. sectoral GDP contribution). Pie charts show how a whole divides into parts (e.g. population by age group). Line graphs display trends over time (e.g. GDP growth rate across years) and are especially useful for spotting cycles or turning points. Histograms display frequency distributions of continuous data (e.g. income brackets). Choosing the correct chart type for the data and question being asked is itself an important analytical skill, since a poorly chosen chart can mislead rather than clarify.',
+            memoryTrick:'Bar = compare categories; Pie = show proportions; Line = show trend over time.',
+            example:"A pie chart showing India's population by age group (0-14, 15-64, 65+) clearly displays the country's demographic structure." },
+        ]},
+      { id:'central-tendency-dispersion', name:'Central Tendency, Dispersion & Correlation',
+        subtopics:[
+          { id:'central-tendency', name:'Measures of Central Tendency (Mean, Median, Mode)', keywords:['mean','median','mode','average'],
+            def2:'Mean is the average; median is the middle value; mode is the most frequently occurring value.',
+            def3:'For data {1,3,3,5}: mean = (1+3+3+5)/4 = 3; median (middle value) = 3; mode (most frequent) = 3. All three measures agree in this simple case.',
+            def5:'The three main measures of central tendency each have distinct properties. The mean uses every data point, making it sensitive to extreme values (outliers) — a single very high income can pull up an average income figure misleadingly. The median, the middle value when data is ordered, is robust to outliers and is often preferred for skewed data like income distributions. The mode, the most frequently occurring value, is useful for categorical data where mean and median are not meaningful. In economics, median income is often reported alongside mean income specifically because income distributions are typically right-skewed (a small number of very high earners), so the mean overstates typical income.',
+            memoryTrick:'Mean = average; Median = middle; Mode = most common.',
+            example:'Median household income is often reported instead of mean income because a few extremely wealthy households would distort the mean.',
+            formulas:[{ name:'Arithmetic Mean', expr:'x̄ = Σx / n', derivation:'Sum all data values (Σx) and divide by the number of observations (n).', units:'Same units as the data', mistakes:'Forgetting to divide by the correct n, especially when data is grouped into a frequency table.' }] },
+          { id:'dispersion', name:'Measures of Dispersion (Range, Variance, SD)', keywords:['range','variance','standard deviation'],
+            def2:'Range, variance, and standard deviation (SD) all measure how spread out a set of data is.',
+            def3:'For data {2,4,6}: range = 6−2 = 4; mean = 4; variance = Σ(x−mean)²/n = (4+0+4)/3 = 2.67; SD = √2.67 ≈ 1.63.',
+            def5:'Dispersion measures describe how spread out data values are around the centre. Range is the simplest (maximum minus minimum) but ignores all values in between. Variance averages the squared deviations from the mean, giving more weight to larger deviations; standard deviation (the square root of variance) returns the measure to the original units, making it more interpretable. In economics, a high variance in income data signals greater inequality, while high variance in GDP growth rates over time signals a more volatile, less predictable economy. The distinction between population and sample formulas (dividing by n vs n−1) matters for statistical inference, though board-level questions typically use the simpler population formula.',
+            memoryTrick:'Variance = average of squared deviations; SD = square root of variance (back to original units).',
+            example:"A country with highly volatile GDP growth rates year-to-year has a higher variance than one with steady, predictable growth.",
+            formulas:[{ name:'Variance & Standard Deviation', expr:'σ² = Σ(x − x̄)² / n;  σ = √σ²', derivation:'Subtract the mean from each value, square the differences (to remove negative signs), average them (variance), then take the square root to return to original units (SD).', units:'Variance is in squared units; SD is in the same units as the original data', mistakes:'Forgetting to square the deviations, or forgetting to take the square root at the end to get SD from variance.' }] },
+          { id:'correlation', name:'Correlation', keywords:['correlation','positive','negative','causation'],
+            def2:'Correlation measures the direction and strength of a linear relationship between two variables, ranging from -1 to +1.',
+            def3:'A positive correlation (e.g. income and consumption) means both variables rise together; a negative correlation (e.g. price and quantity demanded) means one rises as the other falls. Correlation does not imply causation.',
+            def5:'Correlation quantifies the strength and direction of a linear association between two variables using Pearson\'s coefficient (r), which ranges from -1 (perfect negative relationship) through 0 (no linear relationship) to +1 (perfect positive relationship). A scatter plot visually displays this relationship. In economics, income and consumption typically show strong positive correlation, while price and quantity demanded typically show negative correlation, consistent with the law of demand. A crucial caution, frequently tested, is that correlation does not imply causation — two variables can move together due to a third, unmeasured factor, or purely by coincidence, without one causing the other.',
+            memoryTrick:'r close to +1 or -1 = strong relationship; r close to 0 = weak or no relationship. Correlation ≠ causation.',
+            example:'Ice cream sales and drowning incidents are positively correlated, but both are actually driven by a third factor: hot weather, not by one causing the other.' },
+        ]},
+      { id:'index-numbers-math-tools', name:'Index Numbers & Mathematical Tools',
+        subtopics:[
+          { id:'index-numbers-basic', name:'Index Numbers', keywords:['index number','base year','cpi'],
+            def2:'An index number is a measure showing relative change in a variable compared to a base year (set at 100).',
+            def3:'The Consumer Price Index (CPI) tracks inflation: if the CPI base year value is 100 and the current value is 155, prices have risen 55% since the base year.',
+            def5:'Index numbers convert raw data into a comparative measure relative to a chosen base period, conventionally set to 100. The Consumer Price Index (CPI) is the most common economic example, tracking the cost of a fixed basket of goods over time to measure inflation. Two common methods exist for constructing such indices: Laspeyres (using base-year quantities as weights) and Paasche (using current-year quantities as weights), which can give slightly different results due to changing consumption patterns — a limitation known as substitution bias, since consumers shift away from goods that become relatively more expensive.',
+            memoryTrick:'Index = (Current value ÷ Base value) × 100.',
+            example:'If the CPI was 100 in the base year and is 155 today, prices have risen by 55% over that period.',
+            formulas:[{ name:'Index Number', expr:'Index = (Current value / Base value) × 100', derivation:'Divide the current-period value by the base-period value, then multiply by 100 to express it as a percentage of the base.', units:'Index points (dimensionless)', mistakes:'Using the wrong year as the base value, or forgetting to multiply by 100.' }],
+            numericalGen:'index-numbers' },
+          { id:'math-tools', name:'Mathematical Tools (Linear Equations & Slope)', keywords:['slope','linear equation','straight line'],
+            def2:'A straight line is represented by y = mx + c, where m is the slope and c is the y-intercept.',
+            def3:'Slope m = (y2−y1)/(x2−x1). Example: a line from (1,2) to (3,6) has slope (6−2)/(3−1) = 2.',
+            def5:'Linear equations are the basic mathematical tool behind demand and supply curves in introductory economics, which are typically drawn as straight lines for simplicity. The slope of a line, calculated as the change in y divided by the change in x between two points, indicates how steeply one variable responds to a change in the other — for a demand curve, the slope indicates how much quantity demanded changes for a given change in price. Being able to derive the equation of a line from two known points, and to compute its slope, underlies numerical problems on demand and supply shifts throughout the syllabus.',
+            memoryTrick:'Slope = rise over run = (y2−y1)/(x2−x1).',
+            example:'A demand curve passing through (price=10, quantity=80) and (price=20, quantity=60) has a slope of (60−80)/(20−10) = −2, showing quantity falls by 2 units per ₹1 price rise.' },
+        ]},
+    ]},
+  { id:'microeconomic-theory', grade:12, name:'Microeconomic Theory', icon:'📈',
+    topics:[
+      { id:'demand-elasticity', name:'Demand & Elasticity',
+        subtopics:[
+          { id:'law-of-demand', name:'Demand & the Law of Demand', keywords:['law of demand','inverse relation','determinants of demand'],
+            def2:'Demand is the quantity of a good buyers are willing and able to purchase at a given price. The Law of Demand states quantity demanded falls as price rises, other things being equal.',
+            def3:'Example: if the price of rice rises, quantity demanded falls, shown by a downward-sloping demand curve. Determinants of demand include income, tastes, and prices of related goods.',
+            def5:'The Law of Demand describes an inverse relationship between price and quantity demanded, holding other factors (ceteris paribus) constant. The market demand curve is derived by horizontally summing individual demand curves. Determinants that shift the entire demand curve (as opposed to movements along it) include income (with normal and inferior goods responding oppositely), tastes and preferences, prices of substitutes and complements (joint demand), and expectations of future prices. Exceptions to the law include Giffen goods (where quantity demanded rises as price rises, due to a dominant income effect for a very inferior good) and Veblen goods (status/luxury goods where higher price signals prestige and can increase desirability).',
+            memoryTrick:'Law of Demand = price up, quantity down (ceteris paribus).',
+            example:'Jowar (a coarse grain) can behave as a Giffen good for very poor households: if its price rises, they may buy more of it because they can no longer afford pricier substitutes like rice.',
+            graph:{ title:'Demand Curve', xLabel:'Quantity', yLabel:'Price', xMax:100, yMax:100, shiftRange:20,
+              curves:[ {id:'demand', label:'Demand', color:'#c94a05', p1:[0,90], p2:[90,0], draggable:true} ],
+              note:'Drag to shift the demand curve left or right — a rightward shift represents an increase in demand at every price (e.g. from rising income).' } },
+          { id:'elasticity-of-demand', name:'Elasticity of Demand', keywords:['price elasticity','income elasticity','cross elasticity','elastic','inelastic'],
+            def2:'Elasticity of demand measures the responsiveness of quantity demanded to a change in price, income, or the price of another good.',
+            def3:'Price elasticity: %ΔQd / %ΔP. If |E|>1, elastic (e.g. luxury goods); if |E|<1, inelastic (e.g. necessities like milk); if |E|=1, unitary. Income elasticity and cross elasticity work similarly for income and related-good prices.',
+            def5:'Elasticity of demand comes in three key forms tested at board level: price elasticity (responsiveness to a good\'s own price), income elasticity (responsiveness to income changes — positive for normal goods, negative for inferior goods), and cross elasticity (responsiveness to a related good\'s price — positive for substitutes, negative for complements). Price elasticity is calculated using the percentage method (favoured at board level over calculus-based point elasticity): %ΔQuantity ÷ %ΔPrice. Factors affecting price elasticity include the availability of substitutes (more substitutes → more elastic), whether the good is a necessity or luxury, and the time period considered (demand tends to become more elastic over longer time horizons as consumers find alternatives). The total revenue test provides a practical way to infer elasticity: if a price rise increases total revenue, demand was inelastic; if it decreases total revenue, demand was elastic.',
+            memoryTrick:'Elastic demand = revenue and price move opposite ways; Inelastic demand = revenue and price move together.',
+            example:"Milk has low (inelastic) price elasticity since it's a necessity with few substitutes, while branded soft drinks have high (elastic) price elasticity since substitutes are widely available.",
+            formulas:[{ name:'Price Elasticity of Demand', expr:'E_d = (%ΔQuantity Demanded) / (%ΔPrice)', derivation:'Calculate percentage change in quantity demanded and percentage change in price separately, then divide the former by the latter.', units:'No units (a pure ratio)', mistakes:'Forgetting that price and quantity move in opposite directions for normal demand, which makes E_d negative — by convention it is often reported as an absolute value.' }],
+            numericalGen:'price-elasticity-demand' },
+        ]},
+      { id:'supply-market-equilibrium', name:'Supply & Market Equilibrium',
+        subtopics:[
+          { id:'law-of-supply', name:'Supply & the Law of Supply', keywords:['law of supply','determinants of supply'],
+            def2:'Supply is the quantity producers are willing and able to sell at a given price. The Law of Supply states quantity supplied rises as price rises.',
+            def3:'Supply function: Qs = f(Price, technology, input costs, taxes/subsidies). Example: if input costs rise, supply decreases (the whole curve shifts left) even though the law of supply itself still holds for that new curve.',
+            def5:'The Law of Supply describes a direct (positive) relationship between price and quantity supplied, ceteris paribus, reflecting that higher prices make production more profitable and encourage firms to supply more. Determinants that shift the entire supply curve include the cost of inputs, technology (better technology shifts supply right), taxes (which raise effective cost and shift supply left) and subsidies (which shift supply right), and the number of sellers in the market. Time period matters for the elasticity of supply too: supply tends to become more elastic over the long run as firms can adjust capacity, but in the very short run (e.g. perishable agricultural goods), supply can be fixed regardless of price — sometimes described as a backward-bending or perfectly inelastic supply curve.',
+            memoryTrick:'Law of Supply = price up, quantity supplied up (ceteris paribus).',
+            example:'A tax on sugary drinks raises production costs, shifting the entire supply curve to the left (less supplied at every price).',
+            graph:{ title:'Supply Curve', xLabel:'Quantity', yLabel:'Price', xMax:100, yMax:100, shiftRange:20,
+              curves:[ {id:'supply', label:'Supply', color:'#1e8e5a', p1:[0,10], p2:[90,100], draggable:true} ],
+              note:'Drag to shift the supply curve — a leftward shift represents a fall in supply at every price (e.g. from rising input costs).' } },
+          { id:'market-equilibrium', name:'Market Equilibrium & Price Controls', keywords:['equilibrium price','excess demand','excess supply','price ceiling','price floor'],
+            def2:'Market equilibrium occurs where quantity demanded equals quantity supplied, determining the equilibrium price.',
+            def3:'If demand increases (curve shifts right), equilibrium price and quantity both rise. If supply falls (curve shifts left, e.g. due to a flood damaging crops), price rises while quantity falls.',
+            def5:'Market equilibrium is the price-quantity combination where the demand and supply curves intersect, so that quantity demanded exactly equals quantity supplied with no tendency for price to change. Away from equilibrium, a price above equilibrium creates excess supply (a surplus), pushing price back down; a price below equilibrium creates excess demand (a shortage), pushing price back up. Governments sometimes intervene with price controls: a price ceiling (maximum price, set below equilibrium) creates a persistent shortage, as seen with historical rent controls; a price floor (minimum price, set above equilibrium) creates a persistent surplus, as seen with agricultural minimum support prices (MSP) in India, where the government often must purchase the surplus itself.',
+            memoryTrick:'Price ceiling (below equilibrium) → shortage; Price floor (above equilibrium) → surplus.',
+            example:"India's Minimum Support Price (MSP) for crops like wheat is a price floor — when set above the market equilibrium, it can create a surplus that the government procures.",
+            graph:{ title:'Market Equilibrium (Demand & Supply)', xLabel:'Quantity', yLabel:'Price', xMax:100, yMax:100, shiftRange:20, equilibriumOf:['demand','supply'], eqLabel:'Equilibrium', xMarker:'Q', yMarker:'P',
+              curves:[
+                {id:'demand', label:'Demand', color:'#c94a05', p1:[0,90], p2:[90,0], draggable:true},
+                {id:'supply', label:'Supply', color:'#1e8e5a', p1:[0,10], p2:[90,100], draggable:true},
+              ],
+              note:'Drag either curve to see the equilibrium price and quantity adjust instantly — try shifting demand right to simulate a rise in incomes.' } },
+        ]},
+      { id:'production-cost-revenue', name:'Production, Cost & Revenue',
+        subtopics:[
+          { id:'production-function', name:'Production Function & Law of Variable Proportions', keywords:['total product','marginal product','average product','returns to scale'],
+            def2:'The production function shows the relationship between inputs and output. In the short run, one input is variable (e.g. labour); in the long run, all inputs can vary (returns to scale).',
+            def3:'Total Product (TP) is total output; Average Product (AP) = TP/units of input; Marginal Product (MP) = change in TP from one more unit of input. The Law of Variable Proportions describes three stages: increasing, then diminishing, then negative returns.',
+            def5:'The short-run production function holds at least one input fixed (typically capital) while varying another (typically labour), governed by the Law of Variable Proportions. In Stage I, marginal product rises (increasing returns) as the fixed factor is used more fully. In Stage II, marginal product falls but remains positive (diminishing returns) — this is where rational firms operate. In Stage III, marginal product turns negative (too many variable inputs crowd the fixed factor, reducing total output) — for example, adding too many workers to a small field eventually gets in each other\'s way and total output falls. The long-run production function instead examines returns to scale: increasing returns to scale occur if doubling all inputs more than doubles output; constant returns if output exactly doubles; decreasing returns if output less than doubles.',
+            memoryTrick:'MP rising = Stage I; MP positive but falling = Stage II (rational stage); MP negative = Stage III.',
+            example:'Adding more and more labourers to a fixed-size farm eventually causes them to get in each other\'s way, illustrating Stage III (negative marginal product).',
+            graph:{ title:'Total, Average & Marginal Product', xLabel:'Units of Labour', yLabel:'Product', xMax:10, yMax:100, shiftRange:15,
+              curves:[ {id:'mp', label:'Marginal Product', color:'#c94a05', p1:[1,80], p2:[9,10], draggable:true} ],
+              note:'A simplified view of marginal product falling as more labour is added to a fixed factor — drag to see the diminishing-returns pattern shift.' } },
+          { id:'cost-revenue-curves', name:'Cost & Revenue Curves', keywords:['total cost','marginal cost','average cost','total revenue','marginal revenue'],
+            def2:'Total Cost = Fixed Cost + Variable Cost. Marginal Cost = change in Total Cost per extra unit. Total Revenue = Price × Quantity; Marginal Revenue = change in Total Revenue per extra unit sold.',
+            def3:'Short-run cost curves (AVC, AC, MC) are U-shaped; MC intersects AC and AVC at their minimum points. In perfect competition, AR = MR = Price (a horizontal line); under monopoly, AR (and MR, below it) slope downward.',
+            def5:'Cost curves in the short run take a U-shape due to the Law of Variable Proportions: average variable cost and average cost first fall (as productivity rises) then rise (as diminishing returns set in), while marginal cost falls and then rises more sharply, always crossing AVC and AC exactly at their minimum points — a fixed mathematical relationship, not a coincidence. On the revenue side, a perfectly competitive firm is a "price taker," so its Average Revenue and Marginal Revenue curves are both horizontal at the market price. A monopolist, by contrast, faces the entire downward-sloping market demand curve as its Average Revenue curve, with Marginal Revenue falling twice as steeply (mathematically, MR\'s slope is twice AR\'s slope for a linear demand curve). A firm maximises profit at the output where Marginal Cost equals Marginal Revenue (MC = MR); producing beyond this point adds more to cost than to revenue.',
+            memoryTrick:'MC always cuts AC and AVC at their lowest point. Profit-maximising rule: MC = MR.',
+            example:'A firm producing where MC = MR maximises profit; if it produced one more unit, that unit would cost more to make than it earns in revenue.',
+            formulas:[
+              { name:'Average & Marginal Cost', expr:'AC = TC/Q;  MC = ΔTC/ΔQ', derivation:'Average cost divides total cost by output; marginal cost is the change in total cost from producing one additional unit.', units:'₹ per unit', mistakes:'Confusing marginal cost (cost of the next unit) with average cost (cost per unit so far).' },
+              { name:'Profit Maximisation Rule', expr:'Profit is maximised where MC = MR', derivation:'As long as MR > MC, producing one more unit adds more revenue than cost, so profit rises; once MC > MR, an extra unit reduces profit. The optimal point is exactly where they are equal.', units:'—', mistakes:'Assuming profit is maximised where price is highest, rather than where MC = MR.' },
+            ],
+            numericalGen:'cost-revenue-breakeven',
+            graph:{ title:'Cost Curves (AC & MC)', xLabel:'Quantity', yLabel:'Cost per unit', xMax:100, yMax:100, shiftRange:20,
+              curves:[ {id:'ac', label:'Average Cost', color:'#c94a05', p1:[5,70], p2:[95,55], draggable:true}, {id:'mc', label:'Marginal Cost', color:'#1e8e5a', p1:[5,40], p2:[95,90], draggable:true} ],
+              note:'A simplified straight-line approximation of the U-shaped AC/MC pair — drag either curve to see how the crossing point shifts.' } },
+        ]},
+      { id:'market-forms', name:'Market Forms',
+        subtopics:[
+          { id:'market-forms-overview', name:'Perfect Competition, Monopoly, Oligopoly & Monopolistic Competition', keywords:['perfect competition','monopoly','oligopoly','monopolistic competition','price taker','price maker'],
+            def2:'Market forms range from Perfect Competition (many firms, identical products, price takers) to Monopoly (single firm, price maker), with Oligopoly (few firms) and Monopolistic Competition (many firms, differentiated products) in between.',
+            def3:'Perfect competition: no entry barriers, firms are price takers (e.g. agricultural markets). Monopoly: high entry barriers, firm is a price maker (e.g. a local water utility). Oligopoly: a few dominant firms (e.g. the car industry). Monopolistic competition: many firms, differentiated products (e.g. restaurants).',
+            def5:'Market forms are distinguished chiefly by the number of firms, entry barriers, and the degree of product differentiation. In perfect competition, numerous small firms sell an identical product with no barriers to entry, making each firm a price taker with a horizontal demand curve at the market price; in the short run firms may earn abnormal profit or loss, but free entry/exit drives long-run profit to a normal level. In monopoly, a single firm with significant barriers to entry (legal, technological, or resource-based) faces the entire downward-sloping market demand curve, allowing it to set price above marginal cost, restricting output relative to the competitive outcome — a source of allocative inefficiency. Oligopoly features a few large, interdependent firms — a change in one firm\'s pricing directly affects rivals\' decisions, encouraging strategic behaviour and sometimes tacit collusion. Monopolistic competition sits between perfect competition and monopoly: many firms compete but sell differentiated products (through branding, quality, or location), giving each some pricing power despite free entry keeping long-run profits near normal.',
+            memoryTrick:'PC = price taker, many identical sellers; Monopoly = price maker, one seller; Oligopoly = few sellers; Monopolistic competition = many sellers, differentiated goods.',
+            example:'Wheat farming approximates perfect competition (identical product, many sellers), while a city\'s sole water utility is a natural monopoly.',
+            diffTable:{ title:'Market Forms Compared', columns:['Feature','Perfect Competition','Monopoly','Oligopoly','Monopolistic Competition'], rows:[
+              ['Number of firms','Very many','One','Few','Many'],
+              ['Product','Identical','Unique (no substitutes)','May be identical or differentiated','Differentiated'],
+              ['Entry barriers','None','Very high','High','Low'],
+              ['Price control','None (price taker)','Full (price maker)','Some (interdependent)','Some (via differentiation)'],
+              ['Example','Agricultural produce','Local water utility','Car manufacturing','Restaurants'],
+            ] } },
+        ]},
+    ]},
+  { id:'income-employment', grade:12, name:'Theory of Income & Employment', icon:'💵',
+    topics:[
+      { id:'ad-as-theory', name:'Aggregate Demand & Aggregate Supply',
+        subtopics:[
+          { id:'aggregate-demand', name:'Aggregate Demand (AD)', keywords:['aggregate demand','consumption function','ad curve'],
+            def2:'Aggregate Demand is total planned spending in the economy at different price levels: AD = C + I + G + (X − M).',
+            def3:'Components: Consumption (C), Investment (I), Government spending (G), Net Exports (X−M). If consumption rises (e.g. due to higher income), the entire AD curve shifts right.',
+            def5:'Aggregate Demand represents the sum of all planned expenditure in an economy at each price level, comprising household consumption (C), business investment (I), government spending (G), and net exports (X−M). The AD curve slopes downward due to the wealth effect (lower price levels make existing money holdings buy more, raising real spending) and the interest rate effect (lower price levels reduce the demand for money, lowering interest rates and boosting investment spending). The consumption function, C = a + bY (where a is autonomous consumption and b is the marginal propensity to consume), underlies the C component and is foundational to deriving the equilibrium level of income in the Keynesian model.',
+            memoryTrick:'AD = C + I + G + (X − M).',
+            example:'A cut in income tax raises disposable income, increasing consumption (C) and shifting the entire AD curve to the right.' },
+          { id:'aggregate-supply', name:'Aggregate Supply (AS)', keywords:['aggregate supply','sras','lras','potential output'],
+            def2:'Aggregate Supply is the total output supplied at different price levels. Short-run AS (SRAS) slopes upward; Long-run AS (LRAS) is vertical at full-employment (potential) output.',
+            def3:'If input costs (e.g. wages or oil prices) rise, SRAS shifts left, potentially causing stagflation (higher prices with lower output) — as seen in the 1973 oil shock.',
+            def5:'Short-run Aggregate Supply (SRAS) slopes upward because, with nominal wages relatively fixed in the short run, a higher price level raises firms\' revenue relative to costs, encouraging more output. Long-run Aggregate Supply (LRAS) is vertical at the economy\'s full-employment or potential output level, since in the long run wages and prices adjust fully and output is determined by real factors (labour, capital, technology) rather than the price level. A leftward shift in SRAS — for example from a sudden oil price shock raising production costs across the economy — can cause stagflation, a simultaneous rise in price level and fall in output, famously experienced worldwide after the 1973 oil crisis.',
+            memoryTrick:'SRAS = upward-sloping (wages sticky); LRAS = vertical (full-employment output).',
+            example:'The 1973 oil price shock sharply raised production costs worldwide, shifting SRAS left and causing stagflation.',
+            graph:{ title:'AD-AS Model', xLabel:'Real Output', yLabel:'Price Level', xMax:100, yMax:100, shiftRange:20, equilibriumOf:['ad','as'], eqLabel:'Macro equilibrium', xMarker:'Y', yMarker:'P',
+              curves:[
+                {id:'ad', label:'Aggregate Demand', color:'#c94a05', p1:[0,85], p2:[85,5], draggable:true},
+                {id:'as', label:'Aggregate Supply (SR)', color:'#1e8e5a', p1:[5,10], p2:[80,90], draggable:true},
+              ],
+              note:'Drag AS left to simulate a cost shock (stagflation): watch the price level rise while equilibrium output falls.' } },
+        ]},
+      { id:'equilibrium-multiplier', name:'Equilibrium Income, Multiplier & Gaps',
+        subtopics:[
+          { id:'equilibrium-income', name:'Equilibrium Level of Income (Keynesian Cross)', keywords:['keynesian cross','45 degree line','equilibrium income'],
+            def2:'Equilibrium income is the level of national output where planned aggregate expenditure equals planned aggregate output (income).',
+            def3:'In a simple two-sector economy (no government/foreign trade): Y = C + I. Using the consumption function C = a + bY, equilibrium income Y = (a + I)/(1 − b).',
+            def5:'The Keynesian Cross model determines equilibrium income by plotting planned aggregate expenditure (C + I, and in fuller versions + G + (X−M)) against a 45-degree line representing all points where expenditure equals income/output. Equilibrium occurs where the expenditure line crosses the 45-degree line. If planned expenditure exceeds current output, firms find inventories depleting and increase production, raising income until equilibrium is restored; if planned expenditure falls short of output, unsold inventories accumulate and firms cut production. Leakages from the circular flow (savings, taxes, imports) must equal injections (investment, government spending, exports) at equilibrium.',
+            memoryTrick:'Equilibrium income = where planned spending line crosses the 45° line.',
+            example:'If MPC = 0.8 and autonomous spending (a + I) = ₹20 crore, equilibrium income Y = 20/(1−0.8) = ₹100 crore.' },
+          { id:'multiplier', name:'The Multiplier', keywords:['multiplier','mpc','mps','induced consumption'],
+            def2:'The multiplier shows how an initial change in spending leads to a larger final change in national income: k = 1/(1 − MPC).',
+            def3:'If MPC = 0.75, the multiplier = 4, so a ₹10 crore rise in investment eventually raises national income by ₹40 crore, through rounds of induced consumption spending.',
+            def5:'The multiplier effect arises because one person\'s spending becomes another person\'s income, which is partly re-spent (induced consumption) and partly saved, in a diminishing chain: an initial ₹10 crore of investment might generate ₹7.5 crore of further spending (if MPC=0.75), then ₹5.625 crore, and so on, summing to a total change in income several times the initial injection. The multiplier formula, k = 1/(1−MPC) = 1/MPS, shows the multiplier is larger when the marginal propensity to consume is higher (i.e., people spend, rather than save, a larger share of extra income). Assumptions behind the simple multiplier include unused productive capacity (so output can actually expand), no imports (a closed economy, since imports are a leakage that reduces the multiplier), and constant prices.',
+            memoryTrick:'Multiplier = 1 ÷ MPS (since MPS = 1 − MPC); higher MPC means a bigger multiplier.',
+            example:'A government infrastructure project costing ₹10 crore, in an economy with MPC=0.75, could eventually raise national income by ₹40 crore through the multiplier effect.',
+            formulas:[{ name:'Investment Multiplier', expr:'k = 1 / (1 − MPC) = 1 / MPS;  ΔY = k × ΔI', derivation:'Since each round of new income is partly re-spent (MPC) and partly saved (MPS = 1−MPC), summing the infinite geometric series of induced spending rounds gives total ΔY = ΔI × 1/(1−MPC).', units:'No units for k (a pure multiple); ΔY in the same currency units as ΔI', mistakes:'Using MPC instead of MPS in the denominator, or forgetting to subtract MPC from 1 first.' }],
+            numericalGen:'multiplier' },
+          { id:'inflationary-deflationary-gaps', name:'Inflationary & Deflationary Gaps', keywords:['inflationary gap','deflationary gap','full employment output'],
+            def2:'An inflationary gap occurs when planned aggregate demand exceeds full-employment output; a deflationary gap occurs when it falls short.',
+            def3:'Inflationary gap: excess demand pushes up prices (demand-pull inflation) since output cannot rise further at full employment. Deflationary gap: insufficient demand leaves resources unemployed, as in a recession.',
+            def5:'These gaps are measured against the full-employment (potential) level of output on the AD-AS diagram, where LRAS is vertical. An inflationary gap arises when planned aggregate expenditure exceeds what the economy can produce at full employment; since real output cannot expand further, the excess demand instead bids up prices, generating demand-pull inflation. A deflationary (or recessionary) gap arises when planned aggregate expenditure falls short of full-employment output, leaving some resources — notably labour — involuntarily unemployed, as seen during the 2008 global financial crisis. Governments correct these gaps through fiscal policy (adjusting government spending or taxes) or monetary policy (adjusting interest rates), aiming to shift AD back toward the full-employment level without triggering the opposite gap.',
+            memoryTrick:'Inflationary gap = too much demand (prices rise); Deflationary gap = too little demand (unemployment rises).',
+            example:'The 2008 global financial crisis created a deflationary gap worldwide, as aggregate demand collapsed well below full-employment output.' },
+        ]},
+    ]},
+  { id:'money-banking', grade:12, name:'Money & Banking', icon:'🏦',
+    topics:[
+      { id:'money-functions-supply', name:'Money: Meaning, Functions & Supply',
+        subtopics:[
+          { id:'money-meaning-functions', name:'Money: Meaning & Functions', keywords:['medium of exchange','store of value','unit of account','m1 m2'],
+            def2:'Money is anything generally accepted as a medium of exchange. Its functions are: medium of exchange, unit of account, store of value, and standard of deferred payment.',
+            def3:'Medium of exchange avoids the inefficiency of barter; unit of account lets prices be compared; store of value lets purchasing power be saved; standard of deferred payment supports credit and loan contracts. Money supply is measured as M1, M2, etc.',
+            def5:'Money serves four interlinked functions. As a medium of exchange, it eliminates the "double coincidence of wants" problem inherent to barter. As a unit of account, it provides a common measure for expressing and comparing the value of different goods and services. As a store of value, it lets purchasing power be carried forward in time (though inflation erodes this function). As a standard of deferred payment, it enables credit transactions and loan contracts to be denominated in a stable, widely-accepted unit. Money supply is measured in layers of increasing breadth: M1 (currency with the public plus demand deposits) is the narrowest and most liquid measure, while M2 and M3 progressively include less liquid forms like savings and time deposits.',
+            memoryTrick:'Money\'s four functions: Medium, Measure, Store, Standard (for deferred payment).',
+            example:'Currency notes and demand (chequable) deposits together make up M1, the narrowest and most liquid measure of money supply.' },
+          { id:'commercial-banks-credit', name:'Commercial Banks & Credit Creation', keywords:['credit creation','crr','money multiplier'],
+            def2:'Commercial banks accept deposits and make loans, thereby creating credit in the economy.',
+            def3:'If a bank receives a ₹100 deposit and keeps a fraction as reserves (say 10%), it can lend out ₹90, which becomes a new deposit elsewhere, and the process repeats — creating a total money multiplier effect.',
+            def5:'Commercial banks create credit because they are required to hold only a fraction of deposits as reserves (the Cash Reserve Ratio, CRR, set by the central bank), lending out the rest. This lent money typically returns to the banking system as a new deposit, which is again partly lent out, and so on — a process that expands the total money supply well beyond the original deposit. The theoretical maximum credit multiplier is 1/CRR: if CRR is 10%, the money multiplier is 10, meaning an initial ₹100 deposit could theoretically support up to ₹1,000 in total deposits economy-wide. In practice, the actual multiplier is usually lower because banks hold excess reserves and some money leaks out of the banking system as cash holdings by the public.',
+            memoryTrick:'Credit (money) multiplier = 1 ÷ CRR.',
+            example:'If the CRR is 10%, the theoretical money multiplier is 1/0.10 = 10, meaning the banking system can expand an initial deposit tenfold through repeated lending.' },
+          { id:'central-bank-rbi', name:'Central Bank (RBI) & Monetary Policy', keywords:['rbi','repo rate','crr','slr','monetary policy'],
+            def2:'The central bank (RBI in India) regulates money supply, issues currency, and acts as banker to the government and other banks.',
+            def3:'Functions: lender of last resort, monetary policy tools (repo rate, reverse repo, open market operations). Example: RBI raises the repo rate to curb inflation by making borrowing more expensive.',
+            def5:'The Reserve Bank of India (RBI) is India\'s central bank, tasked with maintaining price stability while supporting growth. Its monetary policy toolkit includes the repo rate (the rate at which RBI lends short-term funds to commercial banks — raising it makes credit costlier economy-wide, cooling demand and inflation), the reverse repo rate (the rate RBI pays banks for parking surplus funds with it), the Cash Reserve Ratio (CRR, the fraction of deposits banks must hold as reserves with RBI), the Statutory Liquidity Ratio (SLR, the fraction banks must hold in approved liquid assets), and Open Market Operations (buying or selling government securities to inject or absorb liquidity). As lender of last resort, RBI also stands ready to support banks facing liquidity crises, preventing systemic banking collapse.',
+            memoryTrick:'Repo rate up → borrowing costlier → demand and inflation cool down.',
+            example:'In 2020, facing a pandemic-driven slowdown, RBI cut the repo rate to around 4% to make borrowing cheaper and stimulate economic activity.' },
+        ]},
+      { id:'inflation-topic', name:'Inflation',
+        subtopics:[
+          { id:'inflation-types-measurement', name:'Inflation: Types & Measurement', keywords:['demand-pull','cost-push','cpi','wpi'],
+            def2:'Inflation is a sustained rise in the general price level. Demand-pull inflation is caused by excess demand; cost-push inflation is caused by rising production costs.',
+            def3:'Demand-pull: too much money chasing too few goods (AD shifts right). Cost-push: rising input costs (e.g. oil) shift AS left. Measured via CPI (consumer prices) or WPI (wholesale prices); India\'s recent CPI inflation has hovered around 6%.',
+            def5:'Inflation is measured primarily through the Consumer Price Index (CPI), which tracks the cost of a representative basket of consumer goods and services, and historically also through the Wholesale Price Index (WPI), which tracks prices at the wholesale/producer level. Demand-pull inflation occurs when aggregate demand grows faster than the economy\'s productive capacity, pulling prices up — often linked to excessive money supply growth or fiscal stimulus. Cost-push inflation occurs when rising input costs (wages, raw materials, energy) force firms to raise prices even without a rise in demand, shifting aggregate supply left, as in the 1970s oil shocks. Persistent inflation erodes the purchasing power of money and particularly hurts those on fixed incomes; policy responses typically involve tightening monetary policy (raising interest rates) to cool demand-pull inflation, though cost-push inflation is harder to address through demand-side tools alone.',
+            memoryTrick:'Demand-pull = too much demand; Cost-push = too-high costs.',
+            example:"The 1973 global oil price shock is a textbook case of cost-push inflation, as rising oil costs pushed up production costs across nearly every industry.",
+            numericalGen:'index-numbers' },
+        ]},
+    ]},
+  { id:'bop-exchange-rate', grade:12, name:'Balance of Payments & Exchange Rate', icon:'🌍',
+    topics:[
+      { id:'balance-of-payments', name:'Balance of Payments',
+        subtopics:[
+          { id:'bop-components', name:'Balance of Payments: Components & Disequilibrium', keywords:['current account','capital account','bop deficit'],
+            def2:'The Balance of Payments (BoP) is a record of all economic transactions between a country and the rest of the world, split into the Current Account and Capital Account.',
+            def3:'Current Account: trade in goods, services, and income flows. Capital Account: loans, investments, and other capital flows. Example: India\'s IT services surplus strengthens its current account.',
+            def5:'The Balance of Payments systematically records all transactions between a country\'s residents and the rest of the world over a period. The Current Account covers trade in goods (visible trade) and services (invisible trade, where India has a notable surplus from IT and business services exports), plus income flows (like remittances) and current transfers. The Capital Account covers financial flows: foreign direct investment, portfolio investment, and loans. A current account deficit financed by capital account inflows (like foreign investment) can be sustainable if those inflows are stable and productive, but a sudden reversal of capital inflows can trigger a balance of payments crisis — as India experienced in 2013, when foreign investors pulled funds out rapidly, sharply depreciating the rupee and depleting foreign exchange reserves. Correction mechanisms include drawing down reserves, allowing currency depreciation, or, in a fixed exchange rate system, formal devaluation.',
+            memoryTrick:'Current Account = goods, services, income; Capital Account = investment and loan flows.',
+            example:"India's 2013 'taper tantrum' crisis, when foreign capital left rapidly, is a textbook example of a balance of payments disequilibrium." },
+        ]},
+      { id:'exchange-rate-topic', name:'Exchange Rate',
+        subtopics:[
+          { id:'exchange-rate-systems', name:'Exchange Rate: Fixed vs Flexible', keywords:['exchange rate','depreciation','appreciation','fixed rate','flexible rate'],
+            def2:'The exchange rate is the price of one currency in terms of another. A flexible (floating) rate is determined by market forces; a fixed rate is pegged by the central bank.',
+            def3:'Example: the Rupee-Dollar rate floats with market supply and demand for forex under a flexible system. Depreciation means the domestic currency weakens (buys less foreign currency); appreciation means it strengthens.',
+            def5:'Under a flexible (floating) exchange rate system, the value of a currency is determined purely by the supply and demand for foreign exchange in the market — the system India has broadly followed since 1993. A rise in demand for foreign currency (e.g., from higher imports) causes the domestic currency to depreciate; a rise in the domestic currency\'s demand (e.g. from export earnings or capital inflows) causes it to appreciate. Under a fixed exchange rate system, the central bank commits to a specific rate and intervenes in the forex market — buying or selling reserves — to defend that peg. A formal fixed-rate adjustment is called devaluation (lowering the pegged rate) or revaluation (raising it), distinct from the market-driven depreciation/appreciation used under flexible systems. Related concepts tested at a higher level include Purchasing Power Parity (comparing currencies based on relative price levels) and interest rate parity (linking exchange rate movements to interest rate differentials between countries).',
+            memoryTrick:'Flexible = market-determined (depreciation/appreciation); Fixed = government-pegged (devaluation/revaluation).',
+            example:'When the RBI intervenes to sell dollars from its reserves to prevent the rupee from depreciating too quickly, it is managing a broadly flexible exchange rate.',
+            graph:{ title:'Foreign Exchange Market (Supply & Demand for Forex)', xLabel:'Quantity of Forex', yLabel:'Exchange Rate (₹ per $)', xMax:100, yMax:100, shiftRange:20, equilibriumOf:['demand','supply'], eqLabel:'Equilibrium rate', xMarker:'Q', yMarker:'Rate',
+              curves:[
+                {id:'demand', label:'Demand for Forex', color:'#c94a05', p1:[0,85], p2:[85,5], draggable:true},
+                {id:'supply', label:'Supply of Forex', color:'#1e8e5a', p1:[5,10], p2:[85,90], draggable:true},
+              ],
+              note:'Drag demand for forex right to simulate a rise in imports — the equilibrium exchange rate rises, meaning the rupee depreciates.' } },
+        ]},
+    ]},
+  { id:'public-finance', grade:12, name:'Public Finance', icon:'🏛️',
+    topics:[
+      { id:'fiscal-policy-budget', name:'Fiscal Policy & Government Budget',
+        subtopics:[
+          { id:'fiscal-policy-instruments', name:'Fiscal Policy: Instruments & Types', keywords:['fiscal policy','expansionary','contractionary','taxes','public expenditure'],
+            def2:'Fiscal policy is the government\'s use of taxation and spending to influence the economy.',
+            def3:'Instruments: direct/indirect taxes, subsidies, public spending. Expansionary fiscal policy (tax cuts or higher spending) boosts demand; contractionary fiscal policy (tax rises or spending cuts) cools it down.',
+            def5:'Fiscal policy uses government revenue and expenditure decisions to influence aggregate demand and steer the economy toward growth and stability goals. Its instruments include direct taxes (on income/profit, which are progressive and also redistributive), indirect taxes (on goods and services, like GST, which are typically regressive relative to income), subsidies (to lower the effective price of essential goods), and public expenditure (on infrastructure, welfare, and administration). Expansionary fiscal policy — tax cuts and/or increased spending — is used to boost a sluggish economy, as seen in India\'s 2008 fiscal stimulus following the global financial crisis. Contractionary fiscal policy — tax rises and/or spending cuts — is used to cool an overheating, inflationary economy, though it is politically harder to implement than expansionary policy.',
+            memoryTrick:'Expansionary fiscal policy = spend more/tax less; Contractionary = spend less/tax more.',
+            example:"India's 2008 fiscal stimulus package, involving tax cuts and higher spending, is a classic example of expansionary fiscal policy used to counter a global slowdown." },
+          { id:'government-budget-deficits', name:'Government Budget & Deficit Concepts', keywords:['fiscal deficit','revenue deficit','primary deficit','budget'],
+            def2:'The government budget is a statement of expected receipts and expenditure. A deficit occurs when expenditure exceeds receipts.',
+            def3:'Revenue deficit = Revenue Expenditure − Revenue Receipts. Fiscal deficit = Total Expenditure − Total Receipts (excluding borrowings). Primary deficit = Fiscal deficit − Interest payments.',
+            def5:'The government budget separates revenue items (routine, non-asset-creating receipts and spending, like salaries and interest payments) from capital items (asset-creating spending, like infrastructure, and receipts like loan recoveries or disinvestment proceeds). A revenue deficit signals that the government is borrowing merely to fund its routine, non-productive expenses — generally considered undesirable. The fiscal deficit, the broadest measure, is the gap between total expenditure and total non-borrowing receipts, indicating how much the government must borrow in total; India\'s fiscal deficit reached roughly 9.5% of GDP in 2020-21 amid pandemic spending. The primary deficit strips out interest payments on past debt from the fiscal deficit, revealing the deficit generated by the current year\'s policy decisions alone, separate from the burden of past borrowing. Persistently high fiscal deficits, financed by borrowing, can crowd out private investment (by raising interest rates) and risk unsustainable debt accumulation.',
+            memoryTrick:'Fiscal deficit = total borrowing need; Primary deficit = fiscal deficit minus interest (isolates current-year policy).',
+            example:"India's fiscal deficit surged to about 9.5% of GDP in 2020-21, reflecting the scale of pandemic-related emergency government spending.",
+            formulas:[{ name:'Deficit Measures', expr:'Fiscal Deficit = Total Expenditure − Total Receipts (excl. borrowings);  Primary Deficit = Fiscal Deficit − Interest Payments', derivation:'Fiscal deficit captures the government\'s total borrowing requirement; subtracting interest payments (the cost of servicing past debt) isolates the deficit attributable to current policy.', units:'₹ crore, or as a % of GDP', mistakes:'Confusing fiscal deficit with revenue deficit, or forgetting that primary deficit can be smaller than fiscal deficit precisely because of interest payments.' }],
+            numericalGen:'fiscal-deficit' },
+        ]},
+    ]},
+  { id:'national-income', grade:12, name:'National Income', icon:'🧮',
+    topics:[
+      { id:'circular-flow-income', name:'Circular Flow of Income',
+        subtopics:[
+          { id:'circular-flow', name:'Circular Flow of Income (2, 3, 4-Sector Models)', keywords:['circular flow','leakages','injections','households firms'],
+            def2:'The circular flow of income shows how income moves between sectors of the economy: households, firms, government, and the foreign sector.',
+            def3:'Two-sector model: households and firms exchange factor services for income, and goods for expenditure. Three-sector adds government (taxes, spending); four-sector adds the foreign sector (exports, imports).',
+            def5:'The circular flow of income models how money and goods move continuously through the economy. In the simplest two-sector model, households supply factors of production (land, labour, capital, enterprise) to firms in exchange for factor income (rent, wages, interest, profit), and use that income to buy goods and services from firms, whose spending becomes firms\' revenue — completing the circle. Adding a government sector introduces leakages (taxes, which remove income from the flow) and injections (government spending, which adds to it). Adding a foreign sector introduces further leakages (imports, spending that flows abroad) and injections (exports, foreign spending flowing in). At macroeconomic equilibrium, total leakages (savings + taxes + imports) must equal total injections (investment + government spending + exports); if leakages exceed injections, national income tends to fall, and vice versa.',
+            memoryTrick:'Leakages (savings, taxes, imports) must balance injections (investment, government spending, exports) at equilibrium.',
+            example:'A rise in household savings without a matching rise in investment is a leakage exceeding injections, which tends to reduce national income over time (all else equal).',
+            flowchart:[
+              {heading:'Households supply factors', text:'Land, labour, capital and enterprise flow from households to firms.'},
+              {heading:'Firms pay factor income', text:'Firms pay rent, wages, interest and profit back to households.'},
+              {heading:'Households spend income', text:'Households use this income to buy goods and services from firms.'},
+              {heading:'Government adds leakages/injections', text:'Taxes remove income from the flow; government spending injects it back in.'},
+              {heading:'Foreign sector adds leakages/injections', text:'Imports are a leakage (spending flows abroad); exports are an injection (foreign spending flows in).'},
+            ] },
+        ]},
+      { id:'income-concepts-measurement', name:'Income Concepts & Measurement Methods',
+        subtopics:[
+          { id:'income-concepts', name:'Income Concepts — GDP, GNP, NNP, Personal & Disposable Income', keywords:['gdp','gnp','nnp','personal income','disposable income'],
+            def2:'GDP: value of final goods and services produced within a country in a year. GNP: GDP plus net factor income from abroad. NNP: GNP minus depreciation.',
+            def3:'Personal income = GNP − undistributed profits − corporate taxes + transfer payments. Disposable income = Personal income − direct taxes — the income households actually have available to spend or save.',
+            def5:'These income concepts form a linked chain, each derived from the previous by specific adjustments. GDP measures output produced within a country\'s borders regardless of who owns the factors of production. GNP adjusts this by adding net factor income from abroad (income Indians earn overseas minus income foreigners earn in India), reflecting output attributable to a country\'s own residents wherever earned. NNP subtracts depreciation (capital consumption) from GNP, since some of gross investment merely replaces worn-out capital rather than adding new productive capacity. Personal income further adjusts NNP (at factor cost) by removing income earned but not received by households (like undistributed corporate profits and corporate taxes) and adding income received but not currently earned (like transfer payments/pensions). Disposable income, personal income minus direct taxes, is the amount households can actually spend or save — the figure most directly relevant to consumption behaviour. A further crucial distinction is nominal GDP (valued at current prices) versus real GDP (adjusted for inflation using a base year, via the GDP deflator), since comparing nominal GDP across years can overstate real growth if prices have also risen.',
+            memoryTrick:'GDP → (+net factor income abroad) → GNP → (−depreciation) → NNP → (adjust for corporate income/transfers) → Personal Income → (−direct taxes) → Disposable Income.',
+            example:"India's real GDP (valued at constant 2011-12 prices) is lower than its nominal GDP (valued at current prices) precisely because real GDP strips out the effect of inflation.",
+            formulas:[{ name:'National Income Identities', expr:'GNP = GDP + Net Factor Income from Abroad;  NNP = GNP − Depreciation', derivation:'GNP adjusts GDP for income earned by residents abroad vs foreigners earned domestically; NNP further removes the value of capital used up (depreciation) during production.', units:'₹ crore (or lakh crore)', mistakes:'Confusing GDP (domestic territory) with GNP (national residents) — the difference is exactly net factor income from abroad.' }] },
+          { id:'measurement-methods', name:'Measuring National Income (Output, Income, Expenditure Methods)', keywords:['value added method','income method','expenditure method'],
+            def2:'National income can be measured by three equivalent methods: Output (value-added), Income, and Expenditure.',
+            def3:'Output/Value-added method: sum value added at each production stage. Income method: sum of wages + rent + interest + profit + taxes. Expenditure method: GDP = C + I + G + (X−M). All three should yield the same total.',
+            def5:'The three methods of measuring national income are conceptually equivalent because they measure the same economic activity from three different vantage points — what is produced, what is earned, and what is spent. The Output (Value-Added) method sums the value added at each stage of production across all sectors (agriculture, industry, services), carefully avoiding double-counting of intermediate goods. The Income method sums all factor incomes generated in production: wages (labour), rent (land), interest (capital), and profit (enterprise), plus indirect taxes less subsidies to move from factor cost to market price. The Expenditure method sums all final spending on domestically produced goods and services: private consumption (C), investment (I), government spending (G), and net exports (X−M). A major practical challenge in India is the large unorganised/informal sector, where output and income are difficult to measure precisely, requiring estimation techniques that introduce some margin of error into official national income statistics.',
+            memoryTrick:'Output = what\'s produced; Income = what\'s earned; Expenditure = what\'s spent — three ways to reach the same total.',
+            example:"A shoe's journey from raw leather, to tanned leather, to a finished shoe illustrates the value-added method: only the value added at each stage is counted, not the full sale price at every stage.",
+            formulas:[{ name:'Expenditure Method', expr:'GDP = C + I + G + (X − M)', derivation:'Sum all categories of final spending on domestically produced goods and services in a year.', units:'₹ crore', mistakes:'Including spending on intermediate goods (double-counting) or forgetting to net out imports.' }],
+            numericalGen:'national-income-expenditure' },
+        ]},
+    ]},
+];
+
+/* ============================================================
+   ECONOMICS PRACTICE QUESTION BANK — tagged by grade/chapter/
+   topic/subtopic/marks, same shape as SOC_QA_BANK for reuse with
+   the existing grading/practice-zone engine.
+   ============================================================ */
+const ECON_QA_BANK = [
+  { id:'econ-def-1', grade:11, chapter:'Understanding Economics', topic:'What is Economics?', subtopic:'Definition of Economics', marks:3, question:'Define economics and explain why scarcity is central to the subject.', keywords:['scarcity','choice','resources','allocate'],
+    answer:{ intro:'Economics is the study of how society manages scarce resources to satisfy unlimited human wants.',
+      explanation:'Because resources (land, labour, capital) are limited relative to the near-unlimited wants people have, every economic decision involves a choice, and every choice involves an opportunity cost — the value of the next-best alternative given up. This is why scarcity, not money, is considered the true foundation of economic analysis.',
+      conclusion:'Without scarcity, there would be no need to choose, and economics as a discipline of studying choice would not exist.' } },
+  { id:'econ-ppc-1', grade:11, chapter:'Understanding Economics', topic:'Basic Economic Problems & PPC', subtopic:'Production Possibility Curve (PPC)', marks:5, question:'Using a Production Possibility Curve, explain the concepts of opportunity cost and economic growth.', keywords:['opportunity cost','ppc','economic growth','increasing opportunity cost'],
+    answer:{ intro:'The Production Possibility Curve (PPC) shows the maximum combinations of two goods an economy can produce with its given resources and technology, and it directly illustrates both opportunity cost and growth.',
+      explanation:'Any movement along the PPC to produce more of one good requires giving up some of the other good — this sacrifice is the opportunity cost, and it rises as more resources shift into one good, because increasingly unsuitable resources must be reallocated (the Law of Increasing Opportunity Cost), giving the curve its characteristic concave shape. Economic growth is shown not by a movement along the curve but by an outward shift of the entire PPC, made possible by more resources, improved technology, or a more skilled workforce.',
+      conclusion:'The PPC therefore captures two distinct ideas in one diagram: opportunity cost as a movement along a fixed curve, and growth as an outward shift of the curve itself.' } },
+  { id:'econ-systems-1', grade:11, chapter:'Understanding Economics', topic:'Types of Economic Systems', subtopic:'Capitalism, Socialism & Mixed Economy', marks:5, question:'Compare capitalism and socialism as economic systems, and explain why India is described as a mixed economy.', keywords:['capitalism','socialism','mixed economy','price mechanism'],
+    answer:{ intro:'Capitalism and socialism represent two opposite approaches to answering the central economic problems, while India\'s mixed economy blends elements of both.',
+      explanation:'Under capitalism, private ownership and the free price mechanism allocate resources, rewarding efficiency but risking inequality. Under socialism, the state owns key resources and a central authority plans production and distribution, aiming for equality but often losing efficiency and consumer choice. India is a mixed economy because it relies on markets and private enterprise for most production decisions while the government intervenes through taxation, subsidies, and public sector enterprises to pursue social welfare goals that pure markets might neglect.',
+      conclusion:'India\'s mixed economy is best understood as a deliberate compromise, retaining market efficiency while using government intervention to correct market failures and pursue equity.' } },
+  { id:'econ-dev-1', grade:11, chapter:'Indian Economic Development', topic:'Pre-Independence Economy & Development Indicators', subtopic:'The Indian Economy on the Eve of Independence', marks:5, question:'Describe the state of the Indian economy on the eve of independence in 1947.', keywords:['agrarian','colonial','deindustrialization'],
+    answer:{ intro:'On the eve of independence, India was a largely agrarian, colonially-exploited economy with very low per capita income.',
+      explanation:'Agriculture employed the vast majority of the population but suffered from low productivity due to outdated techniques and exploitative land tenure systems like zamindari. British trade policy deliberately deindustrialised India, destroying competitive handicraft industries such as Bengal\'s textiles to create a captive market for British manufactured goods, while infrastructure like railways was built mainly to serve colonial extraction rather than balanced development.',
+      conclusion:'This left independent India with an extremely low starting per capita income, widespread illiteracy and poverty, and a structurally distorted economy that shaped the priorities of subsequent economic planning.' } },
+  { id:'econ-lpg-1', grade:11, chapter:'Indian Economic Development', topic:'Planning, Liberalization & Growth vs Development', subtopic:'Liberalization, Privatization & Globalization (LPG)', marks:5, question:'Explain the 1991 LPG reforms and their impact on the Indian economy.', keywords:['liberalization','privatization','globalization','1991 reforms'],
+    answer:{ intro:'The 1991 LPG reforms marked a decisive shift away from India\'s planned-economy approach, triggered by a severe balance of payments crisis.',
+      explanation:'Liberalization dismantled the licence-permit-quota system, freeing firms from excessive regulatory approval requirements. Privatization involved reducing state ownership through disinvestment in public sector undertakings. Globalization opened India to foreign investment and reduced trade barriers, integrating the economy with world markets.',
+      conclusion:'The reforms are credited with significantly raising India\'s GDP growth rate in subsequent decades, though critics note the benefits have been unevenly distributed, contributing to rising inequality even as absolute poverty declined.' } },
+  { id:'econ-sustain-1', grade:11, chapter:'Indian Economic Development', topic:'Current Challenges & Sustainable Development', subtopic:'Sustainable Development', marks:3, question:'What is sustainable development? Give one example of an Indian policy that promotes it.', keywords:['sustainable development','environment','renewable energy'],
+    answer:{ intro:'Sustainable development means meeting present needs without compromising future generations\' ability to meet their own needs.',
+      explanation:'It requires balancing economic growth against environmental limits, since growth achieved by depleting natural resources or damaging the environment effectively borrows against future welfare.',
+      conclusion:'India\'s major push into solar and wind energy capacity is a clear example of a policy aimed at sustaining growth while reducing reliance on depleting, polluting fossil fuels.' } },
+  { id:'econ-stats-1', grade:11, chapter:'Statistics', topic:'Central Tendency, Dispersion & Correlation', subtopic:'Measures of Central Tendency (Mean, Median, Mode)', marks:3, question:'Distinguish between mean and median as measures of central tendency, explaining when median is preferred.', keywords:['mean','median','outliers','skewed'],
+    answer:{ intro:'Mean and median both summarise a data set with a single typical value, but they behave very differently in the presence of extreme values.',
+      explanation:'The mean uses every observation in its calculation, making it sensitive to outliers — a few very high values can pull the mean upward misleadingly. The median, being the middle value when data is ordered, is unaffected by how extreme the outlying values are, only by their position.',
+      conclusion:'Median is therefore preferred for skewed data such as income distributions, where a small number of very high earners would otherwise distort the mean upward.' } },
+  { id:'econ-correlation-1', grade:11, chapter:'Statistics', topic:'Central Tendency, Dispersion & Correlation', subtopic:'Correlation', marks:3, question:'What does a correlation coefficient of -0.9 indicate? Why is correlation not the same as causation?', keywords:['correlation','negative','causation'],
+    answer:{ intro:'A correlation coefficient of -0.9 indicates a very strong negative (inverse) linear relationship between two variables.',
+      explanation:'As one variable rises, the other falls quite consistently, since -0.9 is close to the maximum possible negative value of -1. However, correlation only measures how two variables move together statistically; it does not establish that a change in one variable causes the change in the other, since both could be driven by an unmeasured third factor, or the relationship could be coincidental.',
+      conclusion:'This is why economists insist that correlation is necessary but not sufficient evidence of causation, and rely on additional theory and evidence before drawing causal conclusions.' } },
+  { id:'econ-index-1', grade:11, chapter:'Statistics', topic:'Index Numbers & Mathematical Tools', subtopic:'Index Numbers', marks:3, question:'Explain what an index number measures, using CPI as an example.', keywords:['index number','base year','cpi'],
+    answer:{ intro:'An index number measures the relative change in a variable compared to a fixed base period, conventionally set to 100.',
+      explanation:'The Consumer Price Index (CPI) tracks the cost of a fixed basket of goods and services over time relative to a base year: if the CPI rises from 100 to 155, the cost of that basket, and hence the general price level facing consumers, has risen by 55%.',
+      conclusion:'Index numbers like the CPI allow otherwise abstract price changes to be compactly summarised and compared across time periods.' } },
+  { id:'econ-demand-1', grade:12, chapter:'Microeconomic Theory', topic:'Demand & Elasticity', subtopic:'Demand & the Law of Demand', marks:5, question:'State the Law of Demand and explain two exceptions to it.', keywords:['law of demand','giffen goods','veblen goods'],
+    answer:{ intro:'The Law of Demand states that, other things being equal, quantity demanded of a good falls as its price rises, giving a downward-sloping demand curve.',
+      explanation:'Two well-known exceptions exist. Giffen goods are very inferior goods (like jowar for very poor households) where a price rise, by making the household even poorer in real terms, forces them to buy more of that cheap staple and less of pricier substitutes, so quantity demanded actually rises with price. Veblen goods are luxury or status goods where a higher price itself signals prestige, making the good more, not less, desirable to certain buyers.',
+      conclusion:'These exceptions do not disprove the law generally, but show that the assumption of "all else equal" can break down for specific categories of goods.' } },
+  { id:'econ-elasticity-1', grade:12, chapter:'Microeconomic Theory', topic:'Demand & Elasticity', subtopic:'Elasticity of Demand', marks:6, question:'Explain price elasticity of demand and the factors that determine whether demand for a good is elastic or inelastic.', keywords:['price elasticity','substitutes','necessity','time period'],
+    answer:{ intro:'Price elasticity of demand measures how responsive quantity demanded is to a change in price, calculated as the percentage change in quantity demanded divided by the percentage change in price.',
+      explanation:'Several factors determine this responsiveness: the availability of substitutes (more substitutes make demand more elastic, since buyers can easily switch away), whether the good is a necessity or a luxury (necessities tend to have inelastic demand since buyers must have them regardless of price), and the time period under consideration (demand tends to become more elastic over longer periods as consumers find or develop alternatives).',
+      conclusion:'Milk, a necessity with few substitutes, typically has inelastic demand, while a specific brand of soft drink, with many close substitutes, typically has elastic demand.' } },
+  { id:'econ-supply-1', grade:12, chapter:'Microeconomic Theory', topic:'Supply & Market Equilibrium', subtopic:'Market Equilibrium & Price Controls', marks:6, question:'Using a diagram, explain the effect of a price ceiling set below the equilibrium price.', keywords:['price ceiling','shortage','excess demand'],
+    answer:{ intro:'A price ceiling is a legally imposed maximum price; when set below the market equilibrium price, it creates a persistent shortage.',
+      explanation:'At the artificially low ceiling price, quantity demanded exceeds quantity supplied, since buyers want to purchase more than producers are willing to supply at that price, and the price is not permitted to rise to clear this excess demand as it normally would.',
+      conclusion:'Historical rent controls illustrate this effect: capping rents below market equilibrium tends to create a persistent shortage of available rental housing, since landlords supply less at the artificially low price than tenants demand.' } },
+  { id:'econ-production-1', grade:12, chapter:'Microeconomic Theory', topic:'Production, Cost & Revenue', subtopic:'Production Function & Law of Variable Proportions', marks:5, question:'Explain the three stages of the Law of Variable Proportions.', keywords:['increasing returns','diminishing returns','negative returns','marginal product'],
+    answer:{ intro:'The Law of Variable Proportions describes how output responds as one variable input is added to a fixed input, in three distinct stages.',
+      explanation:'In Stage I, marginal product rises (increasing returns) as the fixed factor is used more fully by additional units of the variable input. In Stage II, marginal product is positive but falling (diminishing returns), which is where a rational firm chooses to operate. In Stage III, marginal product turns negative, since too many units of the variable input begin to interfere with each other and actually reduce total output.',
+      conclusion:'A firm never rationally produces in Stage III, since adding more of the variable input there actively reduces total output while still adding to cost.' } },
+  { id:'econ-cost-1', grade:12, chapter:'Microeconomic Theory', topic:'Production, Cost & Revenue', subtopic:'Cost & Revenue Curves', marks:6, question:'Explain the relationship between Marginal Cost and Average Cost curves, and state the firm\'s profit-maximising rule.', keywords:['marginal cost','average cost','mc=mr'],
+    answer:{ intro:'Marginal Cost (MC) and Average Cost (AC) are mathematically related: the MC curve always intersects the AC curve exactly at the AC curve\'s minimum point.',
+      explanation:'When MC is below AC, each additional unit costs less than the current average, pulling the average down; when MC is above AC, each additional unit costs more than the average, pulling it up — so MC must cross AC exactly where AC is at its lowest. Separately, a firm maximises profit at the output level where Marginal Cost equals Marginal Revenue (MC = MR), since producing beyond that point would add more to cost than to revenue.',
+      conclusion:'These two rules together explain both the shape of short-run cost curves and how a firm decides its profit-maximising output level.' } },
+  { id:'econ-market-1', grade:12, chapter:'Microeconomic Theory', topic:'Market Forms', subtopic:'Perfect Competition, Monopoly, Oligopoly & Monopolistic Competition', marks:8, question:'Compare perfect competition and monopoly in terms of number of firms, entry barriers, and pricing power.', keywords:['perfect competition','monopoly','price taker','price maker','entry barriers'],
+    answer:{ intro:'Perfect competition and monopoly sit at opposite ends of the spectrum of market structures.',
+      explanation:'Perfect competition features a very large number of small firms selling an identical product with no barriers to entry, making every firm a price taker facing a horizontal demand curve at the market price; free entry and exit drive long-run profit down to a normal level. Monopoly features a single firm protected by significant barriers to entry, facing the entire downward-sloping market demand curve, which allows it to act as a price maker, restricting output below the competitive level to raise price and profit.',
+      conclusion:'This contrast matters because monopoly pricing power generally leads to a lower output and higher price than perfect competition would produce for the same market, a key source of allocative inefficiency associated with monopoly.' } },
+  { id:'econ-multiplier-1', grade:12, chapter:'Theory of Income & Employment', topic:'Equilibrium Income, Multiplier & Gaps', subtopic:'The Multiplier', marks:6, question:'Explain the working of the investment multiplier with a numerical example.', keywords:['multiplier','mpc','induced consumption'],
+    answer:{ intro:'The investment multiplier shows how an initial change in investment spending generates a larger final change in national income, through successive rounds of induced consumption.',
+      explanation:'If the Marginal Propensity to Consume (MPC) is 0.75, the multiplier k = 1/(1−0.75) = 4. An initial investment of ₹10 crore becomes income for someone, who re-spends 75% of it (₹7.5 crore), which becomes income for someone else, who again re-spends 75% (₹5.625 crore), and so on, summing to a total eventual rise in national income of ₹40 crore.',
+      conclusion:'The multiplier is larger whenever MPC is higher, since a higher MPC means less of each round of new income leaks into savings instead of being re-spent.' } },
+  { id:'econ-gap-1', grade:12, chapter:'Theory of Income & Employment', topic:'Equilibrium Income, Multiplier & Gaps', subtopic:'Inflationary & Deflationary Gaps', marks:5, question:'Distinguish between an inflationary gap and a deflationary gap.', keywords:['inflationary gap','deflationary gap','full employment'],
+    answer:{ intro:'Inflationary and deflationary gaps both measure a mismatch between planned aggregate expenditure and the economy\'s full-employment level of output.',
+      explanation:'An inflationary gap occurs when planned aggregate expenditure exceeds full-employment output; since real output cannot expand further, the excess demand instead bids up the general price level, generating demand-pull inflation. A deflationary gap occurs when planned aggregate expenditure falls short of full-employment output, leaving resources, especially labour, involuntarily unemployed.',
+      conclusion:'Governments typically respond to an inflationary gap by tightening fiscal or monetary policy, and to a deflationary gap by loosening it, aiming to bring planned expenditure back in line with full-employment output.' } },
+  { id:'econ-money-1', grade:12, chapter:'Money & Banking', topic:'Money: Meaning, Functions & Supply', subtopic:'Commercial Banks & Credit Creation', marks:5, question:'Explain how commercial banks create credit, with reference to the Cash Reserve Ratio.', keywords:['credit creation','crr','money multiplier'],
+    answer:{ intro:'Commercial banks create credit because they are required to hold only a fraction of deposits as reserves, lending out the remainder.',
+      explanation:'If the Cash Reserve Ratio (CRR) set by the central bank is 10%, a bank receiving a ₹100 deposit keeps ₹10 as reserves and lends out ₹90; this ₹90 typically returns to the banking system as a new deposit elsewhere, which is again 90% lent out, and so on. The theoretical maximum expansion of the money supply is given by the money multiplier, 1/CRR.',
+      conclusion:'With a CRR of 10%, the theoretical money multiplier is 10, meaning the banking system could support up to ten times the initial deposit in total credit, though in practice the actual multiplier is usually lower due to leakages like cash holdings and excess reserves.' } },
+  { id:'econ-rbi-1', grade:12, chapter:'Money & Banking', topic:'Money: Meaning, Functions & Supply', subtopic:'Central Bank (RBI) & Monetary Policy', marks:5, question:'Explain how the RBI uses the repo rate to control inflation.', keywords:['repo rate','rbi','monetary policy'],
+    answer:{ intro:'The repo rate is the interest rate at which the RBI lends short-term funds to commercial banks, and it is a key tool of monetary policy.',
+      explanation:'When the RBI raises the repo rate, borrowing becomes more expensive for commercial banks, who pass this on as higher interest rates to their own customers; this discourages both consumer borrowing (for spending) and business borrowing (for investment), cooling aggregate demand and easing inflationary pressure.',
+      conclusion:'Conversely, cutting the repo rate makes borrowing cheaper, stimulating demand — which is why the RBI cut rates during the 2020 pandemic slowdown to encourage economic activity rather than to fight inflation.' } },
+  { id:'econ-inflation-1', grade:12, chapter:'Money & Banking', topic:'Inflation', subtopic:'Inflation: Types & Measurement', marks:6, question:'Distinguish between demand-pull and cost-push inflation, with an example of each.', keywords:['demand-pull','cost-push'],
+    answer:{ intro:'Demand-pull and cost-push inflation describe two different underlying causes of a sustained rise in the general price level.',
+      explanation:'Demand-pull inflation occurs when aggregate demand grows faster than the economy\'s productive capacity, pulling prices upward — often linked to excessive money supply growth or fiscal stimulus beyond what the economy can absorb. Cost-push inflation occurs when rising production costs, such as wages or raw material prices, force firms to raise prices even without any increase in demand, shifting aggregate supply to the left.',
+      conclusion:'The 1973 global oil price shock is a textbook example of cost-push inflation, since it raised production costs across nearly every industry regardless of the level of demand.' } },
+  { id:'econ-bop-1', grade:12, chapter:'Balance of Payments & Exchange Rate', topic:'Balance of Payments', subtopic:'Balance of Payments: Components & Disequilibrium', marks:5, question:'What is meant by a Balance of Payments deficit, and how can it be corrected?', keywords:['bop deficit','current account','correction'],
+    answer:{ intro:'A Balance of Payments deficit occurs when a country\'s total payments to the rest of the world exceed its total receipts from it, typically driven by a current account deficit not fully offset by capital inflows.',
+      explanation:'Such a deficit can be financed temporarily by capital account inflows like foreign investment or by drawing down foreign exchange reserves, but a sudden reversal of capital inflows, as India experienced in 2013, can force a rapid and disruptive correction through currency depreciation and reserve depletion.',
+      conclusion:'More sustainable long-term corrections include boosting export competitiveness, reducing unnecessary imports, and maintaining policies that keep foreign investors confident enough to avoid sudden capital flight.' } },
+  { id:'econ-exchange-1', grade:12, chapter:'Balance of Payments & Exchange Rate', topic:'Exchange Rate', subtopic:'Exchange Rate: Fixed vs Flexible', marks:5, question:'Distinguish between a fixed and a flexible exchange rate system.', keywords:['fixed exchange rate','flexible exchange rate','depreciation','devaluation'],
+    answer:{ intro:'A fixed and a flexible exchange rate system differ in how the value of a currency is determined and adjusted.',
+      explanation:'Under a flexible (floating) system, the exchange rate is determined purely by market supply and demand for foreign exchange, and changes are called depreciation (weakening) or appreciation (strengthening). Under a fixed system, the central bank pegs the currency at a specific rate and must intervene, buying or selling reserves, to defend it; a deliberate change to that peg is called devaluation or revaluation, not depreciation or appreciation.',
+      conclusion:'India has broadly followed a flexible, market-determined exchange rate system since 1993, though the RBI still intervenes at times to smooth excessive volatility.' } },
+  { id:'econ-fiscal-1', grade:12, chapter:'Public Finance', topic:'Fiscal Policy & Government Budget', subtopic:'Fiscal Policy: Instruments & Types', marks:5, question:'Differentiate between expansionary and contractionary fiscal policy, with an example of each.', keywords:['expansionary','contractionary','fiscal policy'],
+    answer:{ intro:'Expansionary and contractionary fiscal policy describe opposite uses of government taxation and spending to influence the economy.',
+      explanation:'Expansionary fiscal policy — tax cuts and/or higher government spending — is used to stimulate a sluggish economy, as in India\'s 2008 fiscal stimulus following the global financial crisis. Contractionary fiscal policy — tax increases and/or spending cuts — is used to cool an overheating, inflationary economy, though it tends to be politically more difficult to implement.',
+      conclusion:'The choice between the two depends on whether the economy is suffering from a deflationary gap (calling for expansion) or an inflationary gap (calling for contraction).' } },
+  { id:'econ-deficit-1', grade:12, chapter:'Public Finance', topic:'Fiscal Policy & Government Budget', subtopic:'Government Budget & Deficit Concepts', marks:6, question:'Distinguish between fiscal deficit and primary deficit, explaining the significance of each.', keywords:['fiscal deficit','primary deficit','interest payments'],
+    answer:{ intro:'Fiscal deficit and primary deficit are related but distinct measures of a government\'s borrowing position.',
+      explanation:'The fiscal deficit is the gap between total government expenditure and total receipts excluding borrowings, representing the government\'s total borrowing requirement for the year. The primary deficit subtracts interest payments on past debt from the fiscal deficit, isolating the deficit generated by the current year\'s own policy decisions, separate from the burden of servicing past borrowing.',
+      conclusion:'A large gap between fiscal deficit and primary deficit signals a heavy legacy interest burden, meaning much of current borrowing simply services old debt rather than funding new activity.' } },
+  { id:'econ-circular-1', grade:12, chapter:'National Income', topic:'Circular Flow of Income', subtopic:'Circular Flow of Income (2, 3, 4-Sector Models)', marks:5, question:'Explain the circular flow of income in a three-sector economy, identifying the leakages and injections introduced by government.', keywords:['circular flow','leakages','injections','government'],
+    answer:{ intro:'A three-sector circular flow model adds government to the basic household-firm flow, introducing new leakages and injections.',
+      explanation:'Households supply factors of production to firms in exchange for income, and spend that income buying goods and services from firms, completing the basic flow. Government adds a leakage in the form of taxes, which remove income from the household-firm flow, and an injection in the form of government spending, which adds new demand into the flow.',
+      conclusion:'For macroeconomic equilibrium, total leakages (including taxes) must equal total injections (including government spending); if government spending consistently exceeds tax revenue, it is injecting more than it withdraws, tending to stimulate national income.' } },
+  { id:'econ-income-1', grade:12, chapter:'National Income', topic:'Income Concepts & Measurement Methods', subtopic:'Income Concepts — GDP, GNP, NNP, Personal & Disposable Income', marks:6, question:'Distinguish between GDP and GNP, and explain the difference between nominal and real GDP.', keywords:['gdp','gnp','net factor income','nominal','real'],
+    answer:{ intro:'GDP and GNP differ in whose income is counted, while nominal and real GDP differ in whether inflation is accounted for.',
+      explanation:'GDP measures the value of output produced within a country\'s borders regardless of who owns the factors of production, while GNP adjusts this by adding net factor income from abroad, capturing output attributable to a country\'s own residents wherever it is earned. Separately, nominal GDP values output at current prices, while real GDP adjusts for inflation using a fixed base year, so that changes in real GDP reflect genuine changes in the quantity of output rather than just rising prices.',
+      conclusion:'Comparing nominal GDP figures across years without adjusting for inflation can overstate how much an economy has actually grown, which is why real GDP is the preferred measure for tracking genuine economic growth.' } },
+  { id:'econ-measurement-1', grade:12, chapter:'National Income', topic:'Income Concepts & Measurement Methods', subtopic:'Measuring National Income (Output, Income, Expenditure Methods)', marks:8, question:'Explain the three methods of measuring national income and why they should, in principle, yield the same total.', keywords:['value added method','income method','expenditure method'],
+    answer:{ intro:'National income can be measured by three conceptually equivalent methods — output (value-added), income, and expenditure — each viewing the same economic activity from a different angle.',
+      explanation:'The output (value-added) method sums the value added at each stage of production across all sectors, carefully avoiding double-counting of intermediate goods. The income method sums all factor incomes generated in production — wages, rent, interest and profit. The expenditure method sums all final spending on domestically produced goods and services: consumption, investment, government spending, and net exports.',
+      conclusion:'Because every unit of output produced generates an equivalent amount of income for the factors that produced it, and is ultimately purchased through some category of expenditure, all three methods should in principle arrive at the same total national income figure, differing in practice only due to measurement error, especially in estimating the large informal sector.' } },
+];
+
+/* ============================================================
    STATE
    ============================================================ */
 let session = { name:'', board:'ICSE', grade:'11' };
 let learnedItems = new Set();
 let savedAnswers = {}; // qaId -> {studentText, score, maxMarks, feedback, missing}
-let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{} };
+let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{} };
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2054,7 +2641,7 @@ function handleLogin(e){
     document.getElementById('who-board').textContent = session.board + ' · Grade ' + session.grade;
   }
   goTo('app');
-  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{} };
+  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{} };
   renderApp();
 }
 
@@ -2070,6 +2657,10 @@ function goDashboardHome(){
   appState.socChapterId = null;
   appState.socTopicId = null;
   appState.socSubtopicId = null;
+  appState.econGrade = null;
+  appState.econChapterId = null;
+  appState.econTopicId = null;
+  appState.econSubtopicId = null;
   renderApp();
 }
 
@@ -2116,6 +2707,31 @@ function renderCrumb(){
           }
         }
       }
+    } else if(appState.subjectId==='economics'){
+      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      if(!appState.econGrade){
+        html += `<span class="current">Economics</span>`;
+      } else {
+        html += `<button onclick="backEconToGrades()">Economics</button><span>›</span>`;
+        if(!appState.econChapterId){
+          html += `<span class="current">Class ${appState.econGrade}</span>`;
+        } else {
+          const chapter = ECON_CHAPTERS.find(c=>c.id===appState.econChapterId);
+          html += `<button onclick="backEconToChapters()">Class ${appState.econGrade}</button><span>›</span>`;
+          if(!appState.econTopicId){
+            html += `<span class="current">${escapeHtml(chapter.name)}</span>`;
+          } else {
+            const topic = chapter.topics.find(t=>t.id===appState.econTopicId);
+            html += `<button onclick="backEconToTopics()">${escapeHtml(chapter.name)}</button><span>›</span>`;
+            if(!appState.econSubtopicId){
+              html += `<span class="current">${escapeHtml(topic.name)}</span>`;
+            } else {
+              const subtopic = topic.subtopics.find(s=>s.id===appState.econSubtopicId);
+              html += `<button onclick="backEconToTopic()">${escapeHtml(topic.name)}</button><span>›</span><span class="current">${escapeHtml(subtopic.name)}</span>`;
+            }
+          }
+        }
+      }
     }
   } else if(appState.section==='settings'){
     html = `<span class="current">Settings</span>`;
@@ -2144,9 +2760,17 @@ function socProgressCounts(){
   return {done, total};
 }
 
+function econProgressCounts(){
+  const subtopics = ECON_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics));
+  const total = subtopics.length;
+  const done = subtopics.filter(s=>learnedItems.has('econ-subtopic-'+s.id)).length;
+  return {done, total};
+}
+
 function subjectProgress(id){
   if(id==='english') return englishProgressCounts();
   if(id==='sociology') return socProgressCounts();
+  if(id==='economics') return econProgressCounts();
   return {done:0, total:0};
 }
 
@@ -2167,18 +2791,20 @@ function renderDashboardBody(){
         <div class="s-icon" style="background:${s.bg};">${s.emoji}</div>
         <h3 class="display">${s.name}</h3>
         <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:${s.color};"></div></div>
-        <div class="s-sub">${done} of ${total} ${s.id==='sociology'?'subtopics':'texts'} learned</div>
+        <div class="s-sub">${done} of ${total} ${(s.id==='sociology'||s.id==='economics')?'subtopics':'texts'} learned</div>
       </button>`;
     }).join('');
     container.innerHTML = `
       <h1 style="font-size:24px;margin-bottom:18px;">Grade ${session.grade} Subjects</h1>
       <div class="subject-grid">${tiles}</div>
-      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters) and Sociology (all 7 units) are fully built. Economics, Physics, Biology, Mathematics, Psychology and CBSE are coming soon.</div>
+      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units) and Economics (all 9 chapters, both grades) are fully built. Physics, Biology, Mathematics, Psychology and CBSE are coming soon.</div>
     `;
   } else if(appState.subjectId==='english'){
     container.innerHTML = renderEnglishHub();
   } else if(appState.subjectId==='sociology'){
     container.innerHTML = renderSociology();
+  } else if(appState.subjectId==='economics'){
+    container.innerHTML = renderEconomics();
   }
   renderCrumb();
 }
@@ -2558,7 +3184,9 @@ function toggleChar(key){
 const qaExpandState = {}; // qaId -> bool
 
 function findQaById(id){
-  return QA_BANK.find(q=>q.id===id) || (typeof SOC_QA_BANK!=='undefined' && SOC_QA_BANK.find(q=>q.id===id));
+  return QA_BANK.find(q=>q.id===id)
+    || (typeof SOC_QA_BANK!=='undefined' && SOC_QA_BANK.find(q=>q.id===id))
+    || (typeof ECON_QA_BANK!=='undefined' && ECON_QA_BANK.find(q=>q.id===id));
 }
 
 function gradeStudentAnswer(qa, studentText){
@@ -2819,6 +3447,302 @@ function buildQuoteMemoDeck(workKey, sameWorkCharacters, widerCharacterPool){
 }
 
 /* ============================================================
+   INTERACTIVE GRAPH ENGINE (Economics) — one reusable, config-
+   driven SVG component reused for every graph in the library
+   (Demand-Supply, PPC, cost curves, AD-AS, circular flow, BOP,
+   money market, etc.) instead of hand-coding each graph.
+   Curves are shifted with drag-style range sliders; the
+   equilibrium/intersection point recomputes and redraws live via
+   direct DOM mutation (no full page re-render, so it stays smooth
+   while dragging).
+   ============================================================ */
+const graphState = {};
+
+function graphDataToSvg(config, x, y){
+  const plotW = config.plotW||340, plotH = config.plotH||220, marginL = config.marginL||54, marginT = config.marginT||16;
+  return { sx: marginL + (x/config.xMax)*plotW, sy: marginT + plotH - (y/config.yMax)*plotH };
+}
+
+function graphIntersection(c1, c2){
+  const [x1,y1a] = c1.p1, [x2,y2a] = c1.p2, [x3,y3a] = c2.p1, [x4,y4a] = c2.p2;
+  const y1=y1a+c1.shift, y2=y2a+c1.shift, y3=y3a+c2.shift, y4=y4a+c2.shift;
+  const denom = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
+  if(Math.abs(denom)<1e-9) return null;
+  const px = ((x1*y2-y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4)) / denom;
+  const py = ((x1*y2-y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4)) / denom;
+  if(px<0||py<0) return null;
+  return [px,py];
+}
+
+function initGraphState(graphId, config){
+  if(graphState[graphId]) return graphState[graphId];
+  const curves = {};
+  config.curves.forEach(c=>{ curves[c.id] = {...c, shift:0}; });
+  graphState[graphId] = { curves, config };
+  return graphState[graphId];
+}
+
+function redrawGraphLive(graphId){
+  const state = graphState[graphId];
+  const config = state.config;
+  Object.values(state.curves).forEach(c=>{
+    const line = document.getElementById(`graphline-${graphId}-${c.id}`);
+    const lbl = document.getElementById(`graphlinelabel-${graphId}-${c.id}`);
+    if(!line) return;
+    const p1 = graphDataToSvg(config, c.p1[0], c.p1[1]+c.shift);
+    const p2 = graphDataToSvg(config, c.p2[0], c.p2[1]+c.shift);
+    line.setAttribute('x1',p1.sx); line.setAttribute('y1',p1.sy);
+    line.setAttribute('x2',p2.sx); line.setAttribute('y2',p2.sy);
+    if(lbl){ lbl.setAttribute('x', p2.sx+4); lbl.setAttribute('y', p2.sy); }
+  });
+  if(config.equilibriumOf){
+    const [aId,bId] = config.equilibriumOf;
+    const a = state.curves[aId], b = state.curves[bId];
+    const inter = graphIntersection(a,b);
+    const marker = document.getElementById('graphmarker-'+graphId);
+    const vline = document.getElementById('graphvline-'+graphId);
+    const hline = document.getElementById('graphhline-'+graphId);
+    const label = document.getElementById('graphlabel-'+graphId);
+    if(inter){
+      const [dx,dy] = inter;
+      const {sx,sy} = graphDataToSvg(config, dx, dy);
+      const origin = graphDataToSvg(config,0,0);
+      if(marker){ marker.setAttribute('cx',sx); marker.setAttribute('cy',sy); marker.setAttribute('opacity',1); }
+      if(vline){ vline.setAttribute('x1',sx); vline.setAttribute('x2',sx); vline.setAttribute('y1',sy); vline.setAttribute('y2',origin.sy); vline.setAttribute('opacity',1); }
+      if(hline){ hline.setAttribute('y1',sy); hline.setAttribute('y2',sy); hline.setAttribute('x1',sx); hline.setAttribute('x2',origin.sx); hline.setAttribute('opacity',1); }
+      if(label){ label.setAttribute('x',sx+8); label.setAttribute('y',sy-8); label.textContent = `${config.eqLabel||'Eq.'} (${config.xMarker||'Q'}*=${dx.toFixed(1)}, ${config.yMarker||'P'}*=${dy.toFixed(1)})`; }
+    } else {
+      [marker,vline,hline].forEach(el=>el&&el.setAttribute('opacity',0));
+      if(label) label.textContent = '';
+    }
+  }
+}
+
+function onGraphShift(graphId, curveId, value){
+  graphState[graphId].curves[curveId].shift = Number(value);
+  const readout = document.getElementById('graphshiftval-'+graphId+'-'+curveId);
+  if(readout) readout.textContent = (Number(value)>0?'+':'')+value;
+  redrawGraphLive(graphId);
+}
+
+function resetGraph(graphId){
+  Object.values(graphState[graphId].curves).forEach(c=>c.shift=0);
+  renderDashboardBody();
+}
+
+function renderInteractiveGraph(graphId, config){
+  initGraphState(graphId, config);
+  const state = graphState[graphId];
+  const plotW=config.plotW||340, plotH=config.plotH||220, marginL=config.marginL||54, marginB=config.marginB||34, marginT=config.marginT||16, marginR=config.marginR||16;
+  const width = marginL+plotW+marginR, height = marginT+plotH+marginB;
+  const origin = graphDataToSvg(config,0,0);
+  const topLeft = graphDataToSvg(config,0,config.yMax);
+  const rightBottom = graphDataToSvg(config,config.xMax,0);
+
+  const curvesSvg = Object.values(state.curves).map(c=>{
+    const p1 = graphDataToSvg(config, c.p1[0], c.p1[1]+c.shift);
+    const p2 = graphDataToSvg(config, c.p2[0], c.p2[1]+c.shift);
+    return `<line id="graphline-${graphId}-${c.id}" x1="${p1.sx}" y1="${p1.sy}" x2="${p2.sx}" y2="${p2.sy}" stroke="${c.color}" stroke-width="2.5"/>
+      <text id="graphlinelabel-${graphId}-${c.id}" x="${p2.sx+4}" y="${p2.sy}" font-size="11" fill="${c.color}" font-weight="700">${escapeHtml(c.label)}</text>`;
+  }).join('');
+
+  let eqInit = { opacity:0, sx:0, sy:0, text:'' };
+  if(config.equilibriumOf){
+    const [aId,bId] = config.equilibriumOf;
+    const inter = graphIntersection(state.curves[aId], state.curves[bId]);
+    if(inter){
+      const [dx,dy] = inter;
+      const p = graphDataToSvg(config, dx, dy);
+      eqInit = { opacity:1, sx:p.sx, sy:p.sy, text:`${config.eqLabel||'Eq.'} (${config.xMarker||'Q'}*=${dx.toFixed(1)}, ${config.yMarker||'P'}*=${dy.toFixed(1)})` };
+    }
+  }
+
+  const eqSvg = config.equilibriumOf ? `
+    <line id="graphvline-${graphId}" stroke="#9b9a95" stroke-dasharray="3 3" x1="${eqInit.sx}" y1="${eqInit.sy}" x2="${eqInit.sx}" y2="${origin.sy}" opacity="${eqInit.opacity}"/>
+    <line id="graphhline-${graphId}" stroke="#9b9a95" stroke-dasharray="3 3" x1="${eqInit.sx}" y1="${eqInit.sy}" x2="${origin.sx}" y2="${eqInit.sy}" opacity="${eqInit.opacity}"/>
+    <circle id="graphmarker-${graphId}" r="4.5" fill="#f2600c" cx="${eqInit.sx}" cy="${eqInit.sy}" opacity="${eqInit.opacity}"/>
+    <text id="graphlabel-${graphId}" font-size="11.5" font-weight="700" fill="#c94a05" x="${eqInit.sx+8}" y="${eqInit.sy-8}">${escapeHtml(eqInit.text)}</text>
+  ` : '';
+
+  const sliders = Object.values(state.curves).filter(c=>c.draggable).map(c=>`
+    <div class="graph-slider-row">
+      <span class="graph-slider-label" style="color:${c.color};">${escapeHtml(c.label)} shift <span id="graphshiftval-${graphId}-${c.id}">${c.shift}</span></span>
+      <input type="range" min="${-(config.shiftRange||20)}" max="${config.shiftRange||20}" value="${c.shift}" oninput="onGraphShift('${graphId}','${c.id}', this.value)"/>
+    </div>
+  `).join('');
+
+  return `
+    <div class="graph-box">
+      ${config.title ? `<div class="graph-title">${escapeHtml(config.title)}</div>` : ''}
+      <svg viewBox="0 0 ${width} ${height}" width="100%" style="max-width:${width}px;">
+        <line x1="${origin.sx}" y1="${origin.sy}" x2="${rightBottom.sx}" y2="${origin.sy}" stroke="#15151a" stroke-width="1.5"/>
+        <line x1="${origin.sx}" y1="${origin.sy}" x2="${origin.sx}" y2="${topLeft.sy}" stroke="#15151a" stroke-width="1.5"/>
+        <text x="${(origin.sx+rightBottom.sx)/2}" y="${height-4}" font-size="11" text-anchor="middle" fill="#5b5b66">${escapeHtml(config.xLabel)}</text>
+        <text x="10" y="${(origin.sy+topLeft.sy)/2}" font-size="11" fill="#5b5b66" transform="rotate(-90 10 ${(origin.sy+topLeft.sy)/2})" text-anchor="middle">${escapeHtml(config.yLabel)}</text>
+        ${curvesSvg}
+        ${eqSvg}
+      </svg>
+      ${sliders ? `<div class="graph-controls">${sliders}</div>` : ''}
+      ${config.equilibriumOf ? `<button class="btn btn-ghost btn-sm" onclick="resetGraph('${graphId}')" style="margin-top:8px;">↺ Reset graph</button>` : ''}
+      ${config.note ? `<p class="graph-note">${escapeHtml(config.note)}</p>` : ''}
+    </div>
+  `;
+}
+
+/* ============================================================
+   NUMERICAL PROBLEM GENERATOR (Economics) — a registry of
+   parameterized random-number generators, one per formula-based
+   concept. Each generator returns {question, values, answer,
+   steps, hint}. renderNumerical() drives the "generate another /
+   toggle hint / reveal solution" UI shared by every instance.
+   ============================================================ */
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function randFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+const NUMERICAL_GENERATORS = {
+  'price-elasticity-demand': {
+    title:'Price Elasticity of Demand', unit:'', formula:'E_d = (%ΔQ) / (%ΔP)',
+    generate(){
+      const p1 = randInt(10,40), p2 = p1 + randFrom([-8,-6,-4,4,6,8]);
+      const q1 = randInt(60,160); const dir = p2>p1 ? -1 : 1;
+      const q2 = q1 + dir*randInt(10,40);
+      const pctQ = ((q2-q1)/q1)*100, pctP = ((p2-p1)/p1)*100;
+      const ed = pctQ/pctP;
+      return {
+        question: `Price of a good rises from ₹${p1} to ₹${p2}, and quantity demanded changes from ${q1} units to ${q2} units. Calculate the price elasticity of demand.`,
+        answer: Math.abs(ed).toFixed(2),
+        steps: [
+          `%ΔQ = ((${q2} − ${q1}) / ${q1}) × 100 = ${pctQ.toFixed(2)}%`,
+          `%ΔP = ((${p2} − ${p1}) / ${p1}) × 100 = ${pctP.toFixed(2)}%`,
+          `E_d = %ΔQ / %ΔP = ${pctQ.toFixed(2)} / ${pctP.toFixed(2)} = ${ed.toFixed(2)}`,
+          `Taking the absolute value (elasticity is conventionally reported as positive): E_d = ${Math.abs(ed).toFixed(2)}`,
+          Math.abs(ed)>1 ? 'Since |E_d| > 1, demand is elastic.' : Math.abs(ed)===1 ? 'Since |E_d| = 1, demand is unitary elastic.' : 'Since |E_d| < 1, demand is inelastic.',
+        ],
+        hint:'Use %ΔQ ÷ %ΔP, and remember price and quantity move in opposite directions for normal goods.',
+      };
+    } },
+  'national-income-expenditure': {
+    title:'National Income by Expenditure Method', unit:'₹ crore', formula:'GDP = C + I + G + (X − M)',
+    generate(){
+      const C=randInt(400,900), I=randInt(150,400), G=randInt(100,350), X=randInt(80,220), M=randInt(60,200);
+      const gdp = C+I+G+(X-M);
+      return {
+        question: `Given: Private final consumption expenditure (C) = ₹${C} crore, Gross domestic capital formation (I) = ₹${I} crore, Government final consumption expenditure (G) = ₹${G} crore, Exports (X) = ₹${X} crore, Imports (M) = ₹${M} crore. Calculate GDP by the expenditure method.`,
+        answer: gdp.toLocaleString('en-IN'),
+        steps: [
+          `Net exports = X − M = ${X} − ${M} = ${X-M}`,
+          `GDP = C + I + G + (X − M)`,
+          `GDP = ${C} + ${I} + ${G} + (${X-M})`,
+          `GDP = ₹${gdp.toLocaleString('en-IN')} crore`,
+        ],
+        hint:'Add all four expenditure components; net exports can be negative if imports exceed exports.',
+      };
+    } },
+  'multiplier': {
+    title:'Investment Multiplier', unit:'', formula:'k = 1 / (1 − MPC);  ΔY = k × ΔI',
+    generate(){
+      const mpc = (randInt(60,90)/100);
+      const dI = randInt(20,100)*10;
+      const k = 1/(1-mpc);
+      const dY = dI*k;
+      return {
+        question: `In an economy, the Marginal Propensity to Consume (MPC) is ${mpc.toFixed(2)}. If investment increases by ₹${dI} crore, calculate the multiplier and the resulting total change in national income.`,
+        answer: `k = ${k.toFixed(2)}, ΔY = ₹${dY.toFixed(0)} crore`,
+        steps: [
+          `k = 1 / (1 − MPC) = 1 / (1 − ${mpc.toFixed(2)}) = 1 / ${(1-mpc).toFixed(2)} = ${k.toFixed(2)}`,
+          `ΔY = k × ΔI = ${k.toFixed(2)} × ₹${dI} crore`,
+          `ΔY = ₹${dY.toFixed(0)} crore`,
+        ],
+        hint:'Multiplier = 1 ÷ MPS, and MPS = 1 − MPC. Then multiply by the change in investment.',
+      };
+    } },
+  'index-numbers': {
+    title:'Price Index Number', unit:'', formula:'Index = (Current value / Base value) × 100',
+    generate(){
+      const base = randInt(80,150);
+      const current = base + randInt(10,80);
+      const idx = (current/base)*100;
+      return {
+        question: `The price of a commodity basket was ₹${base} in the base year and is ₹${current} in the current year. Calculate the price index number.`,
+        answer: idx.toFixed(1),
+        steps: [
+          `Index = (Current value / Base value) × 100`,
+          `Index = (${current} / ${base}) × 100`,
+          `Index = ${idx.toFixed(1)}`,
+          `This means prices have risen by ${(idx-100).toFixed(1)}% relative to the base year.`,
+        ],
+        hint:'Always divide the current-year value by the base-year value, then multiply by 100.',
+      };
+    } },
+  'cost-revenue-breakeven': {
+    title:'Break-even Output (Cost & Revenue)', unit:'units', formula:'Break-even: TR = TC, i.e. P×Q = FC + (AVC×Q)',
+    generate(){
+      const fc = randInt(500,2000)*10;
+      const price = randInt(20,80);
+      const avc = randInt(5,Math.max(6,price-5));
+      const qbe = fc/(price-avc);
+      return {
+        question: `A firm has Fixed Costs of ₹${fc}, sells its product at ₹${price} per unit, and has an Average Variable Cost of ₹${avc} per unit. Calculate the break-even level of output.`,
+        answer: qbe.toFixed(1)+' units',
+        steps: [
+          `At break-even, Total Revenue = Total Cost: P×Q = FC + (AVC×Q)`,
+          `Q × (P − AVC) = FC`,
+          `Q = FC / (P − AVC) = ${fc} / (${price} − ${avc}) = ${fc} / ${price-avc}`,
+          `Q ≈ ${qbe.toFixed(1)} units`,
+        ],
+        hint:'Break-even output is Fixed Cost divided by the contribution margin per unit (Price − AVC).',
+      };
+    } },
+  'fiscal-deficit': {
+    title:'Fiscal & Primary Deficit', unit:'₹ crore', formula:'Fiscal Deficit = Total Expenditure − Total Receipts (excl. borrowings); Primary Deficit = Fiscal Deficit − Interest Payments',
+    generate(){
+      const totalExp = randInt(1000,3000)*10;
+      const totalRec = totalExp - randInt(200,900)*10;
+      const interest = randInt(50,300)*10;
+      const fiscalDef = totalExp - totalRec;
+      const primaryDef = fiscalDef - interest;
+      return {
+        question: `A government's total expenditure is ₹${totalExp} crore and total receipts (excluding borrowings) are ₹${totalRec} crore. Interest payments are ₹${interest} crore. Calculate the fiscal deficit and the primary deficit.`,
+        answer: `Fiscal deficit = ₹${fiscalDef.toLocaleString('en-IN')} crore, Primary deficit = ₹${primaryDef.toLocaleString('en-IN')} crore`,
+        steps: [
+          `Fiscal Deficit = Total Expenditure − Total Receipts (excl. borrowings)`,
+          `Fiscal Deficit = ${totalExp} − ${totalRec} = ₹${fiscalDef.toLocaleString('en-IN')} crore`,
+          `Primary Deficit = Fiscal Deficit − Interest Payments`,
+          `Primary Deficit = ${fiscalDef} − ${interest} = ₹${primaryDef.toLocaleString('en-IN')} crore`,
+        ],
+        hint:'Primary deficit strips out interest payments on past borrowing from the fiscal deficit.',
+      };
+    } },
+};
+
+const numericalState = {}; // instanceId -> {genId, current, showHint, showSteps}
+
+function renderNumerical(instanceId, genId){
+  if(!numericalState[instanceId]){
+    numericalState[instanceId] = { genId, current: NUMERICAL_GENERATORS[genId].generate(), showHint:false, showSteps:false };
+  }
+  const st = numericalState[instanceId];
+  const gen = NUMERICAL_GENERATORS[st.genId];
+  const p = st.current;
+  return `
+    <div class="numerical-box">
+      <div class="numerical-formula"><span class="eyebrow" style="color:var(--orange-deep);">${escapeHtml(gen.title)}</span><div class="numerical-formula-expr">${escapeHtml(gen.formula)}</div></div>
+      <p class="numerical-question">${escapeHtml(p.question)}</p>
+      <div class="numerical-actions">
+        <button class="btn btn-ghost btn-sm" onclick="toggleNumericalHint('${instanceId}')">${st.showHint?'Hide hint':'💡 Show hint'}</button>
+        <button class="btn btn-primary btn-sm" onclick="toggleNumericalSteps('${instanceId}')">${st.showSteps?'Hide solution':'✅ Reveal step solution'}</button>
+        <button class="btn btn-ghost btn-sm" onclick="regenNumerical('${instanceId}')">🔄 New problem</button>
+      </div>
+      ${st.showHint ? `<div class="numerical-hint">💡 ${escapeHtml(p.hint)}</div>` : ''}
+      ${st.showSteps ? `<div class="numerical-steps">${p.steps.map((s,i)=>`<div class="beat-row"><div class="beat-num">${i+1}</div><div class="beat-text">${escapeHtml(s)}</div></div>`).join('')}<div class="numerical-answer">Final answer: <strong>${escapeHtml(String(p.answer))}</strong></div></div>` : ''}
+    </div>
+  `;
+}
+function toggleNumericalHint(id){ numericalState[id].showHint = !numericalState[id].showHint; renderDashboardBody(); }
+function toggleNumericalSteps(id){ numericalState[id].showSteps = !numericalState[id].showSteps; renderDashboardBody(); }
+function regenNumerical(id){ const st = numericalState[id]; st.current = NUMERICAL_GENERATORS[st.genId].generate(); st.showHint=false; st.showSteps=false; renderDashboardBody(); }
+
+/* ============================================================
    SOCIOLOGY — Chapter (Unit) > Topic > Subtopic navigation.
    Subtopic page = Learn (2/3/5-mark boxes, not flip cards, plus
    scrollable teaching content/flowcharts) + Practice Zone.
@@ -2897,7 +3821,7 @@ function renderSocSubtopicChips(chapter, topic){
   ).join('')}</div>`;
 }
 
-function renderSocDefBoxes(subtopic){
+function renderDefBoxes(subtopic){
   return `
     <div class="soc-def-grid">
       <div class="soc-def-box"><div class="soc-def-label">2-mark <span>· keywords only</span></div><p>${highlight(subtopic.def2, subtopic.keywords)}</p></div>
@@ -2917,7 +3841,7 @@ function renderSocTopicPage(chapter, topic){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>📘 ${escapeHtml(s.name)}</h2>
-        ${renderSocDefBoxes(s)}
+        ${renderDefBoxes(s)}
         <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
         <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
         ${s.flowchart ? renderFlowchart(s.flowchart) : ''}
@@ -2939,7 +3863,7 @@ function renderSocTopicPage(chapter, topic){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>🔑 ${escapeHtml(s.name)}</h2>
-        ${renderSocDefBoxes(s)}
+        ${renderDefBoxes(s)}
       </div>
     `).join('');
   } else if(tab==='difftables'){
@@ -2987,7 +3911,7 @@ function renderSocSubtopicPage(chapter, topic, subtopic){
   let body = '';
   if(tab==='learn'){
     body = `
-      ${renderSocDefBoxes(subtopic)}
+      ${renderDefBoxes(subtopic)}
       <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
       <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
       ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
@@ -3005,6 +3929,236 @@ function renderSocSubtopicPage(chapter, topic, subtopic){
     <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backSocToTopic()">← ${escapeHtml(topic.name)}</button>
     <div style="margin-bottom:18px;">
       <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
+      <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
+    </div>
+    <div class="eng-tabs">${tabsHtml}</div>
+    <div>${body}</div>
+  `;
+}
+
+/* ============================================================
+   ECONOMICS — Grade > Chapter (Unit) > Topic > Subtopic.
+   Topic page carries the full "topper-level" tab set: Overview,
+   Practice Zone, Memorize Mode, Key Definitions, Formula
+   Handbook, Difference Tables, Graph Library, Numerical
+   Practice, Concept Map, Exam Booster. Subtopic page = Learn
+   (2/3/5-mark boxes + formulas + graph + numerical, all inline)
+   + Practice Zone.
+   ============================================================ */
+function openEconGrade(g){ appState.econGrade=g; appState.econChapterId=null; appState.econTopicId=null; appState.econSubtopicId=null; renderDashboardBody(); }
+function openEconChapter(id){ appState.econChapterId=id; appState.econTopicId=null; appState.econSubtopicId=null; renderDashboardBody(); }
+function openEconTopic(id){ appState.econTopicId=id; appState.econSubtopicId=null; renderDashboardBody(); }
+function openEconSubtopic(id){ appState.econSubtopicId=id; renderDashboardBody(); }
+function backEconToGrades(){ appState.econGrade=null; appState.econChapterId=null; appState.econTopicId=null; appState.econSubtopicId=null; renderDashboardBody(); }
+function backEconToChapters(){ appState.econChapterId=null; appState.econTopicId=null; appState.econSubtopicId=null; renderDashboardBody(); }
+function backEconToTopics(){ appState.econTopicId=null; appState.econSubtopicId=null; renderDashboardBody(); }
+function backEconToTopic(){ appState.econSubtopicId=null; renderDashboardBody(); }
+function setEconTopicTab(topicId, tab){ appState.econTopicTab[topicId]=tab; renderDashboardBody(); }
+
+function econTopicSubtopicCount(topic){
+  const done = topic.subtopics.filter(s=>learnedItems.has('econ-subtopic-'+s.id)).length;
+  return { done, total: topic.subtopics.length };
+}
+function econAllSubtopics(){ return ECON_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics)); }
+
+function renderEconomics(){
+  if(!appState.econGrade) return renderEconGradeList();
+  const chapters = ECON_CHAPTERS.filter(c=>c.grade===appState.econGrade);
+  if(!appState.econChapterId) return renderEconChapterList(chapters);
+  const chapter = ECON_CHAPTERS.find(c=>c.id===appState.econChapterId);
+  if(!appState.econTopicId) return renderEconTopicList(chapter);
+  const topic = chapter.topics.find(t=>t.id===appState.econTopicId);
+  if(appState.econSubtopicId){
+    const subtopic = topic.subtopics.find(s=>s.id===appState.econSubtopicId);
+    return renderEconSubtopicPage(chapter, topic, subtopic);
+  }
+  return renderEconTopicPage(chapter, topic);
+}
+
+function renderEconGradeList(){
+  const tiles = [11,12].map(g=>{
+    const chapters = ECON_CHAPTERS.filter(c=>c.grade===g);
+    const total = chapters.reduce((n,c)=>n+c.topics.reduce((m,t)=>m+t.subtopics.length,0),0);
+    const done = chapters.reduce((n,c)=>n+c.topics.reduce((m,t)=>m+t.subtopics.filter(s=>learnedItems.has('econ-subtopic-'+s.id)).length,0),0);
+    const pct = total? Math.round(done/total*100):0;
+    return `<button class="subject-tile" onclick="openEconGrade(${g})">
+      <div class="s-icon" style="background:#E8F7FF;">${g===11?'📘':'📗'}</div>
+      <h3 class="display">Class ${g}</h3>
+      <div class="s-sub" style="margin-top:4px;">${chapters.length} chapters</div>
+      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#0EA5E9;"></div></div>
+      <div class="s-sub">${done} of ${total} subtopics learned</div>
+    </button>`;
+  }).join('');
+  return `
+    <h1 style="font-size:26px;margin-bottom:4px;">Economics</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">ISC Economics · Grades XI &amp; XII, every chapter in the CISCE syllabus with 2/3/5-mark answers, formulas, interactive graphs and infinite numericals.</p>
+    <div class="subject-grid">${tiles}</div>
+  `;
+}
+
+function renderEconChapterList(chapters){
+  const tiles = chapters.map(c=>{
+    const total = c.topics.reduce((n,t)=>n+t.subtopics.length,0);
+    const done = c.topics.reduce((n,t)=>n+t.subtopics.filter(s=>learnedItems.has('econ-subtopic-'+s.id)).length,0);
+    const pct = total? Math.round(done/total*100):0;
+    return `<button class="subject-tile" onclick="openEconChapter('${c.id}')">
+      <div class="s-icon" style="background:#E8F7FF;">${c.icon}</div>
+      <h3 class="display">${escapeHtml(c.name)}</h3>
+      <div class="s-sub" style="margin-top:4px;">${c.topics.length} topics</div>
+      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#0EA5E9;"></div></div>
+      <div class="s-sub">${done} of ${total} subtopics learned</div>
+    </button>`;
+  }).join('');
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToGrades()">← Class XI / XII</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">Class ${appState.econGrade} Economics</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a chapter to explore its topics.</p>
+    <div class="subject-grid">${tiles}</div>
+  `;
+}
+
+function renderEconTopicList(chapter){
+  const rows = chapter.topics.map(t=>{
+    const {done,total} = econTopicSubtopicCount(t);
+    return listRow(t.id, t.name, `${t.subtopics.length} subtopics · ${done}/${total} learned`, done===total && total>0, `openEconTopic('${t.id}')`);
+  }).join('');
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToChapters()">← Class ${chapter.grade} chapters</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a topic for its full topper-level toolkit: overview, practice zone, memorize mode, formulas, graphs, numericals, concept map and exam booster.</p>
+    ${rows}
+  `;
+}
+
+const ECON_TOPIC_TABS = [
+  {id:'overview', label:'Overview'},
+  {id:'practice', label:'Practice Zone'},
+  {id:'memorize', label:'Memorize Mode'},
+  {id:'keydefs', label:'Key Definitions'},
+  {id:'formulas', label:'Formula Handbook'},
+  {id:'difftables', label:'Difference Tables'},
+  {id:'graphs', label:'Graph Library'},
+  {id:'numericals', label:'Numerical Practice'},
+  {id:'conceptmap', label:'Concept Map'},
+  {id:'exambooster', label:'Exam Booster'},
+];
+
+function renderEconSubtopicChips(topic){
+  return `<div class="eng-tabs" style="margin-bottom:20px;">${topic.subtopics.map(s=>
+    `<button class="eng-tab ${appState.econSubtopicId===s.id?'active':''}" onclick="openEconSubtopic('${s.id}')">${learnedItems.has('econ-subtopic-'+s.id)?'✓ ':''}${escapeHtml(s.name)}</button>`
+  ).join('')}</div>`;
+}
+
+function renderFormulaCard(f){
+  return `<div class="formula-hb-card">
+    <div class="fhb-name">🧮 ${escapeHtml(f.name)}</div>
+    <div class="fhb-expr">${escapeHtml(f.expr)}</div>
+    <div class="fhb-row"><b>Derivation: </b>${escapeHtml(f.derivation)}</div>
+    <div class="fhb-row"><b>Units: </b>${escapeHtml(f.units)}</div>
+    <div class="fhb-row"><b>Common mistake: </b>${escapeHtml(f.mistakes)}</div>
+  </div>`;
+}
+
+function renderEconTopicPage(chapter, topic){
+  if(!appState.econTopicTab[topic.id]) appState.econTopicTab[topic.id] = 'overview';
+  const tab = appState.econTopicTab[topic.id];
+  const tabsHtml = ECON_TOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setEconTopicTab('${topic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+
+  let body = '';
+  if(tab==='overview'){
+    body = topic.subtopics.map(s=>`
+      <div class="lesson-card">
+        <h2>📘 ${escapeHtml(s.name)}</h2>
+        ${renderDefBoxes(s)}
+        <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
+        <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
+      </div>
+    `).join('');
+  } else if(tab==='practice'){
+    const qs = ECON_QA_BANK.filter(q=>q.topic===topic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Every question for ${escapeHtml(topic.name)}. Answers save automatically and re-grade whenever you edit them.</p>${renderPracticeSection('econ-topic-'+topic.id, qs, {subtopic:true, marks:true})}`;
+  } else if(tab==='memorize'){
+    const widerNames = econAllSubtopics().map(s=>s.name);
+    const sameTopicNames = topic.subtopics.map(s=>s.name);
+    const cards = topic.subtopics.map(s=>({
+      prompt: `${escapeHtml(s.example)}<br><span style="font-size:13px;color:var(--ink-soft);">This is an example of: <span class="blank">?</span></span>`,
+      answer: s.name,
+      options: buildMcqOptions(s.name, sameTopicNames, widerNames),
+    }));
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Match each real-world example to the concept it illustrates.</p>${renderMemoMode('memo-econ-topic-'+topic.id, cards, 'memoAnswer')}`;
+  } else if(tab==='keydefs'){
+    body = topic.subtopics.map(s=>`<div class="lesson-card"><h2>🔑 ${escapeHtml(s.name)}</h2>${renderDefBoxes(s)}</div>`).join('');
+  } else if(tab==='formulas'){
+    const withFormulas = topic.subtopics.filter(s=>s.formulas && s.formulas.length);
+    body = withFormulas.length ? withFormulas.map(s=>`<div style="margin-bottom:6px;"><div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${s.formulas.map(renderFormulaCard).join('')}</div>`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No formulas tagged for this topic.</p>';
+  } else if(tab==='difftables'){
+    const tables = topic.subtopics.filter(s=>s.diffTable);
+    body = tables.length ? tables.map(s=>renderDiffTable(s.diffTable)).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No paired comparison tables for this topic.</p>';
+  } else if(tab==='graphs'){
+    const withGraphs = topic.subtopics.filter(s=>s.graph);
+    body = withGraphs.length ? withGraphs.map(s=>`<div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${renderInteractiveGraph('econ-'+s.id, s.graph)}`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No graphs tagged for this topic.</p>';
+  } else if(tab==='numericals'){
+    const withGen = topic.subtopics.filter(s=>s.numericalGen);
+    body = withGen.length ? withGen.map(s=>`<div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${renderNumerical('econ-'+s.id, s.numericalGen)}`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No numerical generator tagged for this topic.</p>';
+  } else if(tab==='conceptmap'){
+    body = `<div class="lesson-card"><div class="concept-map">
+      <div class="concept-node center">${escapeHtml(topic.name)}</div>
+      ${topic.subtopics.map(s=>`<span class="concept-arrow">→</span><div class="concept-node">${escapeHtml(s.name)}</div>`).join('')}
+    </div></div>`;
+  } else if(tab==='exambooster'){
+    const tips = topic.subtopics.map(s=>`<div class="device-line"><b>${escapeHtml(s.name)}: </b>${escapeHtml(s.def2)}</div>`).join('');
+    const tricks = topic.subtopics.map(s=>`<span class="char-verb">${escapeHtml(s.memoryTrick)}</span>`).join('');
+    const mistakes = topic.subtopics.filter(s=>s.formulas).flatMap(s=>s.formulas.map(f=>`<div class="device-line"><b>${escapeHtml(f.name)}: </b>${escapeHtml(f.mistakes)}</div>`)).join('');
+    body = `
+      <div class="lesson-card"><h2>⚡ Quick-fire 2-mark definitions</h2>${tips}</div>
+      <div class="lesson-card"><h2>💡 Memory tricks (last-24-hr drill)</h2><div class="char-verbs">${tricks}</div></div>
+      ${mistakes ? `<div class="tip-box"><div class="tip-head">🚫 Common examiner pitfalls</div><div class="tip-body">${mistakes}</div></div>` : ''}
+    `;
+  }
+
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToTopics()">← ${escapeHtml(chapter.name)}</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${escapeHtml(topic.name)}</h1>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
+    <div class="eng-tabs">${tabsHtml}</div>
+    ${renderEconSubtopicChips(topic)}
+    <div>${body}</div>
+  `;
+}
+
+const econSubtopicTabState = {};
+function setEconSubtopicTab(subtopicId, tab){ econSubtopicTabState[subtopicId] = tab; renderDashboardBody(); }
+
+function renderEconSubtopicPage(chapter, topic, subtopic){
+  const tab = econSubtopicTabState[subtopic.id] || 'learn';
+  const tabsHtml = SOC_SUBTOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setEconSubtopicTab('${subtopic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+  const learnedKey = 'econ-subtopic-'+subtopic.id;
+  const learned = learnedItems.has(learnedKey);
+
+  let body = '';
+  if(tab==='learn'){
+    body = `
+      ${renderDefBoxes(subtopic)}
+      <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
+      <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
+      ${subtopic.formulas ? subtopic.formulas.map(renderFormulaCard).join('') : ''}
+      ${subtopic.graph ? renderInteractiveGraph('econ-'+subtopic.id, subtopic.graph) : ''}
+      ${subtopic.numericalGen ? renderNumerical('econ-'+subtopic.id, subtopic.numericalGen) : ''}
+      ${subtopic.diffTable ? renderDiffTable(subtopic.diffTable) : ''}
+      ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
+      <button class="btn btn-primary mark-learned-btn" ${learned?'disabled':''} onclick="markLearned('${learnedKey}')" style="${learned?'background:var(--green);':''}">
+        ${learned?'✓ Marked as learned':'Mark this subtopic as learned'}
+      </button>
+    `;
+  } else if(tab==='practice'){
+    const qs = ECON_QA_BANK.filter(q=>q.subtopic===subtopic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('econ-subtopic-'+subtopic.id, qs, {marks:true})}`;
+  }
+
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToTopic()">← ${escapeHtml(topic.name)}</button>
+    <div style="margin-bottom:18px;">
+      <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
       <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
     </div>
     <div class="eng-tabs">${tabsHtml}</div>
