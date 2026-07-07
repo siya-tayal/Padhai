@@ -325,6 +325,24 @@
   .prereq-title{font-size:13.5px;font-weight:700;color:var(--ink);}
   @media (max-width:600px){ .prereq-next-row{grid-template-columns:1fr;} }
 
+  /* ---- lesson flow (Sociology / Economics subtopic pages) ---- */
+  .lesson-flow-layout{display:flex;gap:24px;align-items:flex-start;}
+  .lesson-rail{flex:0 0 220px;position:sticky;top:16px;display:flex;flex-direction:column;gap:4px;max-height:80vh;overflow-y:auto;padding-right:6px;}
+  .lesson-rail-item{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 10px;border-radius:10px;border:none;background:none;cursor:pointer;font-family:inherit;}
+  .lesson-rail-item:hover{background:#faf8f5;}
+  .lesson-rail-item.active{background:var(--orange-tint);}
+  .lesson-rail-num{flex:none;width:22px;height:22px;border-radius:999px;background:#efeeea;color:var(--ink-soft);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .lesson-rail-num.done{background:var(--green);color:#fff;}
+  .lesson-rail-item.active .lesson-rail-num{background:var(--orange-deep);color:#fff;}
+  .lesson-rail-name{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.35;}
+  .lesson-flow-main{flex:1;min-width:0;}
+  .lesson-flow-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);}
+  .lesson-flow-progress{font-size:11.5px;font-weight:700;color:var(--ink-soft);white-space:nowrap;}
+  @media (max-width:800px){ .lesson-flow-layout{flex-direction:column;} .lesson-rail{position:static;flex-direction:row;flex-wrap:wrap;max-height:none;width:100%;} }
+
+  /* ---- economics def-box formula ---- */
+  .econ-def-formula{margin-top:10px;padding:10px 14px;background:#faf8f5;border-radius:10px;border:1px dashed var(--line);}
+
   /* ---- accordion ---- */
   .accordion{border:1.5px solid var(--line);border-radius:14px;background:#fff;margin-bottom:12px;overflow:hidden;}
   .accordion-summary{cursor:pointer;padding:14px 18px;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;justify-content:space-between;}
@@ -1451,13 +1469,25 @@ const SOC_CHAPTERS = [
             def3:"Matrilineal descent traces family lineage via the mother, with women transmitting inheritance. Patrilineal descent traces lineage via the father (the male line). Bilateral (cognatic) descent considers both maternal and paternal sides equally.",
             def5:"Descent rules decide which parent's line a person belongs to for inheritance and group membership. In a matrilineal system, individuals belong to their mother's descent group, inheriting names or property maternally. In a patrilineal system, descent and inheritance follow the father's line, common where property passes from fathers to sons. A bilateral (cognatic) system recognises both parents' lines equally, so relatives on both mother's and father's sides matter for identity and inheritance. These rules function to organise property, group membership and lineage continuity across generations.",
             memoryTrick:"Matre = Mother's line; Patre = Papa's line; Bi = both.",
-            example:'The Khasi tribe of Northeast India is matrilineal (property passes mother to daughter); traditional Hindu society is patrilineal (name and inheritance follow the male line).' },
+            example:'The Khasi tribe of Northeast India is matrilineal (property passes mother to daughter); traditional Hindu society is patrilineal (name and inheritance follow the male line).',
+            examples:[
+              { clue:'Matrilineal descent — property and clan name pass from mother to daughter.', tag:'Khasi (Meghalaya)' },
+              { clue:'Matrilineal descent, with the youngest daughter traditionally inheriting the family property.', tag:'Garo (Meghalaya)' },
+              { clue:'Patrilineal descent — property and lineage pass through the father.', tag:'Naga (Nagaland)' },
+              { clue:'Patrilineal descent, with surname and inheritance following the male line.', tag:'Mainstream Hindu society' },
+            ] },
           { id:'residence', name:'Residence — Matrilocal, Patrilocal, Avunculocal', keywords:['matrilocal','patrilocal','avunculocal','residence'],
             def2:'Matrilocal: couple lives with/near the wife\'s family; Patrilocal: near the husband\'s family; Avunculocal: near the maternal uncle.',
             def3:"Matrilocal residence places a married couple in the wife's family home. Patrilocal residence places them with the husband's kin. Avunculocal residence has the couple living with the husband's maternal uncle, found in some matrilineal tribes.",
             def5:"Residence rules designate where a couple lives after marriage, and they function to reinforce whichever descent system a society follows. In a matrilocal system the husband moves to the wife's household; in a patrilocal system (the most common globally) the wife moves to the husband's kin. Avunculocal residence occurs in certain matrilineal societies (e.g. some Khasi communities), where a married couple lives with the husband's maternal uncle, which strengthens ties to the mother's clan even though the couple itself is not physically at the wife's home.",
             memoryTrick:"Matri- (mum's home), Patri- (pa's home), Avunculo- (uncle's home).",
             example:'In many South Indian communities, brides move into the groom\'s home (patrilocal); in some Naga tribes, a couple stays with the groom\'s maternal uncle (avunculocal).',
+            examples:[
+              { clue:'Matrilocal residence — the husband moves into the wife\'s family home after marriage.', tag:'Khasi (Meghalaya)' },
+              { clue:'Matrilocal residence, reinforcing a matrilineal descent system.', tag:'Garo (Meghalaya)' },
+              { clue:'Patrilocal residence — the bride moves into the groom\'s family home.', tag:'Mainstream Hindu society' },
+              { clue:'Avunculocal residence — the couple lives with the husband\'s maternal uncle.', tag:'Matrilineal Northeast tribes' },
+            ],
             flowchart:[
               {heading:'Matrilocal', text:'The married couple settles in or near the wife\'s family home.'},
               {heading:'Patrilocal', text:'The married couple settles in or near the husband\'s family home — the most common pattern worldwide.'},
@@ -1468,7 +1498,13 @@ const SOC_CHAPTERS = [
             def3:'In an avoidance relationship, certain kin observe restrained, formal behaviour to show respect and avoid tension. In a joking relationship, a preferred relative engages in humorous teasing and easy familiarity.',
             def5:'Kinship usages are customary patterns of interaction among relatives, and their scope covers how different kin are expected to behave toward one another. In an avoidance relationship, kin such as a son-in-law and mother-in-law keep formal distance and restrained behaviour to prevent friction and show respect. In a joking relationship, typically a cross-cousin or uncle-nephew pair, humour and teasing are permitted and even expected. Together, these usages function to release social tension and integrate kin into a stable, predictable system of behaviour.',
             memoryTrick:'Avoidance = avoid eye contact. Joking = blow off steam with humour.',
-            example:'A daughter-in-law avoiding direct speech with her father-in-law (avoidance); a maternal uncle jokingly teasing his nephew (joking relationship).' },
+            example:'A daughter-in-law avoiding direct speech with her father-in-law (avoidance); a maternal uncle jokingly teasing his nephew (joking relationship).',
+            examples:[
+              { clue:'Avoidance relationships between a daughter-in-law and father-in-law, requiring formal distance, are widely documented here.', tag:'Naga (Nagaland)' },
+              { clue:'Joking relationships between cross-cousins are a well-documented custom here.', tag:'Khasi (Meghalaya)' },
+              { clue:'The devar–bhabhi (brother-in-law and sister-in-law) joking relationship is a common custom here.', tag:'North Indian Hindu families' },
+              { clue:'Son-in-law/mother-in-law avoidance customs, requiring restrained formal behaviour, are documented here.', tag:'Gond (Central India)' },
+            ] },
           { id:'special-kinship-terms', name:'Teknonymy, Avunculate, Amitate, Couvade', keywords:['teknonymy','avunculate','amitate','couvade'],
             def2:'Teknonymy: naming a parent after their child. Avunculate: elevated status of the maternal uncle. Amitate: elevated status of the paternal aunt. Couvade: a ritual where the husband mimics labour pains.',
             def3:'Teknonymy means calling a parent by their child\'s name (e.g. "Hari\'s mother"). Avunculate and amitate give special authority to the maternal uncle or paternal aunt respectively. Couvade is a ritual in which the husband observes symbolic pregnancy pains during his wife\'s labour.',
@@ -1501,7 +1537,12 @@ const SOC_CHAPTERS = [
             def3:'Monogamy is the norm in most modern societies, restricting each person to one spouse at a time. Polygamy covers any form of plural marriage, split into polygyny (a man with multiple wives) and polyandry (a woman with multiple husbands).',
             def5:'Marriage forms describe how many spouses a person may have at one time, and their scope reflects a society\'s economic and cultural priorities. Monogamy, the dominant form worldwide, involves one spouse at a time and is often legally enforced. Polygamy is the general category for plural marriage; polygyny (one man, several wives) has historically functioned to display wealth and status or ensure lineage continuity, while polyandry (one woman, several husbands, often brothers) has functioned in some Himalayan communities to keep family land undivided across brothers.',
             memoryTrick:'Mono = one; Poly = many; gyny = women; andry = men.',
-            example:'Polygyny is practised in some tribal and royal families; fraternal polyandry exists among some Himalayan communities.' },
+            example:'Polygyny is practised in some tribal and royal families; fraternal polyandry exists among some Himalayan communities.',
+            examples:[
+              { clue:'Fraternal polyandry (a woman married to a group of brothers) is traditionally documented here.', tag:'Toda (Nilgiris, Tamil Nadu)' },
+              { clue:'Fraternal polyandry has historically been practiced here to keep family land undivided across brothers.', tag:'Jaunsar-Bawar (Himachal Pradesh/Uttarakhand)' },
+              { clue:'Polygyny (one man, multiple wives) has been historically documented here.', tag:'Some tribal/royal families' },
+            ] },
         ] },
       { id:'family', name:'Family',
         subtopics:[
@@ -1535,7 +1576,12 @@ const SOC_CHAPTERS = [
             def3:'A matriarchal (matripotestal) family gives authority to the eldest woman, such as a mother or grandmother, found in some tribal societies. A patriarchal family gives authority to the eldest male, the most common pattern globally. An avuncupotestal family gives authority to the maternal uncle rather than the father.',
             def5:'These terms describe where formal authority sits within a family, and their scope covers how decision-making power is distributed across generations and genders. In a matriarchal (matripotestal) family, the eldest woman holds authority over the household, as documented among the Khasi and Garo tribes of Northeast India. In a patriarchal family, by far the most common form worldwide, the eldest male (father or grandfather) holds authority. In an avuncupotestal family, found in certain patrilineal-adjacent lineages, authority rests with the maternal uncle rather than the father, functioning to balance power between a child\'s father\'s lineage and mother\'s lineage.',
             memoryTrick:'Matri- = mother rules; Patri- = father rules; Avuncu- = maternal uncle rules.',
-            example:'Among the Khasi of Northeast India, the eldest woman heads the household (matriarchal).' },
+            example:'Among the Khasi of Northeast India, the eldest woman heads the household (matriarchal).',
+            examples:[
+              { clue:'A matriarchal (matripotestal) family — the eldest woman traditionally heads the household.', tag:'Khasi (Meghalaya)' },
+              { clue:'A matripotestal family structure, with authority resting with senior women.', tag:'Garo (Meghalaya)' },
+              { clue:'A patriarchal family structure — the eldest male traditionally heads the household.', tag:'Mainstream Hindu society (patriarchal)' },
+            ] },
           { id:'nuclear-vs-joint', name:'Nuclear vs Joint (Extended) Family', keywords:['nuclear','joint family','extended','urbanization'],
             def2:'Nuclear: a small family of one married couple and their unmarried children. Joint (Extended): multiple related nuclear families living together across generations.',
             def3:'A nuclear family is independent, usually just both parents and dependent children in one household. An extended/joint family includes several generations under one roof, sharing resources — common in traditional Indian society.',
@@ -1720,19 +1766,35 @@ const SOC_CHAPTERS = [
             def3:'A tribe is a social group with shared culture, language, and common descent, usually inhabiting a defined territory, and typically with an egalitarian social structure.',
             def5:'A tribe is a collection of families or local communities sharing a common name, territory, and culture. Sociologist D.N. Majumdar defines a tribe as "a collection of families... occupying the same territory, speaking the same language, observing certain marriage taboos, and having a system of mutual obligation." Its scope covers kin-based, often politically autonomous communities not rigidly stratified like caste, and its distinguishing traits include relative isolation, oral traditions, and community-based decision-making.',
             memoryTrick:'Tribe = tight-knit native unit.',
-            example:'The Gond tribe of central India has its own language and territory, with chiefs chosen by elders.' },
+            example:'The Gond tribe of central India has its own language and territory, with chiefs chosen by elders.',
+            examples:[
+              { clue:'A tribe with its own language (Gondi) and elder-led leadership, found across central India.', tag:'Gond (Central India)' },
+              { clue:'One of the largest tribal communities in India, concentrated in the eastern states.', tag:'Santhal (Jharkhand/West Bengal/Odisha)' },
+              { clue:'One of India\'s largest tribal groups, spread across the western-central states.', tag:'Bhil (Rajasthan/Gujarat/MP)' },
+              { clue:'A small pastoral tribal community found in a South Indian hill range.', tag:'Toda (Nilgiris, Tamil Nadu)' },
+            ] },
           { id:'dormitories', name:'Tribal Youth Dormitories', keywords:['communal living','morung','socialization'],
             def2:'Communal living spaces for unmarried youth, usually separated by gender, in many tribal societies.',
             def3:'Dormitories are communal quarters where unmarried tribal youth stay, functioning as education and socialisation centres where elders teach traditions and values.',
             def5:'Dormitories are communal living spaces reserved for unmarried youth, typically separated by gender, found in many tribal societies of India. Their scope functions as informal education and socialisation centres: elders use them to teach oral traditions, values, and skills that prepare youth for adult roles, while also fostering unity and shared identity among the young people of a tribe.',
             memoryTrick:'Dormitory = communal education home for youth.',
-            example:'In some Nagaland tribes, village boys sleep in a communal dormitory called a "Morung" where elders instruct them in tribal lore.' },
+            example:'In some Nagaland tribes, village boys sleep in a communal dormitory called a "Morung" where elders instruct them in tribal lore.',
+            examples:[
+              { clue:'This tribe\'s traditional youth dormitory is called the "Morung".', tag:'Naga (Nagaland) — Morung' },
+              { clue:'This tribe\'s traditional youth dormitory is called the "Ghotul".', tag:'Muria Gond (Bastar, Chhattisgarh) — Ghotul' },
+              { clue:'This tribe\'s traditional youth dormitory is called the "Dhumkuria".', tag:'Oraon (Jharkhand/Chhattisgarh) — Dhumkuria' },
+            ] },
           { id:'tribal-features', name:'Features of Tribal Communities', keywords:['subsistence economy','isolation','oral tradition','animism'],
             def2:'Key features: subsistence economy, small kinship-based population, primitive technology, isolation, and animistic beliefs.',
             def3:'Tribal communities are typically characterised by a subsistence economy, small kinship-based villages, simple technology, relative isolation from mainstream society, and band- or village-level political organisation.',
             def5:'Tribal communities share several distinctive features, whose scope Majumdar and other sociologists have documented: a subsistence economy (often agrarian or pastoral), small population size organised through kinship-based villages, relatively simple technology and tools, isolation from mainstream culture (including a distinct language), band- or village-level political organisation without a formal state structure, and a strong emphasis on oral tradition and animistic religious beliefs. These features function together to sustain a distinct cultural identity, though increasing contact with mainstream society has begun to change many of them.',
             memoryTrick:'Small, subsistence, simple tools, isolated, oral, animist.',
-            example:'Many Indian tribes are monolingual and celebrate festivals distinct from the mainstream Hindu calendar.' },
+            example:'Many Indian tribes are monolingual and celebrate festivals distinct from the mainstream Hindu calendar.',
+            examples:[
+              { clue:'Animistic belief systems (worship of natural spirits) are a well-documented feature of religious practice here.', tag:'Gond/Santhal (Central India)' },
+              { clue:'Subsistence shifting (jhum) cultivation is a traditional feature of the tribal economy here.', tag:'Naga (Nagaland) — jhum cultivation' },
+              { clue:'Oral tradition and folklore, passed down without a written script, are a defining feature of culture here.', tag:'Gond/Santhal — oral tradition' },
+            ] },
         ] },
       { id:'tribal-policy-welfare', name:'Tribal Policy & Welfare',
         subtopics:[
@@ -3215,21 +3277,12 @@ function renderTopicMetaStrip(subject, topicId){
   if(subject==='sociology'){
     return `<div class="topic-meta-strip">
       <span class="topic-meta-chip">📊 Board Weightage: <b>${escapeHtml(m.weightage)}</b></span>
-      <span class="topic-meta-chip">❓ Frequently Asked: <b>${m.frequentlyAsked} times</b></span>
-      <span class="topic-meta-chip">🎯 Difficulty: <b>${escapeHtml(m.difficulty)}</b></span>
-      <span class="topic-meta-chip">⏱️ Est. Study Time: <b>${escapeHtml(m.studyTime)}</b></span>
-    </div>`;
-  }
-  if(subject==='math'){
-    return `<div class="topic-meta-strip">
-      <span class="topic-meta-chip">📊 Board Weightage: <b>${escapeHtml(m.weightage)}</b></span>
-      <span class="topic-meta-chip">📄 Previous Year Questions: <b>${m.pyqCount}</b></span>
+      <span class="topic-meta-chip">❓ Questions asked in past board papers: <b>${m.frequentlyAsked}</b></span>
     </div>`;
   }
   return `<div class="topic-meta-strip">
     <span class="topic-meta-chip">📊 Board Weightage: <b>${escapeHtml(m.weightage)}</b></span>
-    <span class="topic-meta-chip">📄 Previous Year Questions: <b>${m.pyqCount}</b></span>
-    <span class="topic-meta-chip">🎯 Difficulty: <b>${escapeHtml(m.difficulty)}</b></span>
+    <span class="topic-meta-chip">📄 Questions asked in past board papers: <b>${m.pyqCount}</b></span>
   </div>`;
 }
 
@@ -6568,6 +6621,35 @@ function renderSocSubtopicChips(chapter, topic){
   ).join('')}</div>`;
 }
 
+/* ============================================================
+   LESSON FLOW — replaces horizontal subtopic-chip tabs with a
+   side rail of lessons (Sociology/Economics) so studying a topic
+   feels like moving through a course: current lesson highlighted,
+   Next/Previous buttons flow you sequentially through subtopics.
+   ============================================================ */
+function renderLessonFlow(learnedPrefix, subtopics, currentId, jumpFnName, contentHtml){
+  const idx = subtopics.findIndex(s=>s.id===currentId);
+  const prev = idx>0 ? subtopics[idx-1] : null;
+  const next = idx<subtopics.length-1 ? subtopics[idx+1] : null;
+  const railHtml = subtopics.map((s,i)=>{
+    const done = learnedItems.has(learnedPrefix+'-subtopic-'+s.id);
+    const active = s.id===currentId;
+    return `<button class="lesson-rail-item ${active?'active':''}" onclick="${jumpFnName}('${s.id}')">
+      <span class="lesson-rail-num ${done?'done':''}">${done?'✓':i+1}</span>
+      <span class="lesson-rail-name">${escapeHtml(s.name)}</span>
+    </button>`;
+  }).join('');
+  const navHtml = `<div class="lesson-flow-nav">
+    ${prev?`<button class="btn btn-ghost" onclick="${jumpFnName}('${prev.id}')">← ${escapeHtml(prev.name)}</button>`:'<span></span>'}
+    <span class="lesson-flow-progress">Lesson ${idx+1} of ${subtopics.length}</span>
+    ${next?`<button class="btn btn-primary" onclick="${jumpFnName}('${next.id}')">${escapeHtml(next.name)} →</button>`:'<span></span>'}
+  </div>`;
+  return `<div class="lesson-flow-layout">
+    <div class="lesson-rail">${railHtml}</div>
+    <div class="lesson-flow-main">${contentHtml}${navHtml}</div>
+  </div>`;
+}
+
 function renderDefBoxes(subtopic){
   return `
     <div class="soc-def-grid">
@@ -6575,6 +6657,72 @@ function renderDefBoxes(subtopic){
       <div class="soc-def-box"><div class="soc-def-label">3-mark <span>· keywords + example</span></div><p>${highlight(subtopic.def3, subtopic.keywords)}</p></div>
       <div class="soc-def-box"><div class="soc-def-label">5-mark <span>· keywords + example + scope/functions</span></div><p>${highlight(subtopic.def5, subtopic.keywords)}</p></div>
     </div>
+  `;
+}
+
+/* Sociology: 2-mark stays visible; 3-mark and 5-mark collapse into accordions. */
+function renderSocDefBoxes(subtopic){
+  return `
+    <div class="soc-def-grid" style="grid-template-columns:1fr;">
+      <div class="soc-def-box"><div class="soc-def-label">2-mark <span>· keywords only</span></div><p>${highlight(subtopic.def2, subtopic.keywords)}</p></div>
+    </div>
+    ${renderAccordion('3-mark answer · keywords + example', `<p>${highlight(subtopic.def3, subtopic.keywords)}</p>`)}
+    ${renderAccordion('5-mark answer · keywords + example + scope/functions', `<p>${highlight(subtopic.def5, subtopic.keywords)}</p>`)}
+    ${renderExamplesList(subtopic)}
+  `;
+}
+function renderExamplesList(subtopic){
+  if(!subtopic.examples || !subtopic.examples.length) return '';
+  return `<div class="lesson-card" style="margin-top:14px;">
+    <h2>🌍 Real-world examples</h2>
+    <ul style="margin:0;padding-left:20px;font-size:13.5px;line-height:1.8;">
+      ${subtopic.examples.map(e=>`<li><b>${escapeHtml(e.tag)}:</b> ${escapeHtml(e.clue)}</li>`).join('')}
+    </ul>
+  </div>`;
+}
+/* Sociology topic-level: pool of all example tags across every subtopic, used as distractors for fact-attribution memorize cards. */
+function socAllFacts(){
+  const list = [];
+  SOC_CHAPTERS.forEach(c=>c.topics.forEach(t=>t.subtopics.forEach(s=>{
+    if(s.examples) s.examples.forEach(e=>list.push(e.tag));
+  })));
+  return list;
+}
+function buildFactMemoCards(subtopics, widerTagsPool){
+  const facts = [];
+  subtopics.forEach(s=>{ if(s.examples) s.examples.forEach(e=>facts.push(e)); });
+  const sameTags = facts.map(f=>f.tag);
+  return facts.map(f=>({
+    prompt: `${escapeHtml(f.clue)}<br><span style="font-size:13px;color:var(--ink-soft);">Which tribe/region/community does this belong to? <span class="blank">?</span></span>`,
+    answer: f.tag,
+    options: buildMcqOptions(f.tag, sameTags, widerTagsPool),
+  }));
+}
+
+/* Economics: 2-mark = definition+formula; 3-mark accordion adds a diagram; 5-mark accordion adds functions/scope + a worked example. */
+function renderEconDefBoxes(subtopic){
+  const formula = subtopic.formulas && subtopic.formulas[0];
+  const formulaHtml = formula ? `<div class="econ-def-formula">${texBlock(formula.expr)}</div>` : '';
+  const graphHtml = subtopic.graph ? renderInteractiveGraph('econ-def-'+subtopic.id, subtopic.graph) : '';
+  return `
+    <div class="soc-def-grid" style="grid-template-columns:1fr;">
+      <div class="soc-def-box">
+        <div class="soc-def-label">2-mark <span>· definition + formula</span></div>
+        <p>${highlight(subtopic.def2, subtopic.keywords)}</p>
+        ${formulaHtml}
+      </div>
+    </div>
+    ${renderAccordion('3-mark answer · definition + formula + diagram', `
+      <p>${highlight(subtopic.def3, subtopic.keywords)}</p>
+      ${formulaHtml}
+      ${graphHtml || '<p style="color:var(--ink-soft);font-size:12.5px;">No diagram applicable for this concept.</p>'}
+    `)}
+    ${renderAccordion('5-mark answer · definition + formula + diagram + functions/example', `
+      <p>${highlight(subtopic.def5, subtopic.keywords)}</p>
+      ${formulaHtml}
+      ${graphHtml || ''}
+      <div class="tip-box" style="margin-top:12px;"><div class="tip-head">📌 Worked Example</div><div class="tip-body">${escapeHtml(subtopic.example)}</div></div>
+    `)}
   `;
 }
 
@@ -6588,7 +6736,7 @@ function renderSocTopicPage(chapter, topic){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>📘 ${escapeHtml(s.name)}</h2>
-        ${renderDefBoxes(s)}
+        ${renderSocDefBoxes(s)}
         <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
         <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
         ${s.flowchart ? renderFlowchart(s.flowchart) : ''}
@@ -6600,17 +6748,18 @@ function renderSocTopicPage(chapter, topic){
   } else if(tab==='memorize'){
     const widerNames = SOC_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics.map(s=>s.name)));
     const sameTopicNames = topic.subtopics.map(s=>s.name);
-    const cards = topic.subtopics.map(s=>({
+    const conceptCards = topic.subtopics.map(s=>({
       prompt: `${escapeHtml(s.example)}<br><span style="font-size:13px;color:var(--ink-soft);">This is an example of: <span class="blank">?</span></span>`,
       answer: s.name,
       options: buildMcqOptions(s.name, sameTopicNames, widerNames),
     }));
-    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Match each real-world example to the concept it illustrates.</p>${renderMemoMode('memo-soc-topic-'+topic.id, cards, 'memoAnswer')}`;
+    const cards = conceptCards.concat(buildFactMemoCards(topic.subtopics, socAllFacts()));
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Match each real-world example to the concept it illustrates, and test yourself on which tribe/region each fact belongs to.</p>${renderMemoMode('memo-soc-topic-'+topic.id, cards, 'memoAnswer')}`;
   } else if(tab==='keydefs'){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>🔑 ${escapeHtml(s.name)}</h2>
-        ${renderDefBoxes(s)}
+        ${renderSocDefBoxes(s)}
       </div>
     `).join('');
   } else if(tab==='difftables'){
@@ -6624,7 +6773,6 @@ function renderSocTopicPage(chapter, topic){
     <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
     ${renderTopicMetaStrip('sociology', topic.id)}
     <div class="eng-tabs">${tabsHtml}</div>
-    ${renderSocSubtopicChips(chapter, topic)}
     <div>${body}</div>
   `;
 }
@@ -6659,7 +6807,7 @@ function renderSocSubtopicPage(chapter, topic, subtopic){
   let body = '';
   if(tab==='learn'){
     body = `
-      ${renderDefBoxes(subtopic)}
+      ${renderSocDefBoxes(subtopic)}
       <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
       <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
       ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
@@ -6674,7 +6822,7 @@ function renderSocSubtopicPage(chapter, topic, subtopic){
     body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('soc-subtopic-'+subtopic.id, qs, {marks:true})}`;
   }
 
-  return `
+  const inner = `
     <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backSocToTopic()">← ${escapeHtml(topic.name)}</button>
     <div style="margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
       <div>
@@ -6686,6 +6834,7 @@ function renderSocSubtopicPage(chapter, topic, subtopic){
     <div class="eng-tabs">${tabsHtml}</div>
     <div>${body}</div>
   `;
+  return renderLessonFlow('soc', topic.subtopics, subtopic.id, 'openSocSubtopic', inner);
 }
 
 /* ============================================================
@@ -6813,9 +6962,7 @@ function renderEconTopicPage(chapter, topic){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>📘 ${escapeHtml(s.name)}</h2>
-        ${renderDefBoxes(s)}
-        <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
-        <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
+        ${renderEconDefBoxes(s)}
       </div>
     `).join('');
   } else if(tab==='practice'){
@@ -6831,7 +6978,7 @@ function renderEconTopicPage(chapter, topic){
     }));
     body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Match each real-world example to the concept it illustrates.</p>${renderMemoMode('memo-econ-topic-'+topic.id, cards, 'memoAnswer')}`;
   } else if(tab==='keydefs'){
-    body = topic.subtopics.map(s=>`<div class="lesson-card"><h2>🔑 ${escapeHtml(s.name)}</h2>${renderDefBoxes(s)}</div>`).join('');
+    body = topic.subtopics.map(s=>`<div class="lesson-card"><h2>🔑 ${escapeHtml(s.name)}</h2>${renderEconDefBoxes(s)}</div>`).join('');
   } else if(tab==='formulas'){
     const withFormulas = topic.subtopics.filter(s=>s.formulas && s.formulas.length);
     body = withFormulas.length ? withFormulas.map(s=>`<div style="margin-bottom:6px;"><div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${s.formulas.map(renderFormulaCard).join('')}</div>`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No formulas tagged for this topic.</p>';
@@ -6866,7 +7013,6 @@ function renderEconTopicPage(chapter, topic){
     <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
     ${renderTopicMetaStrip('economics', topic.id)}
     <div class="eng-tabs">${tabsHtml}</div>
-    ${renderEconSubtopicChips(topic)}
     <div>${body}</div>
   `;
 }
@@ -6886,11 +7032,8 @@ function renderEconSubtopicPage(chapter, topic, subtopic){
   let body = '';
   if(tab==='learn'){
     body = `
-      ${renderDefBoxes(subtopic)}
-      <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
-      <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
+      ${renderEconDefBoxes(subtopic)}
       ${subtopic.formulas ? subtopic.formulas.map(renderFormulaCard).join('') : ''}
-      ${subtopic.graph ? renderInteractiveGraph('econ-'+subtopic.id, subtopic.graph) : ''}
       ${subtopic.numericalGen ? renderNumerical('econ-'+subtopic.id, subtopic.numericalGen) : ''}
       ${subtopic.diffTable ? renderDiffTable(subtopic.diffTable) : ''}
       ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
@@ -6904,7 +7047,7 @@ function renderEconSubtopicPage(chapter, topic, subtopic){
     body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('econ-subtopic-'+subtopic.id, qs, {marks:true})}`;
   }
 
-  return `
+  const inner = `
     <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToTopic()">← ${escapeHtml(topic.name)}</button>
     <div style="margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
       <div>
@@ -6916,6 +7059,7 @@ function renderEconSubtopicPage(chapter, topic, subtopic){
     <div class="eng-tabs">${tabsHtml}</div>
     <div>${body}</div>
   `;
+  return renderLessonFlow('econ', topic.subtopics, subtopic.id, 'openEconSubtopic', inner);
 }
 
 /* ============================================================
