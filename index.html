@@ -413,6 +413,22 @@
   .improve-pct.low{background:#fdecec;color:#c62828;}
   .improve-pct.mid{background:var(--amber-tint);color:var(--amber);}
   .improve-pct.good{background:var(--green-tint);color:var(--green);}
+
+  /* ---- dashboard: accuracy + bookmarks ---- */
+  .accuracy-overall{border:1.5px solid var(--line);border-radius:16px;padding:22px 24px;margin-bottom:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:#fff;}
+  .accuracy-overall-label{font-size:13px;font-weight:800;color:var(--ink-soft);}
+  .accuracy-overall-pct{font-family:'Fraunces',serif;font-size:30px;padding:2px 14px;}
+  .accuracy-overall-sub{font-size:12.5px;color:var(--ink-soft);flex:1;text-align:right;min-width:180px;}
+  .accuracy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+  .accuracy-card{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff;text-align:center;}
+  .accuracy-card-subject{font-size:12.5px;font-weight:800;color:var(--ink-soft);margin-bottom:8px;}
+  .accuracy-card-pct{font-family:'Fraunces',serif;font-size:22px;padding:2px 10px;}
+  .accuracy-card-n{font-size:11px;color:var(--ink-soft);margin-top:8px;}
+  .bookmark-subject-group{margin-bottom:24px;}
+  .bookmark-subject-heading{font-size:15px;font-weight:800;margin-bottom:10px;}
+  .bookmark-chapter-group{margin-bottom:14px;}
+  .bookmark-chapter-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin:0 0 8px 2px;}
+  .bookmark-note-input{margin-top:0;font-size:12.5px;}
   @media (max-width:600px){ .continue-card{width:180px;} }
   .release-note{margin-top:26px;padding:16px 20px;border-radius:16px;border:1px solid var(--line);background:#fff;font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
 
@@ -780,13 +796,13 @@
     <aside class="sidebar">
       <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="#fff"><use href="#spade-icon"/></svg></span>Spade</div>
 
-      <button class="side-link" data-section="dashboard" onclick="goDashboardHome()">
+      <button class="side-link" data-section="dashboard" onclick="goExplorerHome()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-        Dashboard
+        Explorer
       </button>
-      <button class="side-link" data-section="bookmarks" onclick="goBookmarks()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        Bookmarks
+      <button class="side-link" data-section="stats" onclick="goStatsDashboard()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-4"/></svg>
+        Dashboard
       </button>
 
       <div class="side-meta" style="margin-top:auto;">
@@ -810,12 +826,12 @@
       </div>
       <div class="crumb" id="app-crumb"></div>
 
-      <!-- BOOKMARKS -->
-      <section class="view" id="tab-bookmarks">
-        <div id="bookmarks-body"></div>
+      <!-- DASHBOARD (accuracy stats + bookmarks) -->
+      <section class="view" id="tab-stats">
+        <div id="stats-body"></div>
       </section>
 
-      <!-- DASHBOARD (subject grid or English hub) -->
+      <!-- EXPLORER (subject grid or English hub) -->
       <section class="view" id="tab-dashboard">
         <div id="dashboard-body"></div>
       </section>
@@ -5950,7 +5966,7 @@ let savedAnswers = {}; // qaId -> {studentText, score, maxMarks, feedback, missi
 let bookmarks = {}; // key -> {label, subject, subjectLabel, chapterId, topicId, subtopicId, qaId, ts}
 let recentSearches = []; // most-recent-first array of query strings
 let lastVisited = {}; // subjectId -> {subtopicId, chapterId, topicId, label, ts}
-let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{} };
+let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{}, statsTab:'accuracy' };
 let mathPTypeState = { instance:null, solutionShown:false }; // current Problem Type practice instance + reveal state
 
 /* ============================================================
@@ -6040,9 +6056,8 @@ function buildSearchIndex(){
     });
   });
   BIO_CHAPTERS.forEach(c=>{
-    items.push({type:'Chapter', label:c.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);}});
     c.topics.forEach(t=>{
-      items.push({type:'Topic', label:t.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);openBioTopic(t.id);}});
+      items.push({type:'Chapter', label:t.name, subject:'biology', nav:()=>{openSubject('biology');openBioTopic(t.id);}});
       t.subtopics.forEach(s=>{
         items.push({type:'Subtopic', label:s.name, subject:'biology', nav:()=>{openSubject('biology');jumpBioSubtopic(c.id,t.id,s.id);}});
       });
@@ -6093,29 +6108,122 @@ function rerunRecentSearch(q){
 function hideSearchResults(){ const el = document.getElementById('search-results'); if(el) el.classList.add('hidden'); }
 
 /* ============================================================
-   BOOKMARKS VIEW
+   DASHBOARD — accuracy stats + bookmarks (with notes), grouped by
+   subject and, where relevant, by chapter/unit division.
    ============================================================ */
-function renderBookmarksBody(){
-  const el = document.getElementById('bookmarks-body');
-  const keys = Object.keys(bookmarks).sort((a,b)=>bookmarks[b].ts-bookmarks[a].ts);
-  if(!keys.length){
-    el.innerHTML = `<h1 class="display" style="font-size:25px;margin-bottom:8px;">Bookmarks</h1><p style="color:var(--ink-soft);font-size:13.5px;">Nothing bookmarked yet — tap the ☆ next to any concept or question to save it here for revision.</p>`;
-    return;
+const STATS_TABS = [
+  {id:'accuracy', label:'Accuracy'},
+  {id:'bookmarks', label:'Bookmarks'},
+];
+function renderStatsBody(){
+  const el = document.getElementById('stats-body');
+  const tab = appState.statsTab || 'accuracy';
+  const tabsHtml = STATS_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setStatsTab('${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+  el.innerHTML = `
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">Dashboard</h1>
+    <p style="color:var(--ink-soft);font-size:13.5px;margin-bottom:18px;">How accurately you're answering, and everything you've bookmarked for revision.</p>
+    <div class="eng-tabs">${tabsHtml}</div>
+    <div>${tab==='accuracy' ? renderStatsAccuracy() : renderStatsBookmarks()}</div>
+  `;
+}
+function computeAccuracyStats(){
+  const bySubject = { english:{score:0,max:0,n:0}, sociology:{score:0,max:0,n:0}, economics:{score:0,max:0,n:0}, math:{score:0,max:0,n:0}, biology:{score:0,max:0,n:0} };
+  let totalScore=0, totalMax=0, totalN=0;
+  Object.keys(savedAnswers).forEach(qaId=>{
+    const r = savedAnswers[qaId];
+    if(!r || !r.maxMarks) return;
+    let subject = null;
+    if(qaId.startsWith('soc-')) subject='sociology';
+    else if(qaId.startsWith('econ-')) subject='economics';
+    else if(qaId.startsWith('math-')) subject='math';
+    else if(qaId.startsWith('bio-')) subject='biology';
+    else if(qaId.startsWith('qa-')) subject='english';
+    if(!subject) return;
+    bySubject[subject].score += r.score; bySubject[subject].max += r.maxMarks; bySubject[subject].n++;
+    totalScore += r.score; totalMax += r.maxMarks; totalN++;
+  });
+  return {bySubject, totalScore, totalMax, totalN};
+}
+function renderStatsAccuracy(){
+  const {bySubject, totalScore, totalMax, totalN} = computeAccuracyStats();
+  if(!totalN){
+    return `<p style="color:var(--ink-soft);font-size:13.5px;">No Practice Zone answers graded yet — answer a few questions and your accuracy will show up here.</p>`;
   }
-  const rows = keys.map(key=>{
-    const b = bookmarks[key];
-    return `<div class="list-row" style="cursor:default;">
-      <div>
-        <div class="lr-title">${escapeHtml(b.label||key)}</div>
-        <div class="lr-sub">${escapeHtml(SUBJECT_LABELS[b.subject]||b.subject||'')}${b.kind?' · '+escapeHtml(b.kind):''}</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-ghost btn-sm" onclick='resumeBookmark(${JSON.stringify(key)})'>Open</button>
-        <button class="bookmark-btn on" onclick='toggleBookmark(${JSON.stringify(key)})' title="Remove bookmark">★</button>
-      </div>
+  const overallPct = totalMax? Math.round(totalScore/totalMax*100) : 0;
+  const tier = p => p<50?'low':p<75?'mid':'good';
+  const subjectCards = Object.keys(bySubject).filter(s=>bySubject[s].n>0).map(s=>{
+    const d = bySubject[s];
+    const pct = d.max? Math.round(d.score/d.max*100):0;
+    return `<div class="accuracy-card">
+      <div class="accuracy-card-subject">${escapeHtml(SUBJECT_LABELS[s]||s)}</div>
+      <div class="accuracy-card-pct improve-pct ${tier(pct)}">${pct}%</div>
+      <div class="accuracy-card-n">${d.n} question${d.n===1?'':'s'} graded</div>
     </div>`;
   }).join('');
-  el.innerHTML = `<h1 class="display" style="font-size:25px;margin-bottom:4px;">Bookmarks</h1><p style="color:var(--ink-soft);font-size:13.5px;margin-bottom:18px;">${keys.length} saved item${keys.length===1?'':'s'} for quick revision.</p>${rows}`;
+  return `
+    <div class="accuracy-overall">
+      <div class="accuracy-overall-label">Overall accuracy</div>
+      <div class="accuracy-overall-pct improve-pct ${tier(overallPct)}">${overallPct}%</div>
+      <div class="accuracy-overall-sub">${totalN} question${totalN===1?'':'s'} graded across every subject</div>
+    </div>
+    <div class="accuracy-grid">${subjectCards}</div>
+    ${renderAreasOfImprovement()}
+  `;
+}
+function chapterNameFor(subject, chapterId){
+  if(!chapterId) return null;
+  const map = { sociology: SOC_CHAPTERS, economics: ECON_CHAPTERS, math: MATH_CHAPTERS, biology: BIO_CHAPTERS };
+  const list = map[subject];
+  const c = list && list.find(c=>c.id===chapterId);
+  return c ? c.name : null;
+}
+function saveBookmarkNote(key, note){
+  if(!bookmarks[key]) return;
+  bookmarks[key].note = note;
+  persistState();
+}
+function renderStatsBookmarks(){
+  const keys = Object.keys(bookmarks).sort((a,b)=>bookmarks[b].ts-bookmarks[a].ts);
+  if(!keys.length){
+    return `<p style="color:var(--ink-soft);font-size:13.5px;">Nothing bookmarked yet — tap the ☆ next to any concept or question to save it here, grouped by chapter, with room for your own notes.</p>`;
+  }
+  const bySubject = {};
+  keys.forEach(key=>{ const s = bookmarks[key].subject || 'other'; (bySubject[s]=bySubject[s]||[]).push(key); });
+  return Object.keys(bySubject).map(subject=>{
+    const subjKeys = bySubject[subject];
+    const byChapter = {};
+    subjKeys.forEach(key=>{
+      const b = bookmarks[key];
+      const chName = chapterNameFor(subject, b.chapterId) || 'General';
+      (byChapter[chName]=byChapter[chName]||[]).push(key);
+    });
+    const chapterBlocks = Object.keys(byChapter).map(chName=>`
+      <div class="bookmark-chapter-group">
+        <div class="bookmark-chapter-label">${escapeHtml(chName)}</div>
+        ${byChapter[chName].map(renderBookmarkRow).join('')}
+      </div>
+    `).join('');
+    return `<div class="bookmark-subject-group">
+      <h3 class="bookmark-subject-heading">${escapeHtml(SUBJECT_LABELS[subject]||subject)}</h3>
+      ${chapterBlocks}
+    </div>`;
+  }).join('');
+}
+function renderBookmarkRow(key){
+  const b = bookmarks[key];
+  return `<div class="list-row" style="cursor:default;flex-direction:column;align-items:stretch;gap:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+      <div>
+        <div class="lr-title">${escapeHtml(b.label||key)}</div>
+        <div class="lr-sub">${b.kind?escapeHtml(b.kind):''}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex:none;">
+        <button class="btn btn-ghost btn-sm" onclick='resumeBookmark(${JSON.stringify(key)})'>Open</button>
+        <button class="bookmark-btn on" onclick='toggleBookmark(${JSON.stringify(key)});renderStatsBody()' title="Remove bookmark">★</button>
+      </div>
+    </div>
+    <textarea class="qa-textarea bookmark-note-input" rows="2" placeholder="Add a note for revision…" onblur='saveBookmarkNote(${JSON.stringify(key)}, this.value)'>${escapeHtml(b.note||'')}</textarea>
+  </div>`;
 }
 function resumeBookmark(key){
   const b = bookmarks[key];
@@ -6168,7 +6276,7 @@ function handleLogin(e){
     document.getElementById('who-board').textContent = session.board + ' · Grade ' + session.grade;
   }
   goTo('app');
-  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{} };
+  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{}, statsTab:'accuracy' };
   loadPersistedState();
   renderApp();
 }
@@ -6177,7 +6285,7 @@ function handleLogout(){
   goTo('landing');
 }
 
-function goDashboardHome(){
+function goExplorerHome(){
   appState.section = 'dashboard';
   appState.subjectId = null;
   appState.storyId = null;
@@ -6206,29 +6314,31 @@ function renderApp(){
   document.querySelectorAll('.side-link').forEach(b=>b.classList.toggle('active', b.dataset.section===appState.section));
   document.getElementById('tab-dashboard').classList.toggle('active', appState.section==='dashboard');
   document.getElementById('tab-settings').classList.toggle('active', appState.section==='settings');
-  document.getElementById('tab-bookmarks').classList.toggle('active', appState.section==='bookmarks');
+  document.getElementById('tab-stats').classList.toggle('active', appState.section==='stats');
 
   renderCrumb();
   if(appState.section==='dashboard') renderDashboardBody();
   if(appState.section==='settings') renderSettings();
-  if(appState.section==='bookmarks') renderBookmarksBody();
+  if(appState.section==='stats') renderStatsBody();
 }
 
-function goBookmarks(){
-  appState.section = 'bookmarks';
+function goStatsDashboard(){
+  appState.section = 'stats';
+  if(!appState.statsTab) appState.statsTab = 'accuracy';
   renderApp();
 }
+function setStatsTab(tab){ appState.statsTab = tab; renderStatsBody(); }
 
 function renderCrumb(){
   const el = document.getElementById('app-crumb');
   let html = '';
   if(appState.section==='dashboard'){
     if(!appState.subjectId){
-      html = `<span class="current">Dashboard</span>`;
+      html = `<span class="current">Explorer</span>`;
     } else if(appState.subjectId==='english'){
-      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span><span class="current">English</span>`;
+      html = `<button onclick="goExplorerHome()">Explorer</button><span>›</span><span class="current">English</span>`;
     } else if(appState.subjectId==='sociology'){
-      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      html = `<button onclick="goExplorerHome()">Explorer</button><span>›</span>`;
       if(!appState.socChapterId){
         html += `<span class="current">Sociology</span>`;
       } else {
@@ -6248,7 +6358,7 @@ function renderCrumb(){
         }
       }
     } else if(appState.subjectId==='economics'){
-      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      html = `<button onclick="goExplorerHome()">Explorer</button><span>›</span>`;
       if(!appState.econChapterId){
         html += `<span class="current">Economics</span>`;
       } else {
@@ -6268,7 +6378,7 @@ function renderCrumb(){
         }
       }
     } else if(appState.subjectId==='math'){
-      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      html = `<button onclick="goExplorerHome()">Explorer</button><span>›</span>`;
       if(!appState.mathChapterId){
         html += `<span class="current">Mathematics</span>`;
       } else {
@@ -6288,22 +6398,19 @@ function renderCrumb(){
         }
       }
     } else if(appState.subjectId==='biology'){
-      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
-      if(!appState.bioChapterId){
+      html = `<button onclick="goExplorerHome()">Explorer</button><span>›</span>`;
+      if(!appState.bioTopicId){
         html += `<span class="current">Biology</span>`;
       } else {
-        const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
-        html += `<button onclick="backBioToChapters()">Biology</button><span>›</span>`;
-        if(!appState.bioTopicId){
-          html += `<span class="current">${escapeHtml(chapter.name)}</span>`;
-        } else {
-          const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
-          html += `<button onclick="backBioToTopics()">${escapeHtml(chapter.name)}</button><span>›</span><span class="current">${escapeHtml(topic.name)}</span>`;
-        }
+        const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId) || bioFindChapterForTopic(appState.bioTopicId);
+        const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
+        html += `<button onclick="backBioToTopics()">Biology</button><span>›</span><span class="current">${escapeHtml(topic.name)}</span>`;
       }
     }
   } else if(appState.section==='settings'){
     html = `<span class="current">Settings</span>`;
+  } else if(appState.section==='stats'){
+    html = `<span class="current">Dashboard</span>`;
   }
   el.innerHTML = html;
 }
@@ -6452,9 +6559,8 @@ function renderDashboardBody(){
     container.innerHTML = `
       <h1 style="font-size:24px;margin-bottom:18px;">Grade ${session.grade} Subjects</h1>
       ${renderContinueCards()}
-      ${renderAreasOfImprovement()}
       <div class="subject-grid">${tiles}</div>
-      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters), Mathematics (all 10 chapters, both grades) and Biology (all 5 units) are built. Physics, Psychology, and CBSE are coming soon.</div>
+      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters), Mathematics (all 10 chapters, both grades) and Biology (all 5 units) are built. Physics, Psychology, and CBSE are coming soon. Accuracy stats and bookmarks now live on the Dashboard.</div>
     `;
   } else if(appState.subjectId==='english'){
     container.innerHTML = renderEnglishHub();
@@ -8507,8 +8613,15 @@ function renderMathSubtopicPage(chapter, topic, subtopic){
    examples list, and a true 4-option MCQ memorize deck (distinct
    from the example-matching pattern used elsewhere).
    ============================================================ */
-function openBioChapter(id){ appState.bioChapterId=id; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
-function openBioTopic(id){ appState.bioTopicId=id; appState.bioSubtopicId=null; renderDashboardBody(); }
+/* Chapter (unit) divisions like Reproduction / Genetics & Evolution stay in the
+   data model (used to group bookmarks) but are no longer a separate browsing
+   step — Biology goes straight from the subject page to a flat topic list. */
+function bioFindChapterForTopic(topicId){ return BIO_CHAPTERS.find(c=>c.topics.some(t=>t.id===topicId)); }
+function openBioTopic(id){
+  const chapter = bioFindChapterForTopic(id);
+  appState.bioChapterId = chapter ? chapter.id : null;
+  appState.bioTopicId=id; appState.bioSubtopicId=null; renderDashboardBody();
+}
 function openBioSubtopic(id){
   appState.bioSubtopicId=id; renderDashboardBody();
   const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
@@ -8517,8 +8630,7 @@ function openBioSubtopic(id){
   touchLastVisited('biology', id, appState.bioChapterId, appState.bioTopicId, subtopic?subtopic.name:id);
   bioScrollToLesson(id);
 }
-function backBioToChapters(){ appState.bioChapterId=null; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
-function backBioToTopics(){ appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
+function backBioToTopics(){ appState.bioChapterId=null; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
 function setBioTopicTab(topicId, tab){ appState.bioTopicTab[topicId] = tab; renderDashboardBody(); }
 function jumpBioSubtopic(chapterId, topicId, subtopicId){
   appState.bioChapterId = chapterId; appState.bioTopicId = topicId;
@@ -8536,43 +8648,29 @@ function bioTopicSubtopicCount(topic){
 }
 
 function renderBiology(){
-  if(!appState.bioChapterId) return renderBioChapterList();
-  const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
-  if(!appState.bioTopicId) return renderBioTopicList(chapter);
+  if(!appState.bioTopicId) return renderBioTopicListFlat();
+  const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId) || bioFindChapterForTopic(appState.bioTopicId);
   const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
   return renderBioTopicPage(chapter, topic);
 }
 
-function renderBioChapterList(){
-  const tiles = BIO_CHAPTERS.map(c=>{
-    const total = c.topics.reduce((n,t)=>n+t.subtopics.length,0);
-    const done = c.topics.reduce((n,t)=>n+t.subtopics.filter(s=>learnedItems.has('bio-subtopic-'+s.id)).length,0);
+function renderBioTopicListFlat(){
+  const rows = BIO_CHAPTERS.flatMap(c=>c.topics.map(t=>({ t, chapterName:c.name, chapterIcon:c.icon })));
+  const rowsHtml = rows.map(({t, chapterName, chapterIcon})=>{
+    const {done,total} = bioTopicSubtopicCount(t);
     const pct = total? Math.round(done/total*100):0;
-    return `<button class="subject-tile" onclick="openBioChapter('${c.id}')">
-      <div class="s-icon" style="background:#EAFBEF;">${c.icon}</div>
-      <h3 class="display">${escapeHtml(c.name)}</h3>
-      <div class="s-sub" style="margin-top:4px;">${c.topics.length} topics</div>
-      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#16A34A;"></div></div>
-      <div class="s-sub">Mastery: ${pct}%</div>
+    return `<button class="list-row" onclick="openBioTopic('${t.id}')">
+      <div>
+        <div class="lr-title">${chapterIcon} ${escapeHtml(t.name)} ${done===total&&total>0?'<span class="learned-badge">✓ Mastered</span>':''}</div>
+        <div class="lr-sub">${escapeHtml(chapterName)} · ${t.subtopics.length} subtopics · Mastery: ${pct}%</div>
+      </div>
+      <span style="color:#9b9a95;">›</span>
     </button>`;
   }).join('');
   return `
     <h1 style="font-size:26px;margin-bottom:4px;">Biology</h1>
-    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">ISC Class XII · All 5 units: Reproduction, Genetics &amp; Evolution, Biology &amp; Human Welfare, Biotechnology, and Ecology &amp; Environment.</p>
-    <div class="subject-grid">${tiles}</div>
-  `;
-}
-
-function renderBioTopicList(chapter){
-  const rows = chapter.topics.map(t=>{
-    const {done,total} = bioTopicSubtopicCount(t);
-    return listRow(t.id, t.name, `${t.subtopics.length} subtopics · Mastery: ${total?Math.round(done/total*100):0}%`, done===total && total>0, `openBioTopic('${t.id}')`);
-  }).join('');
-  return `
-    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToChapters()">← All chapters</button>
-    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
-    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a topic to see its overview, practice zone, memorize mode and key definitions.</p>
-    ${rows}
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">ISC Class XII · all 13 NCERT/ISC chapters, listed directly — no unit picker in the way.</p>
+    ${rowsHtml}
   `;
 }
 
@@ -8737,7 +8835,7 @@ function renderBioTopicPage(chapter, topic){
   }
 
   return `
-    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToTopics()">← ${escapeHtml(chapter.name)}</button>
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToTopics()">← All Biology chapters</button>
     <h1 class="display" style="font-size:25px;margin-bottom:4px;">${escapeHtml(topic.name)}</h1>
     <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
     ${renderTopicMetaStrip('biology', topic.id)}
