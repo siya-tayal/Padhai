@@ -344,12 +344,13 @@
   .econ-def-formula{margin-top:10px;padding:10px 14px;background:#faf8f5;border-radius:10px;border:1px dashed var(--line);}
 
   /* ---- biology: concept-first layout, diagrams, step animations ---- */
+  /* diagrams are capped at 8in (768px) so the whole thing is visible without scrolling/zooming */
   .bio-concept{font-size:14.5px;line-height:1.75;color:var(--ink);margin-bottom:18px;}
-  .bio-diagram-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
-  .bio-diagram-wrap{flex:1;min-width:260px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px;}
+  .bio-diagram-row{display:flex;gap:16px;flex-wrap:wrap;margin:0 auto 20px;max-width:768px;}
+  .bio-diagram-wrap{flex:1;min-width:220px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px;}
   .bio-diagram-wrap svg{width:100%;height:auto;display:block;}
   .bio-diagram-caption{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:8px;font-weight:600;}
-  .bio-step-diagram{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px;margin-bottom:20px;}
+  .bio-step-diagram{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px;margin:0 auto 20px;max-width:768px;}
   .bio-step-diagram svg{width:100%;height:auto;display:block;max-width:460px;margin:0 auto;}
   .bio-step-caption{font-size:13px;color:var(--ink);text-align:center;margin-top:10px;min-height:38px;font-weight:600;}
   .bio-step-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;}
@@ -360,6 +361,30 @@
   .bio-facts-box h3{font-size:13px;font-weight:800;margin-bottom:8px;color:var(--green);}
   .bio-facts-box ul{margin:0;padding-left:18px;font-size:13px;line-height:1.7;}
   .bio-section-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin:20px 0 8px;}
+
+  /* ---- biology: flip cards for real-world examples (tap to reveal) ---- */
+  .bio-flip-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+  .bio-flip-card{flex:1;min-width:200px;height:230px;perspective:1300px;cursor:pointer;}
+  .bio-flip-inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;}
+  .bio-flip-card.flipped .bio-flip-inner{transform:rotateY(180deg);}
+  .bio-flip-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow);}
+  .bio-flip-front{background:linear-gradient(155deg,#1c1c22,#111);border:1px solid var(--line);overflow-y:auto;}
+  .bio-flip-label{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:#fff;line-height:1.3;}
+  .bio-flip-hint{font-size:11px;color:#c9c7c2;margin-top:10px;letter-spacing:.02em;}
+  .bio-flip-back{background:var(--green-tint);border:1.5px solid #cdeedc;transform:rotateY(180deg);overflow-y:auto;}
+  .bio-flip-detail{font-size:12.5px;line-height:1.65;color:var(--ink);}
+
+  /* ---- biology: one-lesson-at-a-time accordion inside a topic ---- */
+  .bio-lesson-open{border-color:var(--orange);}
+  .bio-lesson-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;}
+  .bio-lesson-collapsed{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 18px;border-radius:14px;border:1.5px solid var(--line);background:#faf9f7;margin-bottom:10px;cursor:pointer;font-family:inherit;}
+  .bio-lesson-collapsed:hover{background:#f3f1ec;border-color:var(--orange);}
+  .bio-lesson-collapsed.done{border-color:#cdeedc;background:var(--green-tint);}
+  .bio-lesson-collapsed-icon{font-size:18px;flex:none;}
+  .bio-lesson-collapsed-name{flex:1;font-size:13.5px;font-weight:700;color:var(--ink);}
+  .bio-lesson-collapsed-num{font-size:11px;color:var(--ink-soft);font-weight:700;flex:none;}
+  .bio-continue-btn{width:100%;margin-top:16px;padding:16px;font-size:14.5px;}
+  .bio-topic-done{margin-top:16px;padding:18px;text-align:center;background:var(--green-tint);border-radius:14px;font-weight:700;color:var(--green);font-size:13.5px;}
 
   /* ---- accordion ---- */
   .accordion{border:1.5px solid var(--line);border-radius:14px;background:#fff;margin-bottom:12px;overflow:hidden;}
@@ -6019,7 +6044,7 @@ function buildSearchIndex(){
     c.topics.forEach(t=>{
       items.push({type:'Topic', label:t.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);openBioTopic(t.id);}});
       t.subtopics.forEach(s=>{
-        items.push({type:'Subtopic', label:s.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);openBioTopic(t.id);openBioSubtopic(s.id);}});
+        items.push({type:'Subtopic', label:s.name, subject:'biology', nav:()=>{openSubject('biology');jumpBioSubtopic(c.id,t.id,s.id);}});
       });
     });
   });
@@ -6099,7 +6124,7 @@ function resumeBookmark(key){
   if(b.subject==='sociology'){ appState.section='dashboard'; appState.socChapterId=b.chapterId; appState.socTopicId=b.topicId; appState.socSubtopicId=b.subtopicId; }
   else if(b.subject==='economics'){ appState.section='dashboard'; appState.econChapterId=b.chapterId; appState.econTopicId=b.topicId; appState.econSubtopicId=b.subtopicId; }
   else if(b.subject==='math'){ appState.section='dashboard'; appState.mathChapterId=b.chapterId; appState.mathTopicId=b.topicId; appState.mathSubtopicId=b.subtopicId; }
-  else if(b.subject==='biology'){ appState.section='dashboard'; appState.bioChapterId=b.chapterId; appState.bioTopicId=b.topicId; appState.bioSubtopicId=b.subtopicId; }
+  else if(b.subject==='biology'){ appState.section='dashboard'; appState.bioChapterId=b.chapterId; appState.bioTopicId=b.topicId; appState.bioSubtopicId=b.subtopicId; if(!appState.bioTopicTab) appState.bioTopicTab={}; appState.bioTopicTab[b.topicId]='overview'; }
   else { appState.section='dashboard'; }
   renderApp();
 }
@@ -6273,13 +6298,7 @@ function renderCrumb(){
           html += `<span class="current">${escapeHtml(chapter.name)}</span>`;
         } else {
           const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
-          html += `<button onclick="backBioToTopics()">${escapeHtml(chapter.name)}</button><span>›</span>`;
-          if(!appState.bioSubtopicId){
-            html += `<span class="current">${escapeHtml(topic.name)}</span>`;
-          } else {
-            const subtopic = topic.subtopics.find(s=>s.id===appState.bioSubtopicId);
-            html += `<button onclick="backBioToTopic()">${escapeHtml(topic.name)}</button><span>›</span><span class="current">${escapeHtml(subtopic.name)}</span>`;
-          }
+          html += `<button onclick="backBioToTopics()">${escapeHtml(chapter.name)}</button><span>›</span><span class="current">${escapeHtml(topic.name)}</span>`;
         }
       }
     }
@@ -6364,7 +6383,7 @@ function resumeLastVisited(subjectId){
   if(subjectId==='sociology'){ appState.socChapterId=lv.chapterId; appState.socTopicId=lv.topicId; appState.socSubtopicId=lv.subtopicId; }
   else if(subjectId==='economics'){ appState.econChapterId=lv.chapterId; appState.econTopicId=lv.topicId; appState.econSubtopicId=lv.subtopicId; }
   else if(subjectId==='math'){ appState.mathChapterId=lv.chapterId; appState.mathTopicId=lv.topicId; appState.mathSubtopicId=lv.subtopicId; }
-  else if(subjectId==='biology'){ appState.bioChapterId=lv.chapterId; appState.bioTopicId=lv.topicId; appState.bioSubtopicId=lv.subtopicId; }
+  else if(subjectId==='biology'){ appState.bioChapterId=lv.chapterId; appState.bioTopicId=lv.topicId; appState.bioSubtopicId=lv.subtopicId; if(!appState.bioTopicTab) appState.bioTopicTab={}; appState.bioTopicTab[lv.topicId]='overview'; }
   else if(subjectId==='english'){
     appState.engTab = lv.chapterId; // 'stories' or 'poetry'
     if(lv.chapterId==='stories') appState.storyId = lv.subtopicId; else appState.poemId = lv.subtopicId;
@@ -6435,7 +6454,7 @@ function renderDashboardBody(){
       ${renderContinueCards()}
       ${renderAreasOfImprovement()}
       <div class="subject-grid">${tiles}</div>
-      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters), Mathematics (all 10 chapters, both grades) and Biology (Unit 1: Reproduction) are built. Physics, Psychology, remaining Biology units, and CBSE are coming soon.</div>
+      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters), Mathematics (all 10 chapters, both grades) and Biology (all 5 units) are built. Physics, Psychology, and CBSE are coming soon.</div>
     `;
   } else if(appState.subjectId==='english'){
     container.innerHTML = renderEnglishHub();
@@ -8496,13 +8515,20 @@ function openBioSubtopic(id){
   const topic = chapter && chapter.topics.find(t=>t.id===appState.bioTopicId);
   const subtopic = topic && topic.subtopics.find(s=>s.id===id);
   touchLastVisited('biology', id, appState.bioChapterId, appState.bioTopicId, subtopic?subtopic.name:id);
+  bioScrollToLesson(id);
 }
 function backBioToChapters(){ appState.bioChapterId=null; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
 function backBioToTopics(){ appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
-function backBioToTopic(){ appState.bioSubtopicId=null; renderDashboardBody(); }
 function setBioTopicTab(topicId, tab){ appState.bioTopicTab[topicId] = tab; renderDashboardBody(); }
 function jumpBioSubtopic(chapterId, topicId, subtopicId){
-  appState.bioChapterId = chapterId; appState.bioTopicId = topicId; openBioSubtopic(subtopicId);
+  appState.bioChapterId = chapterId; appState.bioTopicId = topicId;
+  if(!appState.bioTopicTab) appState.bioTopicTab = {};
+  appState.bioTopicTab[topicId] = 'overview';
+  openBioSubtopic(subtopicId);
+}
+function bioOpenSubtopicInTopic(topicId, subtopicId){ jumpBioSubtopic(appState.bioChapterId, topicId, subtopicId); }
+function bioScrollToLesson(subtopicId){
+  requestAnimationFrame(()=>{ const el=document.getElementById('bio-lesson-'+subtopicId); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); });
 }
 function bioTopicSubtopicCount(topic){
   const done = topic.subtopics.filter(s=>learnedItems.has('bio-subtopic-'+s.id)).length;
@@ -8514,10 +8540,6 @@ function renderBiology(){
   const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
   if(!appState.bioTopicId) return renderBioTopicList(chapter);
   const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
-  if(appState.bioSubtopicId){
-    const subtopic = topic.subtopics.find(s=>s.id===appState.bioSubtopicId);
-    return renderBioSubtopicPage(chapter, topic, subtopic);
-  }
   return renderBioTopicPage(chapter, topic);
 }
 
@@ -8594,9 +8616,36 @@ function bioStepMove(id, len, delta){
   renderDashboardBody();
 }
 
-function renderBioFacts(facts){
+/* Real examples/variations render as tap-to-flip cards, not a bullet list — each fact
+   is already authored as '<b>Label</b> ... detail', so the label becomes the card
+   front and the full sentence becomes the back, with no data migration needed. */
+const bioFlipState = {};
+function bioParseFactCard(factHtml, idx){
+  const m = /<b>(.*?)<\/b>/.exec(factHtml);
+  if(m) return { label: m[1], detail: factHtml };
+  return { label: 'Fact '+(idx+1), detail: factHtml };
+}
+function bioFlipCard(id){ bioFlipState[id] = !bioFlipState[id]; renderDashboardBody(); }
+function renderBioFactCards(facts, subtopicId){
   if(!facts || !facts.length) return '';
-  return `<div class="bio-facts-box"><h3>🌍 Real examples &amp; variations</h3><ul>${facts.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+  const cards = facts.map((f,i)=>{
+    const {label, detail} = bioParseFactCard(f, i);
+    const id = 'bio-fact-'+subtopicId+'-'+i;
+    const flipped = !!bioFlipState[id];
+    const labelSize = label.length>44 ? '13px' : label.length>28 ? '15.5px' : '21px';
+    return `<div class="bio-flip-card ${flipped?'flipped':''}" onclick="bioFlipCard('${id}')">
+      <div class="bio-flip-inner">
+        <div class="bio-flip-face bio-flip-front">
+          <div class="bio-flip-label" style="font-size:${labelSize};">${escapeHtml(label)}</div>
+          <div class="bio-flip-hint">tap to reveal ↻</div>
+        </div>
+        <div class="bio-flip-face bio-flip-back">
+          <div class="bio-flip-detail">${detail}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="bio-section-label">🌍 Real examples &amp; variations</div><div class="bio-flip-row">${cards}</div>`;
 }
 
 /* Concept-first Biology subtopic renderer — no 2/3/5-mark structure, diagram-led. */
@@ -8606,7 +8655,7 @@ function renderBioConcept(subtopic){
     ${renderBioDiagramRow(subtopic.diagrams)}
     ${subtopic.stepDiagram ? renderBioStepDiagram('bio-step-'+subtopic.id, subtopic.stepDiagram.steps, subtopic.stepDiagram.viewBox) : ''}
     ${subtopic.graph ? renderInteractiveGraph('bio-'+subtopic.id, subtopic.graph) : ''}
-    ${renderBioFacts(subtopic.facts)}
+    ${renderBioFactCards(subtopic.facts, subtopic.id)}
     ${subtopic.diffTable ? renderDiffTable(subtopic.diffTable) : ''}
   `;
 }
@@ -8618,6 +8667,49 @@ const BIO_TOPIC_TABS = [
 ];
 function bioAllMcqsForTopic(topicId){ return BIO_MCQ_BANK.filter(m=>m.topic===topicId); }
 
+/* One-lesson-at-a-time accordion: only the active subtopic shows full content;
+   the rest collapse into tappable header bars. Opening one auto-collapses the
+   others, and "Continue to" advances sequentially through the topic. */
+function bioDefaultOpenSubtopic(topic){
+  const firstNotLearned = topic.subtopics.find(s=>!learnedItems.has('bio-subtopic-'+s.id));
+  return (firstNotLearned || topic.subtopics[0]).id;
+}
+function renderBioLessonAccordion(chapter, topic){
+  let openId = appState.bioSubtopicId;
+  if(!openId || !topic.subtopics.some(s=>s.id===openId)){
+    openId = bioDefaultOpenSubtopic(topic);
+    appState.bioSubtopicId = openId;
+  }
+  const idx = topic.subtopics.findIndex(s=>s.id===openId);
+  return topic.subtopics.map((s,i)=>{
+    const learnedKey = 'bio-subtopic-'+s.id;
+    const learned = learnedItems.has(learnedKey);
+    if(s.id===openId){
+      const next = topic.subtopics[i+1];
+      return `<div class="lesson-card bio-lesson-open" id="bio-lesson-${s.id}">
+        <div class="bio-lesson-head">
+          <h2>📘 ${escapeHtml(s.name)}</h2>
+          ${bookmarkBtn('bio-subtopic-'+s.id, {label:s.name, subject:'biology', chapterId:chapter.id, topicId:topic.id, subtopicId:s.id, kind:'Subtopic'})}
+        </div>
+        ${renderBioConcept(s)}
+        ${s.flowchart ? renderFlowchart(s.flowchart) : ''}
+        <button class="btn btn-primary mark-learned-btn" ${learned?'disabled':''} onclick="markLearned('${learnedKey}')" style="${learned?'background:var(--green);':''}">
+          ${learned?'✓ Marked as learned':'Mark this subtopic as learned'}
+        </button>
+        ${next
+          ? `<button class="btn btn-primary bio-continue-btn" onclick="bioOpenSubtopicInTopic('${topic.id}','${next.id}')">Continue to: 📘 ${escapeHtml(next.name)} →</button>`
+          : `<div class="bio-topic-done">🎉 That's every lesson in ${escapeHtml(topic.name)}.</div>`}
+        ${renderPrereqNext('biology', BIO_CHAPTERS, s.id, 'jumpBioSubtopic')}
+      </div>`;
+    }
+    return `<button class="bio-lesson-collapsed ${learned?'done':''}" onclick="bioOpenSubtopicInTopic('${topic.id}','${s.id}')">
+      <span class="bio-lesson-collapsed-icon">${learned?'✓':'📘'}</span>
+      <span class="bio-lesson-collapsed-name">${escapeHtml(s.name)}</span>
+      <span class="bio-lesson-collapsed-num">${i+1}/${topic.subtopics.length}</span>
+    </button>`;
+  }).join('');
+}
+
 function renderBioTopicPage(chapter, topic){
   if(!appState.bioTopicTab[topic.id]) appState.bioTopicTab[topic.id] = 'overview';
   const tab = appState.bioTopicTab[topic.id];
@@ -8625,13 +8717,7 @@ function renderBioTopicPage(chapter, topic){
 
   let body = '';
   if(tab==='overview'){
-    body = topic.subtopics.map(s=>`
-      <div class="lesson-card">
-        <h2>📘 ${escapeHtml(s.name)}</h2>
-        ${renderBioConcept(s)}
-        ${s.flowchart ? renderFlowchart(s.flowchart) : ''}
-      </div>
-    `).join('');
+    body = renderBioLessonAccordion(chapter, topic);
   } else if(tab==='practice'){
     const qs = BIO_QA_BANK.filter(q=>q.topic===topic.name);
     body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Every question for ${escapeHtml(topic.name)}. Answers save automatically and re-grade whenever you edit them.</p>${renderPracticeSection('bio-topic-'+topic.id, qs, {subtopic:true, marks:true})}`;
@@ -8658,49 +8744,6 @@ function renderBioTopicPage(chapter, topic){
     <div class="eng-tabs">${tabsHtml}</div>
     <div>${body}</div>
   `;
-}
-
-const BIO_SUBTOPIC_TABS = [
-  {id:'learn', label:'Learn'},
-  {id:'practice', label:'Practice Zone'},
-];
-const bioSubtopicTabState = {};
-function setBioSubtopicTab(subtopicId, tab){ bioSubtopicTabState[subtopicId] = tab; renderDashboardBody(); }
-
-function renderBioSubtopicPage(chapter, topic, subtopic){
-  const tab = bioSubtopicTabState[subtopic.id] || 'learn';
-  const tabsHtml = BIO_SUBTOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setBioSubtopicTab('${subtopic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
-  const learnedKey = 'bio-subtopic-'+subtopic.id;
-  const learned = learnedItems.has(learnedKey);
-
-  let body = '';
-  if(tab==='learn'){
-    body = `
-      ${renderBioConcept(subtopic)}
-      ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
-      <button class="btn btn-primary mark-learned-btn" ${learned?'disabled':''} onclick="markLearned('${learnedKey}')" style="${learned?'background:var(--green);':''}">
-        ${learned?'✓ Marked as learned':'Mark this subtopic as learned'}
-      </button>
-      ${renderPrereqNext('biology', BIO_CHAPTERS, subtopic.id, 'jumpBioSubtopic')}
-    `;
-  } else if(tab==='practice'){
-    const qs = BIO_QA_BANK.filter(q=>q.subtopic===subtopic.name);
-    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('bio-subtopic-'+subtopic.id, qs, {marks:true})}`;
-  }
-
-  const inner = `
-    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToTopic()">← ${escapeHtml(topic.name)}</button>
-    <div style="margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
-      <div>
-        <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
-        <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
-      </div>
-      ${bookmarkBtn('bio-subtopic-'+subtopic.id, {label:subtopic.name, subject:'biology', chapterId:chapter.id, topicId:topic.id, subtopicId:subtopic.id, kind:'Subtopic'})}
-    </div>
-    <div class="eng-tabs">${tabsHtml}</div>
-    <div>${body}</div>
-  `;
-  return renderLessonFlow('bio', topic.subtopics, subtopic.id, 'openBioSubtopic', inner);
 }
 
 /* ============================================================
