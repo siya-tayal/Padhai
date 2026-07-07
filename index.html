@@ -2758,6 +2758,11 @@ const MATH_CHAPTERS = [
     ]},
   { id:'algebra-11', grade:11, name:'Algebra', icon:'🧮',
     topics:[
+      { id:'mathematical-induction', name:'Principle of Mathematical Induction',
+        subtopics:[
+          { id:'induction-basics', name:'Mathematical Induction', keywords:['induction','base case','inductive step'],
+            formulas:[{ name:'Principle of Mathematical Induction', expr:'P(1) \\text{ true, and } P(k) \\implies P(k+1) \\;\\; \\implies \\;\\; P(n) \\text{ true } \\forall n\\in\\mathbb{N}', derivation:'If a statement holds for the first case (base step) and holding for any case k guarantees it holds for the next case k+1 (inductive step), then by the domino effect it holds for every natural number.', units:'—', mistakes:'Forgetting to verify the base case P(1) explicitly; assuming P(k) is true without stating it clearly as the inductive hypothesis before proving P(k+1).' }] },
+        ]},
       { id:'complex-quadratic', name:'Complex Numbers & Quadratic Equations',
         subtopics:[
           { id:'complex-numbers', name:'Complex Numbers', keywords:['complex number','imaginary','modulus','argand'],
@@ -2766,7 +2771,11 @@ const MATH_CHAPTERS = [
             def5:'Complex numbers extend the real number system to include square roots of negative numbers, defined via i = √−1 so that i² = −1. Every complex number z = a+bi can be represented as a point (a,b) on the Argand plane, where the modulus |z| = √(a²+b²) gives its distance from the origin, and the argument (arg z) gives the angle it makes with the positive real axis — together forming the polar form z = r(cosθ + i·sinθ). The conjugate of z = a+bi is z̄ = a−bi, and multiplying a complex number by its conjugate always yields a real number (a²+b²), a trick used to rationalise complex denominators.',
             memoryTrick:'i² = −1 is the one rule that generates all complex number arithmetic.',
             example:'For z = 3+4i, the modulus |z| = √(9+16) = √25 = 5, and multiplying by its conjugate (3−4i) gives 9+16 = 25, a real number.',
-            formulas:[{ name:'Modulus of a Complex Number', expr:'|z| = \\sqrt{a^2+b^2} \\quad \\text{for } z=a+bi', derivation:'Follows from the Pythagorean theorem, treating the real and imaginary parts as perpendicular legs of a right triangle on the Argand plane.', units:'Same units as a, b', mistakes:'Forgetting to take the square root, or mixing up modulus (a distance, always non-negative) with the argument (an angle).' }] },
+            formulas:[
+              { name:'Modulus of a Complex Number', expr:'|z| = \\sqrt{a^2+b^2} \\quad \\text{for } z=a+bi', derivation:'Follows from the Pythagorean theorem, treating the real and imaginary parts as perpendicular legs of a right triangle on the Argand plane.', units:'Same units as a, b', mistakes:'Forgetting to take the square root, or mixing up modulus (a distance, always non-negative) with the argument (an angle).' },
+              { name:"De Moivre's Theorem", expr:'(\\cos\\theta+i\\sin\\theta)^n = \\cos(n\\theta)+i\\sin(n\\theta)', derivation:"Proved by induction using the angle-addition formulas for sine and cosine, extended to any integer n.", units:'—', mistakes:'Forgetting to convert the complex number to polar (modulus-argument) form before applying the theorem — it only applies directly to numbers already in the form cosθ+isinθ.' },
+              { name:'Cube Roots of Unity', expr:'1, \\; \\omega = \\dfrac{-1+i\\sqrt3}{2}, \\; \\omega^2 = \\dfrac{-1-i\\sqrt3}{2}, \\quad \\text{where } 1+\\omega+\\omega^2=0, \\; \\omega^3=1', derivation:'Found by solving x^3=1, i.e. x^3-1=0, which factors as (x-1)(x^2+x+1)=0.', units:'—', mistakes:'Forgetting the key identity 1+ω+ω²=0, which is the fastest way to simplify most cube-roots-of-unity board questions.' },
+            ] },
           { id:'quadratic-equations', name:'Quadratic Equations', keywords:['quadratic formula','discriminant','roots'],
             def2:'A quadratic equation ax²+bx+c=0 (a≠0) is solved using the quadratic formula, giving up to two roots.',
             def3:'The discriminant D = b²−4ac determines the nature of the roots: D>0 gives two distinct real roots, D=0 gives one repeated real root, and D<0 gives two complex conjugate roots.',
@@ -2797,6 +2806,8 @@ const MATH_CHAPTERS = [
             example:'The GP 2, 6, 18, 54,... has a=2, r=3, so the 6th term = 2×3⁵ = 486. For the GP 1, 1/2, 1/4,... with r=1/2, the sum to infinity = 1/(1−1/2) = 2.',
             formulas:[{ name:'GP nth Term, Sum & Sum to Infinity', expr:'a_n = ar^{n-1} \\qquad S_n = \\dfrac{a(r^n-1)}{r-1} \\qquad S_\\infty = \\dfrac{a}{1-r} \\;\\; (|r|<1)', derivation:'The sum formula is derived by multiplying Sₙ by r, subtracting from the original Sₙ, and solving — most terms cancel, leaving a(rⁿ−1)/(r−1). Letting n→∞ with |r|<1 makes rⁿ→0, giving S∞ = a/(1−r).', units:'Same units as the terms', mistakes:'Applying the sum-to-infinity formula when |r|≥1, where the series does not actually converge.' }],
             numericalGen:'gp-nth-term' },
+          { id:'harmonic-progression', name:'Harmonic Progression (HP)', keywords:['harmonic progression','reciprocal','harmonic mean'],
+            formulas:[{ name:'HP nth Term & Harmonic Mean', expr:'a_n = \\dfrac{1}{a + (n-1)d} \\quad \\text{(reciprocals in AP)}, \\qquad H = \\dfrac{2ab}{a+b} \\;\\text{(HM of two numbers)}', derivation:'A sequence is a Harmonic Progression if the reciprocals of its terms form an Arithmetic Progression; the nth term is therefore found by first finding the nth term of the reciprocal AP, then inverting it.', units:'Same units as the terms', mistakes:'Trying to apply the AP or GP nth-term formula directly to an HP instead of first taking reciprocals.' }] },
         ]},
       { id:'perm-comb-binomial', name:'Permutations, Combinations & Binomial Theorem',
         subtopics:[
@@ -2858,6 +2869,13 @@ const MATH_CHAPTERS = [
             memoryTrick:'y²=4ax opens toward positive x; the sign and squared variable tell you the opening direction.',
             example:'For y²=8x, comparing to y²=4ax gives 4a=8 so a=2; the focus is at (2,0), the directrix is x=−2, and the latus rectum has length 8.',
             formulas:[{ name:'Parabola (Standard Form)', expr:'y^2 = 4ax \\quad (\\text{vertex at origin, focus at } (a,0)\\text{, directrix } x=-a)', derivation:'Derived directly from the equidistance definition: setting the distance from a point (x,y) to the focus (a,0) equal to its distance to the directrix x=−a, then simplifying.', units:'Same units as coordinates', mistakes:'Mixing up which variable is squared — y² = 4ax opens along the x-axis, while x² = 4ay opens along the y-axis.' } ] },
+          { id:'ellipse-conic', name:'Ellipse', keywords:['ellipse','foci','major axis','minor axis','eccentricity'],
+            formulas:[{ name:'Ellipse (Standard Form)', expr:'\\dfrac{x^2}{a^2}+\\dfrac{y^2}{b^2}=1 \\;\\;(a>b), \\quad e=\\sqrt{1-\\dfrac{b^2}{a^2}}, \\quad \\text{foci }(\\pm ae, 0)', derivation:'An ellipse is the locus of points where the sum of distances to two fixed foci is constant; expanding this equidistance-sum condition algebraically yields the standard form.', units:'Same units as coordinates', mistakes:'Assuming the major axis is always along the x-axis — compare the denominators under x² and y²; the larger denominator marks the major axis.' }],
+            graph:{ title:'An Ellipse: x²/a² + y²/b² = 1', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:4,
+              curves:[ {id:'ell1', type:'circle', label:'Ellipse (approx.)', color:'#c94a05', cx:10, cy:10, r:6, draggable:true} ],
+              note:'A true ellipse has independent a and b radii; drag to explore how shifting the centre affects the curve while its shape is held fixed here.' } },
+          { id:'hyperbola-conic', name:'Hyperbola', keywords:['hyperbola','foci','transverse axis','asymptotes','eccentricity'],
+            formulas:[{ name:'Hyperbola (Standard Form)', expr:'\\dfrac{x^2}{a^2}-\\dfrac{y^2}{b^2}=1, \\quad e=\\sqrt{1+\\dfrac{b^2}{a^2}}, \\quad \\text{asymptotes: } y=\\pm\\dfrac{b}{a}x', derivation:'A hyperbola is the locus of points where the difference of distances to two fixed foci is constant; expanding this equidistance-difference condition algebraically yields the standard form, with asymptotes found by considering the curve\'s behaviour as x→∞.', units:'Same units as coordinates', mistakes:'Confusing the hyperbola\'s minus sign with the ellipse\'s plus sign — a hyperbola always has one positive and one negative squared term.' }] },
         ]},
       { id:'3d-geometry-intro', name:'Introduction to Three-Dimensional Geometry',
         subtopics:[
@@ -2919,10 +2937,20 @@ const MATH_CHAPTERS = [
             numericalGen:'basic-probability' },
         ]},
     ]},
+  { id:'mathematical-reasoning', grade:11, name:'Mathematical Reasoning', icon:'🧩',
+    topics:[
+      { id:'reasoning-topic', name:'Mathematical Reasoning',
+        subtopics:[
+          { id:'statements-connectives', name:'Statements, Logical Connectives & Validity', keywords:['statement','negation','and','or','implies','converse','contrapositive'],
+            formulas:[{ name:'Logical Connectives & Contrapositive', expr:'\\text{Negation of "}p \\implies q\\text{" reasoning uses: contrapositive} \\equiv \\sim q \\implies \\sim p', derivation:'A statement "if p then q" is logically equivalent to its contrapositive "if not q then not p" — proving one proves the other, which is often the easier direction to argue directly or by contradiction.', units:'—', mistakes:'Confusing the contrapositive (∼q⟹∼p, always logically equivalent) with the converse (q⟹p, NOT generally equivalent to the original statement).' }] },
+        ]},
+    ]},
   { id:'relations-functions-12', grade:12, name:'Relations & Functions', icon:'🔗',
     topics:[
       { id:'relations-functions-extended', name:'Relations & Functions (Extended)',
         subtopics:[
+          { id:'functions-onto-oneone-binary', name:'One-One, Onto Functions & Binary Operations', keywords:['one-one','onto','bijective','inverse function','binary operation'],
+            formulas:[{ name:'One-One (Injective) & Onto (Surjective) Conditions', expr:'\\text{One-one: } f(x_1)=f(x_2) \\implies x_1=x_2 \\qquad \\text{Onto: } \\forall y\\in \\text{codomain}, \\exists x: f(x)=y', derivation:'One-one (injective) means distinct inputs never share an output; onto (surjective) means every element of the codomain is actually hit by some input. A function that is both is called a bijection, and only bijections have a genuine inverse function.', units:'—', mistakes:'Confusing "onto" (every codomain element is hit) with "one-one" (no two inputs share an output) — a function can be one without the other.' }] },
           { id:'equivalence-relations', name:'Equivalence Relations', keywords:['reflexive','symmetric','transitive','equivalence relation'],
             def2:'An equivalence relation is one that is reflexive, symmetric, and transitive all at once.',
             def3:'Reflexive: every element relates to itself (aRa). Symmetric: if aRb then bRa. Transitive: if aRb and bRc then aRc. An equivalence relation partitions its set into disjoint equivalence classes.',
@@ -3081,6 +3109,11 @@ const MATH_CHAPTERS = [
             memoryTrick:"Bayes' Theorem = reverse conditional probability, using the Law of Total Probability as its denominator.",
             example:'If Machine A produces 60% of items with a 2% defect rate, and Machine B produces 40% with a 5% defect rate, Bayes\' Theorem finds the probability a randomly found defective item came from Machine A.' },
         ]},
+      { id:'random-variables', name:'Random Variables & Binomial Distribution',
+        subtopics:[
+          { id:'binomial-distribution', name:'Random Variable, Mean/Variance & Binomial Distribution', keywords:['random variable','probability distribution','bernoulli trial','binomial distribution','mean','variance'],
+            formulas:[{ name:'Binomial Distribution: P(X=r), Mean & Variance', expr:'P(X=r) = {}^nC_r\\,p^r q^{n-r}, \\quad \\text{Mean} = np, \\quad \\text{Variance} = npq \\;\\; (q=1-p)', derivation:'A binomial distribution arises from n independent Bernoulli trials each with success probability p; the probability of exactly r successes is the number of ways to choose which r trials succeed, times the probability of that specific arrangement.', units:'—', mistakes:'Using q (failure probability) where p (success probability) was needed, or vice versa; forgetting that n, p must be fixed and trials independent for the binomial model to apply.' }] },
+        ]},
       { id:'linear-programming', name:'Linear Programming',
         subtopics:[
           { id:'lp-basics', name:'Linear Programming: Formulation & Graphical Solution', keywords:['linear programming','objective function','constraints','feasible region'],
@@ -3185,6 +3218,12 @@ function renderTopicMetaStrip(subject, topicId){
       <span class="topic-meta-chip">❓ Frequently Asked: <b>${m.frequentlyAsked} times</b></span>
       <span class="topic-meta-chip">🎯 Difficulty: <b>${escapeHtml(m.difficulty)}</b></span>
       <span class="topic-meta-chip">⏱️ Est. Study Time: <b>${escapeHtml(m.studyTime)}</b></span>
+    </div>`;
+  }
+  if(subject==='math'){
+    return `<div class="topic-meta-strip">
+      <span class="topic-meta-chip">📊 Board Weightage: <b>${escapeHtml(m.weightage)}</b></span>
+      <span class="topic-meta-chip">📄 Previous Year Questions: <b>${m.pyqCount}</b></span>
     </div>`;
   }
   return `<div class="topic-meta-strip">
@@ -4378,6 +4417,186 @@ const MATH_PROBLEM_TYPES = {
           };
         } } },
   ],
+  'induction-basics': [
+    { id:'induction-summation', title:'Proving a Summation Formula by Induction', difficulty:'Medium',
+      concept:'Mathematical induction proves a statement \\(P(n)\\) holds for all natural numbers \\(n\\geq1\\) by establishing a base case \\(P(1)\\), then showing that if \\(P(k)\\) is true (the inductive hypothesis), \\(P(k+1)\\) must also be true.',
+      recognition:'Any statement claiming a closed-form formula equals a sum "for all natural numbers n" or "for all \\(n\\geq1\\)" is a strong candidate for induction.',
+      whenToUse:'When a formula is claimed to equal a sum for every natural number, and no other technique (like a direct algebraic derivation) is requested.',
+      commonMistakes:'Skipping the base case verification; jumping straight to the inductive step without first writing "Assume \\(P(k)\\) is true" as the inductive hypothesis.',
+      formulaTex:'P(1)\\text{ true}, \\;\\; P(k)\\implies P(k+1) \\;\\; \\therefore \\; P(n) \\; \\forall n\\in\\mathbb{N}',
+      worked:{ problemTex:'\\text{Prove by induction that } 1+2+3+\\cdots+n = \\dfrac{n(n+1)}{2} \\text{ for all } n\\geq1.',
+        steps:[ 'Base case: for \\(n=1\\), LHS\\(=1\\), RHS\\(=1(2)/2=1\\). True.',
+                'Inductive hypothesis: assume \\(1+2+\\cdots+k = \\dfrac{k(k+1)}{2}\\) is true for some \\(k\\).',
+                'Inductive step: add \\((k+1)\\) to both sides: \\(1+2+\\cdots+k+(k+1) = \\dfrac{k(k+1)}{2}+(k+1)\\).',
+                'Simplify the RHS: \\(\\dfrac{k(k+1)+2(k+1)}{2} = \\dfrac{(k+1)(k+2)}{2}\\), matching the formula with \\(n=k+1\\).',
+                'Since the base case holds and \\(P(k)\\implies P(k+1)\\), the formula holds for all \\(n\\geq1\\) by induction.' ],
+        answerTex:'1+2+\\cdots+n = \\dfrac{n(n+1)}{2} \\text{ holds for all } n\\geq1' },
+      shortcut:'The inductive step almost always reduces to factoring \\((k+1)\\) out of the RHS after adding the \\((k+1)\\)th term — practice recognising this factoring pattern.',
+      examinerTips:'Always explicitly write the three labeled parts — Base Case, Inductive Hypothesis, Inductive Step — ISC mark schemes award marks separately for each.',
+      variations:'Proving divisibility statements using the same three-part structure, or proving inequalities like \\(2^n > n\\) for all \\(n\\geq1\\).',
+      relatedTypes:['induction-divisibility'],
+      generator:{ templateDesc:'Cycles through standard summation identities provable by induction, showing the argument for one.',
+        generate(){
+          const identities = [
+            { lhs:'1+2+3+\\cdots+n', rhs:'\\dfrac{n(n+1)}{2}', base:'1', baseRhs:'\\dfrac{1(2)}{2}=1', addTerm:'(k+1)', simplify:'\\dfrac{k(k+1)}{2}+(k+1) = \\dfrac{k(k+1)+2(k+1)}{2} = \\dfrac{(k+1)(k+2)}{2}' },
+            { lhs:'1^2+2^2+3^2+\\cdots+n^2', rhs:'\\dfrac{n(n+1)(2n+1)}{6}', base:'1', baseRhs:'\\dfrac{1(2)(3)}{6}=1', addTerm:'(k+1)^2', simplify:'\\dfrac{k(k+1)(2k+1)}{6}+(k+1)^2 = \\dfrac{(k+1)(k+2)(2k+3)}{6}' },
+            { lhs:'1+3+5+\\cdots+(2n-1)', rhs:'n^2', base:'1', baseRhs:'1^2=1', addTerm:'(2k+1)', simplify:'k^2+(2k+1) = (k+1)^2' },
+          ];
+          const idn = randFrom(identities);
+          return {
+            questionTex: `\\text{Prove by induction that } ${idn.lhs} = ${idn.rhs} \\text{ for all } n\\geq1.`,
+            answerTex: `${idn.lhs} = ${idn.rhs} \\text{ holds for all } n\\geq1 \\text{ by induction}`,
+            formulaTex: 'P(1)\\text{ true}, \\; P(k)\\implies P(k+1) \\;\\therefore\\; P(n)\\;\\forall n',
+            substitutionTex: `\\text{Base case } n=${idn.base}: \\; ${idn.baseRhs}`,
+            simplificationTex: `\\text{Assuming } P(k), \\text{ adding } ${idn.addTerm}: \\; ${idn.simplify}`,
+            alternate:'Verify the formula numerically for n=2,3 as a sanity check before writing the full proof.',
+            mistake:'Forgetting to explicitly state the inductive hypothesis "Assume P(k) is true" before attempting the inductive step.',
+          };
+        } } },
+    { id:'induction-divisibility', title:'Proving Divisibility by Induction', difficulty:'Hard',
+      concept:'Divisibility induction proofs show an expression \\(f(n)\\) is always divisible by a fixed number \\(d\\), by expanding \\(f(k+1)\\) to isolate \\(f(k)\\) (assumed divisible by \\(d\\) via the inductive hypothesis) plus a remaining term also shown divisible by \\(d\\).',
+      recognition:'Statements of the form "prove that [expression in n] is divisible by [number] for all n."',
+      whenToUse:'For divisibility claims about an algebraic expression in \\(n\\), rather than an equality between a sum and a formula.',
+      commonMistakes:'Trying to show \\(f(k+1)\\) is divisible by \\(d\\) directly without relating it back to \\(f(k)\\) via the inductive hypothesis.',
+      formulaTex:'\\text{If } d \\mid f(k) \\text{ and } f(k+1)-f(k) \\text{ is a multiple of } d, \\text{ then } d\\mid f(k+1)',
+      worked:{ problemTex:'\\text{Prove that } n^3-n \\text{ is divisible by 6 for all } n\\geq1.',
+        steps:[ 'Base case: for \\(n=1\\), \\(1^3-1=0\\), divisible by 6. True.',
+                'Inductive hypothesis: assume \\(k^3-k\\) is divisible by 6.',
+                'Inductive step: \\((k+1)^3-(k+1) = k^3+3k^2+3k+1-k-1 = (k^3-k)+3k(k+1)\\).',
+                '\\(k^3-k\\) is divisible by 6 (hypothesis), and \\(k(k+1)\\) is always even (product of consecutive integers), so \\(3k(k+1)\\) is divisible by 6.',
+                'A sum of two multiples of 6 is a multiple of 6, so \\((k+1)^3-(k+1)\\) is divisible by 6, completing the induction.' ],
+        answerTex:'n^3-n \\text{ is divisible by 6 for all } n\\geq1' },
+      shortcut:'Expand \\(f(k+1)\\) and isolate \\(f(k)\\) as a term — the leftover piece is what you need to show is divisible by \\(d\\), often via "product of consecutive integers is even."',
+      examinerTips:'Explicitly justify why the leftover term is divisible by \\(d\\) — do not just assert it.',
+      variations:'Proving \\(4^n-1\\) is divisible by 3, or \\(x^n-y^n\\) is divisible by \\((x-y)\\), using the identical inductive structure.',
+      relatedTypes:['induction-summation'],
+      generator:{ templateDesc:'Cycles through standard divisibility identities provable by induction.',
+        generate(){
+          const identities = [
+            { expr:'n^3-n', divisor:6, expand:'(k^3-k)+3k(k+1)', note:'3k(k+1)\\text{ is divisible by 6 since } k(k+1)\\text{ is always even}' },
+            { expr:'4^n-1', divisor:3, expand:'4(4^k-1)+3', note:'\\text{both } 4(4^k-1)\\text{ and }3\\text{ are divisible by 3}' },
+            { expr:'n^3+2n', divisor:3, expand:'(k^3+2k)+3(k^2+k+1)', note:'\\text{the added term }3(k^2+k+1)\\text{ is clearly divisible by 3}' },
+          ];
+          const idn = randFrom(identities);
+          return {
+            questionTex: `\\text{Prove that } ${idn.expr} \\text{ is divisible by } ${idn.divisor} \\text{ for all } n\\geq1.`,
+            answerTex: `${idn.expr} \\text{ is divisible by } ${idn.divisor} \\text{ for all } n\\geq1 \\text{ by induction}`,
+            formulaTex: `\\text{If } ${idn.divisor} \\mid f(k) \\text{ and the added term is a multiple of } ${idn.divisor}, \\text{ then } ${idn.divisor}\\mid f(k+1)`,
+            substitutionTex: `\\text{Base case } n=1: \\text{ check } f(1) \\text{ directly}`,
+            simplificationTex: `f(k+1) = ${idn.expand}, \\quad \\text{where } ${idn.note}`,
+            alternate:'Test the claim numerically for n=2,3,4 as a quick sanity check.',
+            mistake:'Forgetting to relate f(k+1) back to f(k) via the inductive hypothesis.',
+          };
+        } } },
+  ],
+  'ellipse-conic': [
+    { id:'ellipse-params', title:'Eccentricity, Foci & Axes from an Ellipse Equation', difficulty:'Medium',
+      concept:'For an ellipse \\(\\dfrac{x^2}{a^2}+\\dfrac{y^2}{b^2}=1\\) with \\(a>b\\), the eccentricity \\(e=\\sqrt{1-b^2/a^2}\\) measures how stretched the ellipse is, and the foci lie at \\((\\pm ae, 0)\\) on the major axis.',
+      recognition:'Given the standard equation of an ellipse with numeric \\(a^2\\) and \\(b^2\\), asked to find eccentricity, foci, or axis lengths.',
+      whenToUse:'Whenever numeric \\(a^2\\) and \\(b^2\\) are given directly in an ellipse equation.',
+      commonMistakes:'Forgetting to check which denominator is larger to correctly identify the major axis; forgetting to square-root \\(a^2\\) to get \\(a\\).',
+      formulaTex:'e=\\sqrt{1-\\dfrac{b^2}{a^2}} \\quad (a>b), \\qquad \\text{foci}=(\\pm ae, 0)',
+      worked:{ problemTex:'\\text{For the ellipse } \\dfrac{x^2}{25}+\\dfrac{y^2}{16}=1\\text{, find the eccentricity and foci.}',
+        steps:[ 'Compare denominators: \\(a^2=25\\) (larger, under \\(x^2\\)), \\(b^2=16\\).',
+                '\\(a=5, b=4\\).',
+                '\\(e=\\sqrt{1-16/25}=\\sqrt{9/25}=3/5\\).',
+                'Foci: \\((\\pm ae, 0) = (\\pm5\\times\\tfrac35,0) = (\\pm3,0)\\).' ],
+        answerTex:'e=\\dfrac{3}{5}, \\quad \\text{foci}=(\\pm3,0)' },
+      shortcut:'Recognise Pythagorean-triple patterns between \\(a\\), \\(b\\) and \\(ae=\\sqrt{a^2-b^2}\\) to skip decimal computation.',
+      examinerTips:'State which axis is the major axis (the one with the larger denominator) before computing — this is often a separate mark.',
+      variations:'Finding the latus rectum \\(2b^2/a\\); finding the equation of an ellipse given its foci and one axis length.',
+      relatedTypes:[],
+      generator:{ templateDesc:'Generates an ellipse with a²,b² forming a Pythagorean-triple-like ae, for clean eccentricity values.',
+        generate(){
+          const pairs = [ {a2:25,b2:16,a:5,b:4}, {a2:169,b2:144,a:13,b:12}, {a2:100,b2:64,a:10,b:8}, {a2:169,b2:25,a:13,b:5} ];
+          const p = randFrom(pairs);
+          const aeSq = p.a2-p.b2;
+          const ae = Math.round(Math.sqrt(aeSq));
+          const g = gcdOf(ae, p.a);
+          return {
+            questionTex: `\\text{For the ellipse } \\dfrac{x^2}{${p.a2}}+\\dfrac{y^2}{${p.b2}}=1\\text{, find the eccentricity and foci.}`,
+            answerTex: `e=\\dfrac{${ae/g}}{${p.a/g}}, \\quad \\text{foci}=(\\pm${ae},0)`,
+            formulaTex: 'e=\\sqrt{1-\\dfrac{b^2}{a^2}} \\quad (a>b), \\qquad \\text{foci}=(\\pm ae, 0)',
+            substitutionTex: `a=${p.a}, \\; b=${p.b}, \\quad e=\\sqrt{1-\\dfrac{${p.b2}}{${p.a2}}}`,
+            simplificationTex: `e=\\sqrt{\\dfrac{${aeSq}}{${p.a2}}}=\\dfrac{${ae}}{${p.a}}=\\dfrac{${ae/g}}{${p.a/g}}, \\quad \\text{foci}=(\\pm${ae},0)`,
+            alternate:'Recognize a,b,ae as a Pythagorean triple (like 3-4-5) to shortcut the arithmetic.',
+            mistake:'Assuming the major axis is along x without checking which denominator is actually larger.',
+          };
+        } } },
+  ],
+  'hyperbola-conic': [
+    { id:'hyperbola-params', title:'Eccentricity, Foci & Asymptotes from a Hyperbola Equation', difficulty:'Medium',
+      concept:'For a hyperbola \\(\\dfrac{x^2}{a^2}-\\dfrac{y^2}{b^2}=1\\), the eccentricity \\(e=\\sqrt{1+b^2/a^2}\\) is always greater than 1 (unlike an ellipse\'s \\(e<1\\)), and the foci lie at \\((\\pm ae,0)\\).',
+      recognition:'Given the standard equation of a hyperbola with numeric \\(a^2\\) and \\(b^2\\), asked to find eccentricity, foci, or asymptotes.',
+      whenToUse:'Whenever numeric \\(a^2\\) and \\(b^2\\) are given directly in a hyperbola equation (one term positive, one negative).',
+      commonMistakes:"Using the ellipse eccentricity formula (minus sign) instead of the hyperbola one (plus sign) — a hyperbola always has e>1.",
+      formulaTex:'e=\\sqrt{1+\\dfrac{b^2}{a^2}}, \\qquad \\text{foci}=(\\pm ae,0), \\qquad \\text{asymptotes: } y=\\pm\\dfrac{b}{a}x',
+      worked:{ problemTex:'\\text{For the hyperbola } \\dfrac{x^2}{16}-\\dfrac{y^2}{9}=1\\text{, find the eccentricity and asymptotes.}',
+        steps:[ '\\(a^2=16, b^2=9 \\implies a=4, b=3\\).',
+                '\\(e=\\sqrt{1+9/16}=\\sqrt{25/16}=5/4\\).',
+                'Asymptotes: \\(y=\\pm\\dfrac{3}{4}x\\).' ],
+        answerTex:'e=\\dfrac{5}{4}, \\quad y=\\pm\\dfrac{3}{4}x' },
+      shortcut:'Check whether a, b, ae form a recognisable Pythagorean triple (like 3-4-5) before computing decimals.',
+      examinerTips:'State explicitly that a hyperbola always has \\(e>1\\), distinguishing it from an ellipse\'s \\(e<1\\) — examiners test this conceptual distinction directly.',
+      variations:'Finding the equation of a hyperbola given its foci and vertices; finding the latus rectum \\(2b^2/a\\).',
+      relatedTypes:[],
+      generator:{ templateDesc:'Generates a hyperbola with a²,b² forming a Pythagorean-triple-like ae, for clean eccentricity and asymptote values.',
+        generate(){
+          const pairs = [ {a2:16,b2:9,a:4,b:3}, {a2:144,b2:25,a:12,b:5}, {a2:9,b2:16,a:3,b:4}, {a2:25,b2:144,a:5,b:12} ];
+          const p = randFrom(pairs);
+          const aeSq = p.a2+p.b2;
+          const ae = Math.round(Math.sqrt(aeSq));
+          const g = gcdOf(ae,p.a);
+          const gAsym = gcdOf(p.b,p.a);
+          return {
+            questionTex: `\\text{For the hyperbola } \\dfrac{x^2}{${p.a2}}-\\dfrac{y^2}{${p.b2}}=1\\text{, find the eccentricity and asymptotes.}`,
+            answerTex: `e=\\dfrac{${ae/g}}{${p.a/g}}, \\quad y=\\pm\\dfrac{${p.b/gAsym}}{${p.a/gAsym}}x`,
+            formulaTex: 'e=\\sqrt{1+\\dfrac{b^2}{a^2}}, \\qquad \\text{asymptotes: } y=\\pm\\dfrac{b}{a}x',
+            substitutionTex: `a=${p.a}, \\; b=${p.b}, \\quad e=\\sqrt{1+\\dfrac{${p.b2}}{${p.a2}}}`,
+            simplificationTex: `e=\\sqrt{\\dfrac{${aeSq}}{${p.a2}}}=\\dfrac{${ae}}{${p.a}}=\\dfrac{${ae/g}}{${p.a/g}}`,
+            alternate:'Check if a,b,ae form a recognizable Pythagorean triple to skip decimal computation.',
+            mistake:'Using the ellipse formula (minus sign under the square root) instead of the hyperbola formula (plus sign).',
+          };
+        } } },
+  ],
+  'binomial-distribution': [
+    { id:'binomial-pxr', title:'Finding P(X=r) for a Binomial Distribution', difficulty:'Medium',
+      concept:'For \\(n\\) independent Bernoulli trials each with success probability \\(p\\), the probability of exactly \\(r\\) successes is \\(P(X=r) = {}^nC_r\\,p^r q^{n-r}\\), where \\(q=1-p\\) is the failure probability.',
+      recognition:'A fixed number of independent, identical repeated trials, each with the same success probability, and a question asking for the probability of an exact number of successes.',
+      whenToUse:'Whenever "n trials," "probability of success p," and "exactly r successes" all appear together.',
+      commonMistakes:'Forgetting the binomial coefficient \\({}^nC_r\\); mixing up \\(p\\) and \\(q\\) in the exponents.',
+      formulaTex:'P(X=r) = {}^nC_r\\,p^r q^{n-r}',
+      worked:{ problemTex:'\\text{A fair coin is tossed 5 times. Find the probability of getting exactly 3 heads.}',
+        steps:[ 'Here \\(n=5, p=1/2, q=1/2, r=3\\).',
+                '\\(P(X=3) = {}^5C_3 (1/2)^3(1/2)^2\\).',
+                '\\({}^5C_3=10\\), so \\(P(X=3)=10\\times(1/2)^5=10/32=5/16\\).' ],
+        answerTex:'P(X=3)=\\dfrac{5}{16}' },
+      shortcut:'For a fair coin, every sequence has probability \\((1/2)^n\\), so \\(P(X=r)\\) simplifies to \\({}^nC_r/2^n\\) — just compute the binomial coefficient and divide.',
+      examinerTips:'State the values of \\(n, p, q, r\\) explicitly as a labeled first step before substituting into the formula.',
+      variations:'Finding \\(P(X\\geq r)\\) or \\(P(X\\leq r)\\) by summing several binomial probabilities; finding the mean \\((np)\\) and variance \\((npq)\\) instead of a single probability.',
+      relatedTypes:[],
+      generator:{ templateDesc:'Generates a binomial probability question with simple fractions for p so P(X=r) stays a clean fraction.',
+        generate(){
+          const n = randInt(4,7);
+          const scenarios = [ {p:1,q:1,den:2,ctx:'A fair coin is tossed'}, {p:1,q:2,den:3,ctx:'A biased spinner (1-in-3 chance of red) is spun'} ];
+          const sc = randFrom(scenarios);
+          const r = randInt(1,n-1);
+          function fact(x){ let f=1; for(let i=2;i<=x;i++) f*=i; return f; }
+          const nCr = fact(n)/(fact(r)*fact(n-r));
+          const numerator = nCr * Math.pow(sc.p, r) * Math.pow(sc.q, n-r);
+          const denominator = Math.pow(sc.den, n);
+          const g = gcdOf(numerator, denominator);
+          return {
+            questionTex: `\\text{${sc.ctx} ${n} times. Find the probability of exactly ${r} successes (probability } ${sc.p}/${sc.den} \\text{ each trial).}`,
+            answerTex: `P(X=${r}) = \\dfrac{${numerator/g}}{${denominator/g}}`,
+            formulaTex: 'P(X=r) = {}^nC_r\\,p^r q^{n-r}',
+            substitutionTex: `n=${n}, \\; p=\\dfrac{${sc.p}}{${sc.den}}, \\; q=\\dfrac{${sc.q}}{${sc.den}}, \\; r=${r}`,
+            simplificationTex: `P(X=${r}) = {}^{${n}}C_{${r}}\\left(\\dfrac{${sc.p}}{${sc.den}}\\right)^{${r}}\\left(\\dfrac{${sc.q}}{${sc.den}}\\right)^{${n-r}} = \\dfrac{${numerator}}{${denominator}}`,
+            alternate:"Compute the mean (np) and variance (npq) separately as a broader check on the distribution's shape.",
+            mistake:'Forgetting the binomial coefficient nCr, or swapping p and q in the exponents.',
+          };
+        } } },
+  ],
 };
 function mathProblemTypesFor(subtopicId){ return MATH_PROBLEM_TYPES[subtopicId] || null; }
 
@@ -4394,7 +4613,6 @@ function renderPTypeGrid(subtopic){
       ${types.map((t,i)=>`<button class="ptype-card" onclick="openMathProblemType('${t.id}')">
         <div class="ptype-card-num">Type ${i+1} ${isPTypeMastered(t.id)?'✓':''}</div>
         <div class="ptype-card-title">${escapeHtml(t.title)}</div>
-        <span class="ptype-diff ${t.difficulty}">${escapeHtml(t.difficulty)}</span>
       </button>`).join('')}
     </div>
   </div>`;
@@ -4450,7 +4668,6 @@ function renderMathProblemTypePage(chapter, topic, subtopic, ptype, allTypes){
       <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)} · ${escapeHtml(subtopic.name)}</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <h1 class="display" style="font-size:23px;">Type ${idx+1}: ${escapeHtml(ptype.title)}</h1>
-        <span class="ptype-diff ${ptype.difficulty}">${escapeHtml(ptype.difficulty)}</span>
       </div>
     </div>
 
@@ -5992,108 +6209,115 @@ const NUMERICAL_GENERATORS = {
       };
     } },
   'set-cardinality': {
-    title:'Set Cardinality (Union)', unit:'', formula:'n(A∪B) = n(A) + n(B) − n(A∩B)',
+    title:'Set Cardinality (Union)', unit:'', formula:'n(A∪B) = n(A) + n(B) − n(A∩B)', formulaTex:'n(A\\cup B) = n(A) + n(B) - n(A\\cap B)',
     generate(){
       const nA = randInt(20,45), nB = randInt(15,40);
       const nAB = randInt(5, Math.min(nA,nB)-3);
       const nUnion = nA + nB - nAB;
       const total = nUnion + randInt(5,20);
       return {
-        question: `In a class of ${total} students, ${nA} play cricket, ${nB} play football, and ${nAB} play both. How many students play at least one of the two sports?`,
-        answer: nUnion,
+        stepsAreHtml:true,
+        questionHtml: `In a class of ${total} students, ${nA} play cricket, ${nB} play football, and ${nAB} play both. How many students play at least one of the two sports?`,
+        answer: nUnion, answerHtml: tex(`${nUnion}`) + ' students',
         steps: [
-          `n(A∪B) = n(A) + n(B) − n(A∩B)`,
-          `n(A∪B) = ${nA} + ${nB} − ${nAB}`,
-          `n(A∪B) = ${nUnion} students play at least one sport`,
+          tex('n(A\\cup B) = n(A) + n(B) - n(A\\cap B)'),
+          tex(`n(A\\cup B) = ${nA} + ${nB} - ${nAB}`),
+          tex(`n(A\\cup B) = ${nUnion}`) + ' students play at least one sport',
         ],
-        hint:'Add the two group sizes, then subtract the overlap once to avoid double-counting.',
+        hintHtml:'Add the two group sizes, then subtract the overlap once to avoid double-counting.',
       };
     } },
   'quadratic-roots': {
-    title:'Quadratic Equation: Finding Roots', unit:'', formula:'x = (−b ± √(b² − 4ac)) / 2a',
+    title:'Quadratic Equation: Finding Roots', unit:'', formula:'x = (−b ± √(b² − 4ac)) / 2a', formulaTex:'x = \\dfrac{-b \\pm \\sqrt{b^2-4ac}}{2a}',
     generate(){
       const r1 = randInt(-8,8) || 2, r2 = randInt(-8,8) || -3;
       const a = 1, b = -(r1+r2), c = r1*r2;
       const D = b*b - 4*a*c;
+      const bTerm = b>=0?` + ${b}x`:` - ${Math.abs(b)}x`, cTerm = c>=0?` + ${c}`:` - ${Math.abs(c)}`;
       return {
-        question: `Solve the quadratic equation x² ${b>=0?'+':'-'} ${Math.abs(b)}x ${c>=0?'+':'-'} ${Math.abs(c)} = 0.`,
-        answer: `x = ${r1} or x = ${r2}`,
+        stepsAreHtml:true,
+        questionHtml: `Solve the quadratic equation ${tex(`x^2${bTerm}${cTerm} = 0`)}.`,
+        answer: `x = ${r1} or x = ${r2}`, answerHtml: tex(`x = ${r1} \\text{ or } x = ${r2}`),
         steps: [
-          `Using the quadratic formula with a=${a}, b=${b}, c=${c}:`,
-          `Discriminant D = b² − 4ac = (${b})² − 4(${a})(${c}) = ${D}`,
-          `x = (−(${b}) ± √${D}) / 2(${a}) = (${-b} ± ${Math.sqrt(D)}) / 2`,
-          `x = ${r1} or x = ${r2}`,
+          `Using the quadratic formula with ${tex(`a=${a}, b=${b}, c=${c}`)}:`,
+          tex(`D = b^2-4ac = (${b})^2 - 4(${a})(${c}) = ${D}`),
+          tex(`x = \\dfrac{-(${b}) \\pm \\sqrt{${D}}}{2(${a})} = \\dfrac{${-b} \\pm ${Math.sqrt(D)}}{2}`),
+          tex(`x = ${r1} \\text{ or } x = ${r2}`),
         ],
-        hint:'Since D is a perfect square here, the roots come out as clean integers — factor if you can spot it faster than the formula.',
+        hintHtml:'Since D is a perfect square here, the roots come out as clean integers — factor if you can spot it faster than the formula.',
       };
     } },
   'ap-nth-term': {
-    title:'Arithmetic Progression: nth Term & Sum', unit:'', formula:'aₙ = a + (n−1)d;  Sₙ = n/2 [2a + (n−1)d]',
+    title:'Arithmetic Progression: nth Term & Sum', unit:'', formula:'aₙ = a + (n−1)d;  Sₙ = n/2 [2a + (n−1)d]', formulaTex:'a_n = a+(n-1)d \\qquad S_n = \\dfrac{n}{2}[2a+(n-1)d]',
     generate(){
       const a = randInt(2,15), d = randInt(2,9), n = randInt(8,20);
       const nthTerm = a + (n-1)*d;
       const sum = (n/2)*(2*a + (n-1)*d);
       return {
-        question: `Find the ${n}th term and the sum of the first ${n} terms of the AP with first term ${a} and common difference ${d}.`,
-        answer: `${n}th term = ${nthTerm}, Sum = ${sum}`,
+        stepsAreHtml:true,
+        questionHtml: `Find the ${n}th term and the sum of the first ${n} terms of the AP with first term ${a} and common difference ${d}.`,
+        answer: `${n}th term = ${nthTerm}, Sum = ${sum}`, answerHtml: tex(`a_{${n}} = ${nthTerm}, \\quad S_{${n}} = ${sum}`),
         steps: [
-          `aₙ = a + (n−1)d = ${a} + (${n}−1)(${d}) = ${a} + ${(n-1)*d} = ${nthTerm}`,
-          `Sₙ = n/2 [2a + (n−1)d] = ${n}/2 [2(${a}) + (${n}−1)(${d})]`,
-          `Sₙ = ${n/2} × [${2*a} + ${(n-1)*d}] = ${n/2} × ${2*a+(n-1)*d} = ${sum}`,
+          tex(`a_{${n}} = a+(n-1)d = ${a} + (${n}-1)(${d}) = ${a} + ${(n-1)*d} = ${nthTerm}`),
+          tex(`S_{${n}} = \\dfrac{${n}}{2}[2(${a}) + (${n}-1)(${d})]`),
+          tex(`S_{${n}} = ${n/2} \\times [${2*a} + ${(n-1)*d}] = ${n/2} \\times ${2*a+(n-1)*d} = ${sum}`),
         ],
-        hint:'Find the nth term first using aₙ = a+(n−1)d, then plug the same values into the sum formula.',
+        hintHtml:'Find the nth term first using aₙ = a+(n−1)d, then plug the same values into the sum formula.',
       };
     } },
   'gp-nth-term': {
-    title:'Geometric Progression: nth Term', unit:'', formula:'aₙ = ar^(n−1)',
+    title:'Geometric Progression: nth Term', unit:'', formula:'aₙ = ar^(n−1)', formulaTex:'a_n = ar^{n-1}',
     generate(){
       const a = randInt(2,6), r = randFrom([2,3,4]), n = randInt(4,7);
       const nthTerm = a * Math.pow(r, n-1);
       return {
-        question: `Find the ${n}th term of the GP with first term ${a} and common ratio ${r}.`,
-        answer: nthTerm,
+        stepsAreHtml:true,
+        questionHtml: `Find the ${n}th term of the GP with first term ${a} and common ratio ${r}.`,
+        answer: nthTerm, answerHtml: tex(`a_{${n}} = ${nthTerm}`),
         steps: [
-          `aₙ = ar^(n−1) = ${a} × ${r}^(${n}−1) = ${a} × ${r}^${n-1}`,
-          `aₙ = ${a} × ${Math.pow(r,n-1)} = ${nthTerm}`,
+          tex(`a_{${n}} = ar^{n-1} = ${a} \\times ${r}^{${n}-1} = ${a} \\times ${r}^{${n-1}}`),
+          tex(`a_{${n}} = ${a} \\times ${Math.pow(r,n-1)} = ${nthTerm}`),
         ],
-        hint:'Multiply the first term by the common ratio raised to the power (n−1), not n.',
+        hintHtml:'Multiply the first term by the common ratio raised to the power (n−1), not n.',
       };
     } },
   'permutations-combinations': {
-    title:'Permutations & Combinations', unit:'', formula:'ⁿPᵣ = n!/(n−r)!;  ⁿCᵣ = n!/(r!(n−r)!)',
+    title:'Permutations & Combinations', unit:'', formula:'ⁿPᵣ = n!/(n−r)!;  ⁿCᵣ = n!/(r!(n−r)!)', formulaTex:'{}^nP_r = \\dfrac{n!}{(n-r)!} \\qquad {}^nC_r = \\dfrac{n!}{r!(n-r)!}',
     generate(){
       function fact(x){ let f=1; for(let i=2;i<=x;i++) f*=i; return f; }
       const n = randInt(6,10), r = randInt(2,4);
       const nPr = fact(n)/fact(n-r);
       const nCr = nPr/fact(r);
       return {
-        question: `In how many ways can ${r} items be selected from ${n} distinct items (a) if order matters, and (b) if order does not matter?`,
-        answer: `Order matters (ⁿPᵣ) = ${nPr}; Order doesn't matter (ⁿCᵣ) = ${nCr}`,
+        stepsAreHtml:true,
+        questionHtml: `In how many ways can ${r} items be selected from ${n} distinct items (a) if order matters, and (b) if order does not matter?`,
+        answer: `Order matters (ⁿPᵣ) = ${nPr}; Order doesn't matter (ⁿCᵣ) = ${nCr}`, answerHtml: tex(`{}^{${n}}P_{${r}} = ${nPr} \\quad {}^{${n}}C_{${r}} = ${nCr}`),
         steps: [
-          `ⁿPᵣ = n!/(n−r)! = ${n}!/(${n}−${r})! = ${n}!/${n-r}! = ${nPr}`,
-          `ⁿCᵣ = ⁿPᵣ / r! = ${nPr} / ${r}! = ${nPr} / ${fact(r)} = ${nCr}`,
+          tex(`{}^{${n}}P_{${r}} = \\dfrac{${n}!}{(${n}-${r})!} = \\dfrac{${n}!}{${n-r}!} = ${nPr}`),
+          tex(`{}^{${n}}C_{${r}} = \\dfrac{{}^{${n}}P_{${r}}}{${r}!} = \\dfrac{${nPr}}{${fact(r)}} = ${nCr}`),
         ],
-        hint:'Compute the permutation first, then divide by r! to remove the overcounted orderings and get the combination.',
+        hintHtml:'Compute the permutation first, then divide by r! to remove the overcounted orderings and get the combination.',
       };
     } },
   'differentiation-power-rule': {
-    title:'Differentiation (Power Rule)', unit:'', formula:'d/dx[axⁿ] = a·n·xⁿ⁻¹',
+    title:'Differentiation (Power Rule)', unit:'', formula:'d/dx[axⁿ] = a·n·xⁿ⁻¹', formulaTex:'\\dfrac{d}{dx}(ax^n) = an \\cdot x^{n-1}',
     generate(){
       const a = randInt(2,9), n = randInt(2,6);
       const coeff = a*n;
       return {
-        question: `Differentiate y = ${a}x^${n} with respect to x.`,
-        answer: `dy/dx = ${coeff}x^${n-1}`,
+        stepsAreHtml:true,
+        questionHtml: `Differentiate ${tex(`y = ${a}x^{${n}}`)} with respect to x.`,
+        answer: `dy/dx = ${coeff}x^${n-1}`, answerHtml: tex(`\\dfrac{dy}{dx} = ${coeff}x^{${n-1}}`),
         steps: [
-          `Using the power rule: d/dx[axⁿ] = a·n·xⁿ⁻¹`,
-          `dy/dx = ${a} × ${n} × x^(${n}−1)`,
-          `dy/dx = ${coeff}x^${n-1}`,
+          tex('\\dfrac{d}{dx}(ax^n) = an \\cdot x^{n-1}'),
+          tex(`\\dfrac{dy}{dx} = ${a} \\times ${n} \\times x^{${n}-1}`),
+          tex(`\\dfrac{dy}{dx} = ${coeff}x^{${n-1}}`),
         ],
-        hint:'Multiply the coefficient by the original exponent, then reduce the exponent by 1.',
+        hintHtml:'Multiply the coefficient by the original exponent, then reduce the exponent by 1.',
       };
     } },
   'variance-sd': {
-    title:'Variance & Standard Deviation', unit:'', formula:'Variance = Σ(x−x̄)² / n;  SD = √Variance',
+    title:'Variance & Standard Deviation', unit:'', formula:'Variance = Σ(x−x̄)² / n;  SD = √Variance', formulaTex:'\\text{Variance} = \\dfrac{\\Sigma(x-\\bar{x})^2}{n} \\qquad SD = \\sqrt{\\text{Variance}}',
     generate(){
       const base = randInt(10,30);
       const data = Array.from({length:5}, ()=> base + randInt(-8,8));
@@ -6101,36 +6325,37 @@ const NUMERICAL_GENERATORS = {
       const variance = data.reduce((s,x)=>s+(x-mean)*(x-mean),0)/data.length;
       const sd = Math.sqrt(variance);
       return {
-        question: `Find the variance and standard deviation of the data set: {${data.join(', ')}}.`,
-        answer: `Variance ≈ ${variance.toFixed(2)}, SD ≈ ${sd.toFixed(2)}`,
+        stepsAreHtml:true,
+        questionHtml: `Find the variance and standard deviation of the data set: {${data.join(', ')}}.`,
+        answer: `Variance ≈ ${variance.toFixed(2)}, SD ≈ ${sd.toFixed(2)}`, answerHtml: tex(`\\text{Variance} \\approx ${variance.toFixed(2)}, \\quad SD \\approx ${sd.toFixed(2)}`),
         steps: [
-          `Mean x̄ = (${data.join(' + ')}) / ${data.length} = ${mean.toFixed(2)}`,
-          `Squared deviations: ${data.map(x=>`(${x}−${mean.toFixed(2)})² = ${((x-mean)*(x-mean)).toFixed(2)}`).join(', ')}`,
-          `Variance = sum of squared deviations / n = ${(variance*data.length).toFixed(2)} / ${data.length} = ${variance.toFixed(2)}`,
-          `SD = √Variance = √${variance.toFixed(2)} ≈ ${sd.toFixed(2)}`,
+          tex(`\\bar{x} = \\dfrac{${data.join('+')}}{${data.length}} = ${mean.toFixed(2)}`),
+          `Squared deviations: ` + data.map(x=>tex(`(${x}-${mean.toFixed(2)})^2 = ${((x-mean)*(x-mean)).toFixed(2)}`)).join(', '),
+          tex(`\\text{Variance} = \\dfrac{${(variance*data.length).toFixed(2)}}{${data.length}} = ${variance.toFixed(2)}`),
+          tex(`SD = \\sqrt{${variance.toFixed(2)}} \\approx ${sd.toFixed(2)}`),
         ],
-        hint:'Find the mean first, then square each deviation from it before averaging.',
+        hintHtml:'Find the mean first, then square each deviation from it before averaging.',
       };
     } },
   'basic-probability': {
-    title:'Basic Probability', unit:'', formula:'P(E) = favourable outcomes / total outcomes',
+    title:'Basic Probability', unit:'', formula:'P(E) = favourable outcomes / total outcomes', formulaTex:'P(E) = \\dfrac{n(E)}{n(S)}',
     generate(){
       const total = randFrom([20,25,30,40,50]);
       const favourable = randInt(3, Math.floor(total/2));
-      function gcd(a,b){ return b===0?a:gcd(b,a%b); }
-      const g = gcd(favourable, total);
+      const g = gcdOf(favourable, total);
       return {
-        question: `A bag contains ${total} balls, of which ${favourable} are red. One ball is drawn at random. Find the probability that it is red.`,
-        answer: `${favourable}/${total} = ${(favourable/g)}/${(total/g)}`,
+        stepsAreHtml:true,
+        questionHtml: `A bag contains ${total} balls, of which ${favourable} are red. One ball is drawn at random. Find the probability that it is red.`,
+        answer: `${favourable}/${total} = ${(favourable/g)}/${(total/g)}`, answerHtml: tex(`\\dfrac{${favourable/g}}{${total/g}}`),
         steps: [
-          `P(red) = favourable outcomes / total outcomes = ${favourable}/${total}`,
-          g>1 ? `Simplifying by dividing both by ${g}: ${favourable}/${total} = ${favourable/g}/${total/g}` : `This fraction is already in simplest form.`,
+          tex(`P(\\text{red}) = \\dfrac{${favourable}}{${total}}`),
+          g>1 ? tex(`\\dfrac{${favourable}}{${total}} = \\dfrac{${favourable/g}}{${total/g}}`) : `This fraction is already in simplest form.`,
         ],
-        hint:'Always simplify the final probability fraction to its lowest terms.',
+        hintHtml:'Always simplify the final probability fraction to its lowest terms.',
       };
     } },
   'matrix-multiplication': {
-    title:'2×2 Matrix Multiplication', unit:'', formula:'(AB)ᵢⱼ = row i of A · column j of B',
+    title:'2×2 Matrix Multiplication', unit:'', formula:'(AB)ᵢⱼ = row i of A · column j of B', formulaTex:'(AB)_{ij} = \\text{row } i \\text{ of } A \\cdot \\text{column } j \\text{ of } B',
     generate(){
       const A = [[randInt(1,6),randInt(1,6)],[randInt(1,6),randInt(1,6)]];
       const B = [[randInt(1,6),randInt(1,6)],[randInt(1,6),randInt(1,6)]];
@@ -6138,89 +6363,92 @@ const NUMERICAL_GENERATORS = {
         [A[0][0]*B[0][0]+A[0][1]*B[1][0], A[0][0]*B[0][1]+A[0][1]*B[1][1]],
         [A[1][0]*B[0][0]+A[1][1]*B[1][0], A[1][0]*B[0][1]+A[1][1]*B[1][1]],
       ];
+      const mat = (M) => `\\begin{bmatrix}${M[0][0]}&${M[0][1]}\\\\${M[1][0]}&${M[1][1]}\\end{bmatrix}`;
       return {
-        question: `Multiply the matrices A = [[${A[0][0]},${A[0][1]}],[${A[1][0]},${A[1][1]}]] and B = [[${B[0][0]},${B[0][1]}],[${B[1][0]},${B[1][1]}]] to find AB.`,
-        answer: `[[${C[0][0]},${C[0][1]}],[${C[1][0]},${C[1][1]}]]`,
+        stepsAreHtml:true,
+        questionHtml: `Multiply the matrices ${tex(`A=${mat(A)}`)} and ${tex(`B=${mat(B)}`)} to find AB.`,
+        answer: `[[${C[0][0]},${C[0][1]}],[${C[1][0]},${C[1][1]}]]`, answerHtml: tex(`AB=${mat(C)}`),
         steps: [
-          `Row 1 · Column 1: (${A[0][0]}×${B[0][0]}) + (${A[0][1]}×${B[1][0]}) = ${C[0][0]}`,
-          `Row 1 · Column 2: (${A[0][0]}×${B[0][1]}) + (${A[0][1]}×${B[1][1]}) = ${C[0][1]}`,
-          `Row 2 · Column 1: (${A[1][0]}×${B[0][0]}) + (${A[1][1]}×${B[1][0]}) = ${C[1][0]}`,
-          `Row 2 · Column 2: (${A[1][0]}×${B[0][1]}) + (${A[1][1]}×${B[1][1]}) = ${C[1][1]}`,
-          `AB = [[${C[0][0]},${C[0][1]}],[${C[1][0]},${C[1][1]}]]`,
+          tex(`\\text{Row 1}\\cdot\\text{Col 1}: (${A[0][0]}\\times${B[0][0]}) + (${A[0][1]}\\times${B[1][0]}) = ${C[0][0]}`),
+          tex(`\\text{Row 1}\\cdot\\text{Col 2}: (${A[0][0]}\\times${B[0][1]}) + (${A[0][1]}\\times${B[1][1]}) = ${C[0][1]}`),
+          tex(`\\text{Row 2}\\cdot\\text{Col 1}: (${A[1][0]}\\times${B[0][0]}) + (${A[1][1]}\\times${B[1][0]}) = ${C[1][0]}`),
+          tex(`\\text{Row 2}\\cdot\\text{Col 2}: (${A[1][0]}\\times${B[0][1]}) + (${A[1][1]}\\times${B[1][1]}) = ${C[1][1]}`),
+          tex(`AB=${mat(C)}`),
         ],
-        hint:'Each entry of the product is the dot product of the corresponding row of A and column of B.',
+        hintHtml:'Each entry of the product is the dot product of the corresponding row of A and column of B.',
       };
     } },
   'determinant-2x2': {
-    title:'2×2 Determinant & Inverse', unit:'', formula:'|A| = ad − bc;  A⁻¹ = (1/|A|)[[d,−b],[−c,a]]',
+    title:'2×2 Determinant & Inverse', unit:'', formula:'|A| = ad − bc;  A⁻¹ = (1/|A|)[[d,−b],[−c,a]]', formulaTex:'|A| = ad-bc \\qquad A^{-1} = \\dfrac{1}{|A|}\\begin{bmatrix}d & -b \\\\ -c & a\\end{bmatrix}',
     generate(){
       const a = randInt(1,8), b = randInt(1,8), c = randInt(1,8);
       let d = randInt(1,8);
       let det = a*d - b*c;
       while(det===0){ d = randInt(1,8); det = a*d - b*c; }
-      const invFrac = det<0 ? `−1/${Math.abs(det)}` : `1/${det}`;
       return {
-        question: `Find the determinant and, if it exists, the inverse of the matrix A = [[${a},${b}],[${c},${d}]].`,
-        answer: `|A| = ${det}; A⁻¹ = (${invFrac})[[${d},${-b}],[${-c},${a}]]`,
+        stepsAreHtml:true,
+        questionHtml: `Find the determinant and, if it exists, the inverse of the matrix ${tex(`A=\\begin{bmatrix}${a}&${b}\\\\${c}&${d}\\end{bmatrix}`)}.`,
+        answer: `|A| = ${det}; A⁻¹ = (1/${det})[[${d},${-b}],[${-c},${a}]]`, answerHtml: tex(`|A|=${det}, \\quad A^{-1} = \\dfrac{1}{${det}}\\begin{bmatrix}${d}&${-b}\\\\${-c}&${a}\\end{bmatrix}`),
         steps: [
-          `|A| = ad − bc = (${a})(${d}) − (${b})(${c}) = ${a*d} − ${b*c} = ${det}`,
-          det!==0 ? `Since |A| ≠ 0, the inverse exists: A⁻¹ = (${invFrac}) × [[${d},${-b}],[${-c},${a}]]` : `Since |A| = 0, this matrix is singular and has no inverse.`,
+          tex(`|A| = ad-bc = (${a})(${d}) - (${b})(${c}) = ${a*d} - ${b*c} = ${det}`),
+          det!==0 ? tex(`\\text{Since } |A|\\neq0, \\; A^{-1} = \\dfrac{1}{${det}}\\begin{bmatrix}${d}&${-b}\\\\${-c}&${a}\\end{bmatrix}`) : `Since |A| = 0, this matrix is singular and has no inverse.`,
         ],
-        hint:'For the inverse: swap the leading diagonal entries, negate the other diagonal, then divide everything by the determinant.',
+        hintHtml:'For the inverse: swap the leading diagonal entries, negate the other diagonal, then divide everything by the determinant.',
       };
     } },
   'basic-integration': {
-    title:'Indefinite Integration (Power Rule)', unit:'', formula:'∫axⁿdx = a·xⁿ⁺¹/(n+1) + C',
+    title:'Indefinite Integration (Power Rule)', unit:'', formula:'∫axⁿdx = a·xⁿ⁺¹/(n+1) + C', formulaTex:'\\int ax^n\\,dx = \\dfrac{a \\cdot x^{n+1}}{n+1}+C',
     generate(){
       const a = randInt(2,9), n = randInt(1,5);
       return {
-        question: `Evaluate ∫ ${a}x^${n} dx.`,
-        answer: `${(a/(n+1))}x^${n+1} + C`,
+        stepsAreHtml:true,
+        questionHtml: `Evaluate ${tex(`\\int ${a}x^{${n}}\\,dx`)}.`,
+        answer: `${(a/(n+1))}x^${n+1} + C`, answerHtml: tex(`\\dfrac{${a}}{${n+1}}x^{${n+1}}+C`),
         steps: [
-          `∫axⁿdx = a·xⁿ⁺¹/(n+1) + C`,
-          `= ${a}·x^(${n}+1)/(${n}+1) + C`,
-          `= ${a}x^${n+1}/${n+1} + C`,
+          tex('\\int ax^n\\,dx = \\dfrac{a \\cdot x^{n+1}}{n+1}+C'),
+          tex(`= \\dfrac{${a} \\cdot x^{${n}+1}}{${n}+1}+C`),
+          tex(`= \\dfrac{${a}}{${n+1}}x^{${n+1}}+C`),
         ],
-        hint:'Raise the power by 1 and divide the coefficient by the new power — the reverse of the power rule for differentiation.',
+        hintHtml:'Raise the power by 1 and divide the coefficient by the new power — the reverse of the power rule for differentiation.',
       };
     } },
   'definite-integral': {
-    title:'Definite Integration', unit:'', formula:'∫[a to b] xⁿdx = [xⁿ⁺¹/(n+1)] from a to b',
+    title:'Definite Integration', unit:'', formula:'∫[a to b] xⁿdx = [xⁿ⁺¹/(n+1)] from a to b', formulaTex:'\\int_a^b x^n\\,dx = \\left[\\dfrac{x^{n+1}}{n+1}\\right]_a^b',
     generate(){
       const n = randInt(1,3), upper = randInt(2,5);
       const value = Math.pow(upper, n+1)/(n+1);
       return {
-        question: `Evaluate ∫ from 0 to ${upper} of x^${n} dx.`,
-        answer: value.toFixed(2),
+        stepsAreHtml:true,
+        questionHtml: `Evaluate ${tex(`\\int_0^{${upper}} x^{${n}}\\,dx`)}.`,
+        answer: value.toFixed(2), answerHtml: tex(`${value.toFixed(2)}`),
         steps: [
-          `∫x^${n}dx = x^${n+1}/${n+1}`,
-          `Evaluating from 0 to ${upper}: [${upper}^${n+1}/${n+1}] − [0^${n+1}/${n+1}]`,
-          `= ${Math.pow(upper,n+1)}/${n+1} − 0 = ${value.toFixed(2)}`,
+          tex(`\\int x^{${n}}\\,dx = \\dfrac{x^{${n}+1}}{${n}+1}`),
+          tex(`\\left[\\dfrac{x^{${n+1}}}{${n+1}}\\right]_0^{${upper}} = \\dfrac{${upper}^{${n+1}}}{${n+1}} - \\dfrac{0^{${n+1}}}{${n+1}}`),
+          tex(`= \\dfrac{${Math.pow(upper,n+1)}}{${n+1}} - 0 = ${value.toFixed(2)}`),
         ],
-        hint:'Find the antiderivative first, then substitute the upper limit and subtract the value at the lower limit.',
+        hintHtml:'Find the antiderivative first, then substitute the upper limit and subtract the value at the lower limit.',
       };
     } },
   'conditional-probability': {
-    title:'Conditional Probability', unit:'', formula:'P(A|B) = P(A∩B) / P(B)',
+    title:'Conditional Probability', unit:'', formula:'P(A|B) = P(A∩B) / P(B)', formulaTex:'P(A|B) = \\dfrac{P(A\\cap B)}{P(B)}',
     generate(){
-      const totalCards = 52;
       const scenarios = [
         {a:'a King', b:'a face card', pAandB:4, pB:12},
         {a:'a red card', b:'a face card', pAandB:6, pB:12},
         {a:'a Queen', b:'a red card', pAandB:2, pB:26},
       ];
       const s = randFrom(scenarios);
-      function gcd(a,b){ return b===0?a:gcd(b,a%b); }
-      const g = gcd(s.pAandB, s.pB);
+      const g = gcdOf(s.pAandB, s.pB);
       return {
-        question: `A card is drawn at random from a standard deck of 52 cards. Given that the card is ${s.b}, find the probability that it is also ${s.a}.`,
-        answer: `${s.pAandB}/${s.pB} = ${s.pAandB/g}/${s.pB/g}`,
+        stepsAreHtml:true,
+        questionHtml: `A card is drawn at random from a standard deck of 52 cards. Given that the card is ${s.b}, find the probability that it is also ${s.a}.`,
+        answer: `${s.pAandB}/${s.pB} = ${s.pAandB/g}/${s.pB/g}`, answerHtml: tex(`\\dfrac{${s.pAandB/g}}{${s.pB/g}}`),
         steps: [
-          `P(A|B) = P(A∩B) / P(B), where A = "${s.a}" and B = "${s.b}"`,
-          `Restricting attention to only the ${s.pB} cards that are ${s.b}, ${s.pAandB} of them are also ${s.a}`,
-          `P(A|B) = ${s.pAandB}/${s.pB} = ${s.pAandB/g}/${s.pB/g}`,
+          tex(`P(A|B) = \\dfrac{P(A\\cap B)}{P(B)}, \\; A=\\text{"${s.a}"}, \\; B=\\text{"${s.b}"}`),
+          `Restricting attention to only the ${s.pB} cards that are ${s.b}, ${s.pAandB} of them are also ${s.a}.`,
+          tex(`P(A|B) = \\dfrac{${s.pAandB}}{${s.pB}} = \\dfrac{${s.pAandB/g}}{${s.pB/g}}`),
         ],
-        hint:'Conditional probability restricts the sample space to only the outcomes where the given condition (B) is already true.',
+        hintHtml:'Conditional probability restricts the sample space to only the outcomes where the given condition (B) is already true.',
       };
     } },
 };
@@ -6236,15 +6464,15 @@ function renderNumerical(instanceId, genId){
   const p = st.current;
   return `
     <div class="numerical-box">
-      <div class="numerical-formula"><span class="eyebrow" style="color:var(--orange-deep);">${escapeHtml(gen.title)}</span><div class="numerical-formula-expr">${escapeHtml(gen.formula)}</div></div>
-      <p class="numerical-question">${escapeHtml(p.question)}</p>
+      <div class="numerical-formula"><span class="eyebrow" style="color:var(--orange-deep);">${escapeHtml(gen.title)}</span><div class="numerical-formula-expr">${gen.formulaTex ? texBlock(gen.formulaTex) : escapeHtml(gen.formula)}</div></div>
+      <p class="numerical-question">${p.questionHtml || escapeHtml(p.question)}</p>
       <div class="numerical-actions">
         <button class="btn btn-ghost btn-sm" onclick="toggleNumericalHint('${instanceId}')">${st.showHint?'Hide hint':'💡 Show hint'}</button>
         <button class="btn btn-primary btn-sm" onclick="toggleNumericalSteps('${instanceId}')">${st.showSteps?'Hide solution':'✅ Reveal step solution'}</button>
         <button class="btn btn-ghost btn-sm" onclick="regenNumerical('${instanceId}')">🔄 New problem</button>
       </div>
-      ${st.showHint ? `<div class="numerical-hint">💡 ${escapeHtml(p.hint)}</div>` : ''}
-      ${st.showSteps ? `<div class="numerical-steps">${p.steps.map((s,i)=>`<div class="beat-row"><div class="beat-num">${i+1}</div><div class="beat-text">${escapeHtml(s)}</div></div>`).join('')}<div class="numerical-answer">Final answer: <strong>${escapeHtml(String(p.answer))}</strong></div></div>` : ''}
+      ${st.showHint ? `<div class="numerical-hint">💡 ${p.hintHtml || escapeHtml(p.hint)}</div>` : ''}
+      ${st.showSteps ? `<div class="numerical-steps">${p.steps.map((s,i)=>`<div class="beat-row"><div class="beat-num">${i+1}</div><div class="beat-text">${p.stepsAreHtml ? s : escapeHtml(s)}</div></div>`).join('')}<div class="numerical-answer">Final answer: <strong>${p.answerHtml || escapeHtml(String(p.answer))}</strong></div></div>` : ''}
     </div>
   `;
 }
@@ -6553,7 +6781,6 @@ const MATH_TOPIC_TABS = [
   {id:'overview', label:'Overview'},
   {id:'practice', label:'Practice Zone'},
   {id:'memorize', label:'Memorize Mode'},
-  {id:'keydefs', label:'Key Definitions'},
   {id:'formulas', label:'Formula Handbook'},
   {id:'graphs', label:'Graph Library'},
   {id:'numericals', label:'Numerical Practice'},
@@ -6811,9 +7038,8 @@ function renderMathTopicPage(chapter, topic){
     body = topic.subtopics.map(s=>`
       <div class="lesson-card">
         <h2>📘 ${escapeHtml(s.name)}</h2>
-        ${renderDefBoxes(s)}
-        <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
-        <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
+        ${s.formulas ? s.formulas.map(renderFormulaCard).join('') : ''}
+        ${mathProblemTypesFor(s.id) ? renderPTypeGrid(s) : ''}
       </div>
     `).join('');
   } else if(tab==='practice'){
@@ -6826,17 +7052,18 @@ function renderMathTopicPage(chapter, topic){
       body = `<p style="color:var(--ink-soft);font-size:13.5px;">No formulas, identities or standard results tagged for this topic yet.</p>`;
     } else {
       const wider = mathAllFormulas();
-      const widerNames = wider.map(f=>f.name);
-      const sameTopicNames = topicFormulas.map(f=>f.name);
-      const cards = topicFormulas.map(f=>({
-        prompt: `${texBlock(f.expr)}<br><span style="font-size:13px;color:var(--ink-soft);">Which formula/result is this? (${escapeHtml(f.subtopicName)})</span>`,
-        answer: f.name,
-        options: buildMcqOptions(f.name, sameTopicNames, widerNames),
-      }));
-      body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Formulas, identities, standard results and theorems only — spaced repetition (Leitner boxes) resurfaces the ones you get wrong more often.</p>${renderMemoMode('memo-math-formulas-'+topic.id, cards, 'memoAnswer')}`;
+      const cards = topicFormulas.map(f=>{
+        const correctOpt = tex(f.expr);
+        const sameTopicOpts = topicFormulas.filter(w=>w.name!==f.name).map(w=>tex(w.expr));
+        const widerOpts = wider.filter(w=>w.name!==f.name).map(w=>tex(w.expr));
+        return {
+          prompt: `<b>${escapeHtml(f.name)}</b><br><span style="font-size:13px;color:var(--ink-soft);">(${escapeHtml(f.subtopicName)}) — recall the formula:</span>`,
+          answer: correctOpt,
+          options: buildMcqOptions(correctOpt, sameTopicOpts, widerOpts),
+        };
+      });
+      body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">You're given the formula's name — select the matching formula. Spaced repetition (Leitner boxes) resurfaces the ones you get wrong more often.</p>${renderMemoMode('memo-math-formulas-'+topic.id, cards, 'memoAnswer')}`;
     }
-  } else if(tab==='keydefs'){
-    body = topic.subtopics.map(s=>`<div class="lesson-card"><h2>🔑 ${escapeHtml(s.name)}</h2>${renderDefBoxes(s)}</div>`).join('');
   } else if(tab==='formulas'){
     const withFormulas = topic.subtopics.filter(s=>s.formulas && s.formulas.length);
     body = withFormulas.length ? withFormulas.map(s=>`<div style="margin-bottom:6px;"><div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${s.formulas.map(renderFormulaCard).join('')}</div>`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No formulas tagged for this topic.</p>';
@@ -6847,13 +7074,13 @@ function renderMathTopicPage(chapter, topic){
     const withGen = topic.subtopics.filter(s=>s.numericalGen);
     body = withGen.length ? withGen.map(s=>`<div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${renderNumerical('math-'+s.id, s.numericalGen)}`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No numerical generator tagged for this topic.</p>';
   } else if(tab==='exambooster'){
-    const tips = topic.subtopics.map(s=>`<div class="device-line"><b>${escapeHtml(s.name)}: </b>${escapeHtml(s.def2)}</div>`).join('');
-    const tricks = topic.subtopics.map(s=>`<span class="char-verb">${escapeHtml(s.memoryTrick)}</span>`).join('');
     const mistakes = topic.subtopics.filter(s=>s.formulas).flatMap(s=>s.formulas.map(f=>`<div class="device-line"><b>${escapeHtml(f.name)}: </b>${escapeHtml(f.mistakes)}</div>`)).join('');
+    const ptypeMistakes = [];
+    topic.subtopics.forEach(s=>{ const types = mathProblemTypesFor(s.id); if(types) types.forEach(t=>ptypeMistakes.push(`<div class="device-line"><b>${escapeHtml(t.title)}: </b>${t.commonMistakes}</div>`)); });
     body = `
-      <div class="lesson-card"><h2>⚡ Quick-fire 2-mark definitions</h2>${tips}</div>
-      <div class="lesson-card"><h2>💡 Memory tricks (last-24-hr drill)</h2><div class="char-verbs">${tricks}</div></div>
-      ${mistakes ? `<div class="tip-box"><div class="tip-head">🚫 Common examiner pitfalls</div><div class="tip-body">${mistakes}</div></div>` : ''}
+      ${mistakes ? `<div class="tip-box"><div class="tip-head">🚫 Common formula mistakes</div><div class="tip-body">${mistakes}</div></div>` : ''}
+      ${ptypeMistakes.length ? `<div class="lesson-card"><h2>🚫 Common problem-type mistakes</h2>${ptypeMistakes.join('')}</div>` : ''}
+      ${(!mistakes && !ptypeMistakes.length) ? '<p style="color:var(--ink-soft);font-size:13.5px;">No exam-booster content tagged for this topic yet.</p>' : ''}
     `;
   }
 
@@ -6883,9 +7110,6 @@ function renderMathSubtopicPage(chapter, topic, subtopic){
   let body = '';
   if(tab==='learn'){
     body = `
-      ${renderDefBoxes(subtopic)}
-      <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
-      <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
       ${subtopic.formulas ? subtopic.formulas.map(renderFormulaCard).join('') : ''}
       ${subtopic.graph ? renderInteractiveGraph('math-'+subtopic.id, subtopic.graph) : ''}
       ${subtopic.numericalGen ? renderNumerical('math-'+subtopic.id, subtopic.numericalGen) : ''}
