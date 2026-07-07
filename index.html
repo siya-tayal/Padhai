@@ -818,7 +818,7 @@ const SUBJECTS = [
   { id:'sociology', name:'Sociology', emoji:'👥', color:'#8B5CF6', bg:'#F3EEFF', enabled:true },
   { id:'economics', name:'Economics', emoji:'⚖️', color:'#0EA5E9', bg:'#E8F7FF', enabled:true },
   { id:'physics', name:'Physics', emoji:'⚛️', color:'#3B82F6', bg:'#EAF2FF', enabled:false },
-  { id:'biology', name:'Biology', emoji:'🌿', color:'#16A34A', bg:'#EAFBEF', enabled:false },
+  { id:'biology', name:'Biology', emoji:'🌿', color:'#16A34A', bg:'#EAFBEF', enabled:true },
   { id:'math', name:'Mathematics', emoji:'∑', color:'#D97706', bg:'#FEF3E2', enabled:true },
   { id:'psychology', name:'Psychology', emoji:'🧠', color:'#DB2777', bg:'#FDECF3', enabled:false },
 ];
@@ -1443,6 +1443,290 @@ const QUOTE_BANK = {
     { quote:'The unnamed figure imagined forging the tiger like a blacksmith', character:'The Creator (unnamed)' },
   ],
 };
+
+/* ============================================================
+   BIOLOGY — ISC Class XII, Unit 1: Reproduction (16 marks), built
+   first as the flagship unit. Chapter (Unit) > Topic > Subtopic,
+   mirroring Sociology's structure and 2/3/5-mark framework.
+   Genetics & Evolution, Human Welfare, Biotechnology and Ecology
+   are the planned next units — not yet built (no placeholder
+   chapters added for them).
+   ============================================================ */
+const BIO_CHAPTERS = [
+  { id:'reproduction', name:'Reproduction', icon:'🌸',
+    topics:[
+      { id:'plant-reproduction', name:'Sexual Reproduction in Flowering Plants',
+        subtopics:[
+          { id:'flower-structure', name:'Flower Structure', keywords:['sepal','petal','stamen','carpel','whorl','bisexual'],
+            def2:'A flower has four whorls: calyx (sepals), corolla (petals), androecium (stamens, male), and gynoecium (carpels/pistil, female).',
+            def3:'The calyx and corolla are accessory (non-reproductive) whorls that protect the flower and attract pollinators. The androecium (stamens) is the male reproductive whorl, and the gynoecium (pistil/carpels) is the female reproductive whorl. A flower with both androecium and gynoecium is bisexual; one with only one is unisexual.',
+            def5:'A flower is the reproductive unit of an angiosperm, built from four whorls attached to a receptacle. The outer two whorls — calyx (sepals, usually green, protective) and corolla (petals, often coloured, attracting pollinators) — are accessory whorls with no direct role in gamete production. The inner two whorls are reproductive: the androecium consists of stamens, each with an anther (pollen-producing) and filament (stalk); the gynoecium consists of one or more carpels, each differentiated into stigma (receives pollen), style (connecting tube), and ovary (contains ovules). A flower bearing both androecium and gynoecium is termed bisexual (hermaphrodite, e.g. Hibiscus); one bearing only one is unisexual (e.g. maize, papaya, cucumber).',
+            memoryTrick:'Outer to inner: Sepal, Petal, Stamen, Carpel — "Sweet Peas Smell Cute" (protect, attract, male, female).',
+            example:'Hibiscus is bisexual (has both stamens and carpel in the same flower); papaya and maize bear separate male and female flowers (unisexual).' },
+          { id:'microsporogenesis', name:'Microsporogenesis & Anther Structure', keywords:['anther','pollen sac','microspore mother cell','meiosis','tapetum','pollen grain'],
+            def2:'Microsporogenesis is meiotic division of pollen (microspore) mother cells inside the anther\'s pollen sacs to form haploid microspore tetrads.',
+            def3:'A typical anther is bilobed with two pollen sacs per lobe (four total), each containing microspore mother cells (2n). These undergo meiosis (microsporogenesis) to form a tetrad of four haploid microspores, which separate and mature into pollen grains with a hard exine and soft intine wall.',
+            def5:'The anther is a four-sided (tetragonal) structure with four microsporangia (pollen sacs), two in each lobe, connected by sterile tissue called the connective. Each microsporangium has, from outside in: epidermis, endothecium (helps anther dehiscence), 2-3 middle layers, and an innermost nutritive tapetum layer that nourishes developing pollen. Inside, diploid sporogenous tissue differentiates into microspore mother cells (pollen mother cells), which undergo meiosis — microsporogenesis — to produce microspore tetrads. Each microspore matures into a pollen grain with a hard, sporopollenin-rich outer wall (exine, with germ pores) and a soft inner wall (intine). A mature pollen grain contains a vegetative cell and a generative cell (the generative cell later divides to form two male gametes).',
+            memoryTrick:'Anther = 4 pollen sacs; Tapetum = nurse layer; Meiosis makes 4 microspores per mother cell.',
+            example:'In most angiosperms, pollen grains released at the 2-celled stage (vegetative + generative cell) are shed, and the generative cell divides into two male gametes only after landing on the stigma or, in ~60% of species, before shedding (3-celled stage).' },
+          { id:'megasporogenesis', name:'Megasporogenesis & Ovule Structure', keywords:['ovule','embryo sac','megaspore mother cell','integument','micropyle','nucellus'],
+            def2:'Megasporogenesis is meiotic division of the megaspore mother cell inside the ovule to form four haploid megaspores, of which usually only one survives to form the embryo sac.',
+            def3:'An ovule has a stalk (funicle), one or two protective integuments with an opening (micropyle), and nutritive tissue (nucellus) containing the megaspore mother cell. Meiosis of this cell (megasporogenesis) gives four megaspores; typically only the chalazal one survives and develops into the embryo sac (female gametophyte).',
+            def5:'The ovule is attached to the placenta by a stalk called the funicle, with the ovule body (nucellus) enclosed by one or two protective layers (integuments) that leave a small opening, the micropyle, through which the pollen tube usually enters. Inside the nucellus, a diploid megaspore mother cell undergoes meiosis (megasporogenesis) to form a linear tetrad of four haploid megaspores; in most angiosperms three degenerate and only the chalazal megaspore survives (monosporic development). This surviving megaspore undergoes three rounds of mitosis without cell division, then cellularises to form the typical 7-celled, 8-nucleate embryo sac: three antipodal cells (chalazal end), a large central cell with two polar nuclei, and an egg apparatus of one egg cell flanked by two synergids (micropylar end) — the synergids have special filiform apparatus that guide the pollen tube in.',
+            memoryTrick:'Ovule: Funicle (stalk), Micropyle (door), Nucellus (nursery); Embryo sac = 7 cells, 8 nuclei.',
+            example:'The classic angiosperm embryo sac (e.g. in Polygonum-type development) has 3 antipodals + 2 polar nuclei (central cell) + 1 egg + 2 synergids = 7 cells, 8 nuclei.' },
+          { id:'pollination-types', name:'Pollination — Types & Agents', keywords:['self-pollination','cross-pollination','anemophily','entomophily','hydrophily','ornithophily','chiropterophily'],
+            def2:'Pollination is transfer of pollen from anther to stigma: self-pollination (same flower/plant) or cross-pollination (different plant). Agents include wind, insects, water, birds, and bats.',
+            def3:'Autogamy is self-pollination within the same flower; geitonogamy transfers pollen between flowers of the same plant (genetically still self); xenogamy transfers pollen from a genetically different plant (true cross-pollination). Abiotic agents include wind (anemophily) and water (hydrophily); biotic agents include insects (entomophily), birds (ornithophily) and bats (chiropterophily).',
+            def5:'Pollination is classified by source: autogamy (pollen from the same flower\'s own anther to its own stigma, requiring a bisexual, homogamous flower); geitonogamy (pollen from one flower to another flower on the same plant — genetically equivalent to self-pollination even though it needs a pollinating agent); and xenogamy (pollen transferred between two genetically different plants of the same species, the only type producing true genetic recombination). Pollinating agents fall into abiotic (wind: anemophily, e.g. maize, wheat, grasses — pollen is light, non-sticky, produced in huge quantities, flowers often lack showy petals; water: hydrophily, e.g. Vallisneria, Zostera — either pollen released to float on the surface or entire flowers submerged) and biotic agents (insects: entomophily, e.g. rose, sunflower, Salvia — flowers are large, colourful, scented, with nectar and sticky/spiny pollen; birds: ornithophily, e.g. Erythrina (coral tree), Bignonia, Butea monosperma — large, sturdy, often red flowers with abundant nectar; bats: chiropterophily, e.g. Kigelia (sausage tree), Adansonia (baobab) — flowers open at night, dull-coloured, strong odour). Most species have evolved a range of outbreeding devices to favour xenogamy over autogamy/geitonogamy.',
+            memoryTrick:'Auto = own flower; Geitono = neighbour flower same plant; Xeno = stranger plant (true cross).',
+            example:'Maize is wind-pollinated (anemophily); sunflowers are insect-pollinated (entomophily); Vallisneria is water-pollinated (hydrophily); Bignonia is bird-pollinated (ornithophily); Kigelia (sausage tree) is bat-pollinated (chiropterophily).',
+            diffTable:{ title:'Comparing Pollination Types', columns:['Type','Pollen Source','Genetic Outcome','Example'], rows:[
+              ['Autogamy','Same flower, own anther to own stigma','Self-pollination (no new combinations)','Pea (Pisum sativum), a cleistogamous flower'],
+              ['Geitonogamy','Different flower, same plant','Genetically = self-pollination (needs an agent)','Any bisexual plant with many flowers, e.g. sunflower head'],
+              ['Xenogamy','Different flower, genetically different plant','True cross-pollination (new gene combinations)','Maize (wind), Rose (insect)'],
+            ] } },
+          { id:'outbreeding-devices', name:'Outbreeding Devices', keywords:['dichogamy','herkogamy','heterostyly','self-incompatibility','protandry','protogyny'],
+            def2:'Mechanisms preventing self-pollination and favouring cross-pollination: dichogamy, herkogamy, heterostyly, and self-incompatibility.',
+            def3:'Dichogamy is anther and stigma maturing at different times (protandry: anther first; protogyny: stigma first). Herkogamy is a physical barrier between anther and stigma within the same flower. Heterostyly has flowers with differing style/stamen lengths across plants. Self-incompatibility is a genetic-chemical mechanism where the stigma rejects the plant\'s own pollen.',
+            def5:'Flowering plants have evolved several "outbreeding devices" to prevent self-pollination and force cross-pollination, increasing genetic variation. Dichogamy staggers the maturation of anthers and stigma in the same flower — protandry when the anther matures first (common in most flowers), protogyny when the stigma matures first. Herkogamy uses a physical barrier between the anther and stigma within a single bisexual flower to prevent self-pollen from reaching the stigma, seen in Calotropis. Heterostyly involves the same species producing flowers of different style and stamen lengths (e.g. pin and thrum forms in Primula), so pollen transfer between flowers of the same form (which would effectively be self-fertile) is anatomically disfavoured. Self-incompatibility is a genetic and physiological mechanism (as in many members of the family Asteraceae, and specifically documented in tea) where the stigma actively recognises and rejects pollen from the same plant, even if it physically lands there, preventing the growth of the pollen tube or fertilization.',
+            memoryTrick:'Dichogamy = staggered timing; Herkogamy = physical barrier; Heterostyly = different-length styles; Self-incompatibility = chemical rejection.',
+            example:'Calotropis shows herkogamy (physical separation of anther and stigma); Primula shows heterostyly (pin vs thrum flowers); tea plants show self-incompatibility.' },
+          { id:'pollen-pistil-hybridization', name:'Pollen-Pistil Interaction & Artificial Hybridization', keywords:['pollen tube','recognition','emasculation','bagging','pollen bank'],
+            def2:'Pollen-pistil interaction is the recognition response between pollen and stigma allowing compatible pollen to germinate and grow a pollen tube to the ovule.',
+            def3:'On a compatible stigma, a pollen grain absorbs moisture, germinates, and grows a pollen tube through the style to the ovule, guided chemically toward the micropyle. Artificial hybridization requires emasculation (removing anthers from the bisexual mother flower before dehiscence) followed by bagging to prevent unwanted pollen, then hand-pollination with desired pollen.',
+            def5:'Pollen-pistil interaction is a series of recognition events, beginning the moment pollen lands on the stigma, that determine whether the pollen is "accepted" (compatible) or rejected (incompatible, as in self-incompatibility). If accepted, the pollen grain absorbs stigmatic moisture, its intine grows out through a germ pore to form a pollen tube, which grows down through the style tissue carrying the vegetative nucleus at its tip with the two male gametes following behind. The tube is guided to the micropyle, largely by chemical attraction and physically directed by the synergids\' filiform apparatus. For crop improvement, breeders perform artificial hybridization between two selected parent plants: the mother plant\'s flower is emasculated (anthers removed with forceps before the flower opens/dehisces, to prevent self-pollination), then bagged with a plastic or butter-paper bag to exclude unwanted pollen; when the stigma is receptive, pollen collected from the chosen father plant is dusted on by hand, and the flower is re-bagged until fertilization is complete. Where the mother plant is unisexual, emasculation is unnecessary and only bagging is required before and after hand pollination.',
+            memoryTrick:'Emasculate (remove anthers) → Bag (protect) → Hand-pollinate → Re-bag.',
+            example:'Plant breeders emasculate and bag rice or wheat flowers to create hybrid varieties with desired traits like disease resistance.' },
+          { id:'double-fertilization', name:'Double Fertilization', keywords:['syngamy','triple fusion','zygote','primary endosperm nucleus','strasburger'],
+            def2:'Double fertilization is the fusion of one male gamete with the egg (syngamy, forms the zygote) and the other with the two polar nuclei (triple fusion, forms the triploid primary endosperm nucleus).',
+            def3:'Inside the embryo sac, the pollen tube releases two male gametes: one fuses with the egg cell (syngamy) to form the diploid zygote; the other fuses with the two polar nuclei of the central cell (triple fusion) to form the triploid (3n) primary endosperm nucleus (PEN). This dual fusion event, unique to angiosperms, is called double fertilization.',
+            def5:'Double fertilization, discovered by Strasburger, is a defining feature unique to flowering plants. After the pollen tube penetrates one synergid and releases its two non-motile male gametes into the embryo sac, one male gamete fuses with the egg cell (syngamy) to produce the diploid (2n) zygote, which will develop into the embryo. The second male gamete fuses with the two polar nuclei of the central cell (a process called triple fusion, since three haploid nuclei — one male gamete + two polar nuclei — combine) to produce the triploid (3n) primary endosperm nucleus (PEN), which develops into the nutritive endosperm tissue that nourishes the developing embryo. Because both fusion events happen essentially together in the same embryo sac, involving both male gametes, this is termed "double fertilization" — it ensures no male gamete or female nuclei are wasted.',
+            memoryTrick:'Syngamy: gamete + egg = zygote (2n). Triple fusion: gamete + 2 polar nuclei = PEN (3n).',
+            example:'In a lily or Petunia embryo sac, both fusions can be observed under a microscope essentially simultaneously — the textbook example used to first describe double fertilization.',
+            flowchart:[
+              {heading:'1. Pollen tube entry', text:'The pollen tube grows through the micropyle and enters one of the two synergids (porogamy is the most common entry route).'},
+              {heading:'2. Release of male gametes', text:'The tube tip bursts, releasing its two non-motile male gametes into the degenerating synergid, inside the embryo sac.'},
+              {heading:'3. Syngamy', text:'One male gamete fuses with the egg cell nucleus to form the diploid (2n) zygote — the future embryo.'},
+              {heading:'4. Triple fusion', text:'The second male gamete fuses with the two polar nuclei of the central cell to form the triploid (3n) primary endosperm nucleus — the future endosperm.'},
+            ] },
+          { id:'post-fertilization-development', name:'Post-Fertilization: Embryo, Endosperm, Seed & Fruit', keywords:['embryogeny','endosperm','pericarp','testa','cotyledon'],
+            def2:'After fertilization, the zygote develops into the embryo, the primary endosperm nucleus into nutritive endosperm, the ovule into the seed, and the ovary into the fruit.',
+            def3:'The zygote undergoes embryogeny to form the embryo (radicle, plumule, and one cotyledon in monocots or two in dicots). The endosperm may be consumed by the developing embryo (non-albuminous seed, e.g. pea) or persist in the mature seed (albuminous, e.g. wheat, maize). The ovule wall (integument) becomes the seed coat (testa), and the ovary wall becomes the fruit wall (pericarp).',
+            def5:'Following double fertilization, the zygote develops through a defined sequence of embryogeny: it divides to form a proembryo, then differentiates into a globular, heart-shaped, and torpedo stage, ultimately forming a mature embryo with an embryonal axis bearing a radicle (root pole) and plumule (shoot pole), plus cotyledons — one in monocots, two in dicots. The endosperm develops from the primary endosperm nucleus by free-nuclear or cellular division and serves as nutrition for the growing embryo; in many dicots (e.g. pea, gram, groundnut) the endosperm is completely consumed by the embryo before seed maturity, producing a non-albuminous (exalbuminous) seed where nutrition is instead stored in the thick cotyledons, while in cereals like wheat and maize and some dicots like castor, the endosperm persists into the mature seed, producing an albuminous seed. Concurrently, the ovule\'s integuments harden into the protective seed coat (testa, with the outer layer often called testa and inner tegmen), and the ovary wall develops into the pericarp, which may become dry (as in a pod or grain) or fleshy (as in a berry or drupe) — together, the ovary containing seeds is the fruit.',
+            memoryTrick:'Zygote → embryo; PEN → endosperm; Integument → seed coat; Ovary wall → pericarp/fruit wall.',
+            example:'A pea seed is non-albuminous (endosperm consumed, nutrition in cotyledons); a wheat grain is albuminous (endosperm persists as the "bran/starch" layer feeding the embryo).',
+            diffTable:{ title:'Albuminous vs Non-Albuminous Seeds', columns:['Feature','Albuminous (Endospermic)','Non-Albuminous (Non-Endospermic)'], rows:[
+              ['Endosperm at maturity','Persists, provides nutrition to seedling','Fully consumed by the embryo before seed maturity'],
+              ['Nutrition storage','In endosperm tissue','In thick, food-storing cotyledons'],
+              ['Examples','Wheat, maize, castor, coconut','Pea, gram, groundnut, bean'],
+            ] } },
+          { id:'special-reproductive-modes', name:'Special Modes: Apomixis, Polyembryony, Parthenocarpy', keywords:['apomixis','polyembryony','parthenocarpy','seedless','asexual seed'],
+            def2:'Apomixis produces seeds without fertilization (asexual, clonal). Polyembryony is more than one embryo in a single seed. Parthenocarpy is fruit development without fertilization, giving seedless fruit.',
+            def3:'Apomixis is a form of asexual reproduction that mimics sexual reproduction by producing seeds, but without meiosis or fertilization, so offspring are genetically identical clones of the mother plant — common in Asteraceae and grasses, and exploited commercially in Citrus and mango. Polyembryony occurs when a seed contains more than one embryo, often seen in Citrus. Parthenocarpy produces seedless fruit without fertilization occurring at all, either naturally (banana) or induced by hormone application.',
+            def5:'These three special reproductive modes are distinguished by what exactly happens (or does not happen) around fertilization. Apomixis is a form of asexual reproduction masquerading as sexual reproduction: a seed forms, but through mechanisms bypassing meiosis and fertilization (e.g. the diploid egg cell developing directly into an embryo without reduction division), so the resulting offspring are genetically identical clones of the parent — an economically valuable trait plant breeders try to introduce into hybrid crop seeds so that hybrid vigour need not be re-created every generation. Polyembryony is the presence of more than one embryo within a single seed, which can arise from the fertilization of more than one egg cell, or, more commonly in Citrus, from some cells of the nucellus around the embryo sac developing into additional embryos (nucellar embryony), which is itself a form of apomixis. Parthenocarpy is the development of a fruit without fertilization taking place at all; it may occur naturally, giving seedless fruit varieties (banana, some grapes), or can be artificially induced by applying growth hormones (like auxins) to unfertilized ovaries, a technique used commercially to produce seedless tomatoes and cucumbers.',
+            memoryTrick:'Apomixis = clone seed (no fertilization but IS a seed); Polyembryony = 2+ embryos, ONE seed; Parthenocarpy = fruit with NO seed at all.',
+            example:'Citrus (orange) commonly shows polyembryony (nucellar embryony); banana shows natural parthenocarpy (seedless fruit); mango orchards use apomictic rootstock varieties for genetically uniform saplings.' },
+          { id:'seed-fruit-significance', name:'Significance of Seed & Fruit Formation, Seed Dispersal', keywords:['seed dormancy','dispersal','wind dispersal','water dispersal','animal dispersal'],
+            def2:'Seeds allow plants to survive unfavourable conditions (dormancy) and colonise new areas via dispersal (by wind, water, or animals); fruits protect seeds and aid dispersal.',
+            def3:'Seed formation gives plants a way to survive dry or cold periods through dormancy, resuming growth (germination) only when conditions are favourable. Fruits protect the enclosed seeds and often aid in their dispersal to new locations, reducing competition with the parent plant, via agents like wind, water, or animals.',
+            def5:'The evolution of the seed habit gave flowering plants a major survival advantage over spore-producing plants: the seed coat protects the embryo, stored food (in cotyledons or endosperm) sustains it, and seed dormancy allows the embryo to remain metabolically inactive through unfavourable conditions (drought, cold, seasonal unsuitability), germinating only once conditions favour seedling establishment. The fruit that develops around the seed(s) provides further protection and, critically, functions to disperse seeds away from the parent plant — reducing competition for resources between parent and offspring and enabling colonisation of new habitats. Different fruits are adapted to different dispersal agents: light, winged, or plumed seeds/fruits (e.g. drumstick, Alstonia, dandelion) are wind-dispersed (anemochory); buoyant, waterproof fruits (e.g. coconut) are water-dispersed (hydrochory); and fruits with hooks/spines for attachment (Xanthium) or fleshy, edible pulp that entices animals to eat and later excrete the seeds elsewhere (mango, guava) are animal-dispersed (zoochory).',
+            memoryTrick:'Seed = protection + food + dormancy; Fruit = protection + dispersal (wind/water/animal).',
+            example:'Coconut is dispersed by water (buoyant, waterproof husk); dandelion and drumstick seeds are wind-dispersed (light with hair/wings); Xanthium fruits hook onto animal fur for dispersal.' },
+        ] },
+      { id:'human-reproduction', name:'Human Reproduction',
+        subtopics:[
+          { id:'male-reproductive-system', name:'Male Reproductive System', keywords:['testis','scrotum','seminiferous tubule','epididymis','vas deferens','accessory glands'],
+            def2:'The male reproductive system includes a pair of testes (in the scrotum), sperm-carrying ducts, and accessory glands (seminal vesicles, prostate, bulbourethral) producing seminal fluid.',
+            def3:'Each testis contains highly coiled seminiferous tubules (site of sperm production) lined by germinal epithelium (with Sertoli cells) and interstitial Leydig cells (secrete testosterone) in between. Sperm travel through the epididymis (maturation and storage), vas deferens, and urethra, mixing with secretions from the seminal vesicles, prostate, and bulbourethral glands to form semen.',
+            def5:'The male reproductive system comprises a pair of testes housed outside the abdominal cavity in a pouch called the scrotum, which maintains a temperature 2–2.5°C lower than body temperature, necessary for normal spermatogenesis. Each testis is made of about 250 compartments (lobules), each containing one to three highly coiled seminiferous tubules where sperm are produced; these tubules are lined by a germinal (spermatogenic) epithelium of dividing sperm-forming cells interspersed with Sertoli cells (which nourish developing sperm and secrete supporting factors), while the region between tubules (interstitial spaces) contains Leydig cells that secrete the androgen testosterone. From the testis, sperm pass into the epididymis (a long, highly coiled tube where sperm mature and are stored), then the vas deferens (which loops up and over the bladder), joining the duct from the seminal vesicle to form the ejaculatory duct opening into the urethra. Accessory glands — a pair of seminal vesicles, a single prostate gland, and a pair of pea-sized bulbourethral (Cowper\'s) glands — secrete fluids that combine with sperm to form semen, providing nutrition (fructose), a favourable pH, and lubrication.',
+            memoryTrick:'Sperm path: Seminiferous tubule → Epididymis → Vas deferens → Urethra (out).',
+            example:'Leydig cells secrete testosterone (drives secondary sexual characteristics); Sertoli cells nourish developing sperm within the seminiferous tubule.' },
+          { id:'female-reproductive-system', name:'Female Reproductive System', keywords:['ovary','fallopian tube','uterus','cervix','vagina','graafian follicle'],
+            def2:'The female reproductive system includes a pair of ovaries (produce eggs and hormones), fallopian tubes, a uterus, cervix, and vagina.',
+            def3:'Each ovary contains developing follicles at various stages, culminating in the mature Graafian follicle that releases an egg at ovulation. The fallopian tube (oviduct) carries the egg toward the uterus and is the usual site of fertilization; the uterus (womb) is where implantation and pregnancy occur, connecting to the outside via the cervix and vagina.',
+            def5:'The female reproductive system consists of a pair of ovaries, which are the primary female sex organs producing eggs (ova) and secreting the hormones oestrogen and progesterone. Each ovary contains numerous ovarian follicles at different developmental stages embedded in a connective-tissue stroma; each cycle, a primary follicle matures through several stages into a fluid-filled Graafian follicle, which ruptures at ovulation to release a secondary oocyte. The released egg is picked up by finger-like fimbriae at the funnel-shaped infundibulum of the fallopian tube (oviduct), and fertilization, if it occurs, normally happens in the ampulla region of this tube; the fertilized egg (or unfertilized egg) is then moved toward the uterus by ciliary and muscular action. The uterus (or womb) is a single, pear-shaped, muscular organ (myometrium lined by endometrium) where the blastocyst implants and the fetus develops during pregnancy; its lower narrow part, the cervix, opens into the vagina, which serves as the copulatory canal and birth canal, and also receives menstrual flow.',
+            memoryTrick:'Egg path: Ovary → Fallopian tube (fertilization site) → Uterus (implantation) → Cervix → Vagina (out).',
+            example:'The ampulla region of the fallopian tube is the most common site of fertilization; the endometrium lining the uterus is what sheds during menstruation if implantation does not occur.' },
+          { id:'gametogenesis', name:'Gametogenesis — Spermatogenesis & Oogenesis', keywords:['spermatogenesis','oogenesis','spermatid','spermiogenesis','primary oocyte','polar body'],
+            def2:'Spermatogenesis is sperm formation in the testis (continuous, from puberty onward). Oogenesis is egg formation in the ovary (begins in the fetus, completes only if fertilization occurs).',
+            def3:'In spermatogenesis, spermatogonia (2n) multiply and one set enters meiosis via primary and secondary spermatocytes to form haploid spermatids, which then transform (spermiogenesis) into mature, motile spermatozoa. In oogenesis, a primary oocyte (arrested in prophase I from before birth) resumes meiosis I at puberty to give a secondary oocyte and a small first polar body; meiosis II completes only upon fertilization, giving the ovum and a second polar body.',
+            def5:'Spermatogenesis begins at puberty under the influence of gonadotropins (LH, FSH) and testosterone: diploid spermatogonia present in the seminiferous tubule since before birth begin dividing mitotically to increase in number, and some differentiate into primary spermatocytes, which undergo meiosis I to form two haploid secondary spermatocytes, which then undergo meiosis II to form four haploid spermatids. These spermatids, non-motile at first, undergo spermiogenesis — a transformation involving formation of an acrosome (from the Golgi body, containing enzymes to penetrate the egg), condensation of the nucleus, and development of a flagellum (tail) for motility — to become mature spermatozoa, released into the tubule lumen by spermiation. Oogenesis, by contrast, begins during fetal development: oogonia multiply by mitosis and enter meiosis I as primary oocytes, but this division arrests at prophase I and remains suspended until puberty. Each month after puberty, under hormonal stimulation, one primary oocyte resumes and completes meiosis I, producing a large secondary oocyte and a small, non-functional first polar body (unequal cytoplasm division conserves nutrients for the future egg); the secondary oocyte begins meiosis II but arrests again at metaphase II and is released at ovulation in this state — meiosis II is completed only if a sperm fertilizes the egg, yielding the mature ovum and a second polar body.',
+            memoryTrick:'Sperm: 1 primary spermatocyte → 4 sperm (equal division). Egg: 1 primary oocyte → 1 egg + polar bodies (unequal division, nutrients saved for the egg).',
+            example:'A human female is born with all her primary oocytes already arrested in prophase I; meiosis of any given oocyte only completes decades later, if and when fertilization occurs.' },
+          { id:'menstrual-cycle', name:'Menstrual Cycle', keywords:['menstrual phase','follicular phase','ovulation','luteal phase','FSH','LH','corpus luteum'],
+            def2:'The ~28-day menstrual cycle has four phases: menstrual (shedding of endometrium), follicular (follicle matures), ovulatory (egg released), and luteal (corpus luteum forms, prepares uterus).',
+            def3:'The menstrual phase (days 1-5) sheds the endometrium if no implantation occurred. The follicular phase sees a follicle mature under FSH stimulation while oestrogen rebuilds the endometrium. A mid-cycle LH surge triggers ovulation (around day 14). The luteal phase has the ruptured follicle become the corpus luteum, secreting progesterone to maintain the endometrium for a possible pregnancy.',
+            def5:'The menstrual cycle, occurring roughly every 28 days from puberty (menarche) to menopause, is divided into four overlapping phases regulated by a hormonal feedback loop between the hypothalamus, pituitary, and ovary. The menstrual phase (days 1-5) is the shedding of the endometrial lining (menstruation) that occurs when the previous cycle\'s egg was not fertilized, causing progesterone levels to fall. The follicular (or proliferative) phase follows, in which rising FSH stimulates a cohort of ovarian follicles to grow, with one becoming dominant and secreting increasing oestrogen, which in turn causes the endometrium to thicken and proliferate. Around day 14, a sharp mid-cycle surge of LH (triggered by peak oestrogen through positive feedback) causes ovulation — rupture of the Graafian follicle and release of the secondary oocyte. The luteal (or secretory) phase follows, in which the ruptured follicle transforms into the corpus luteum, secreting large amounts of progesterone (and some oestrogen) that maintains the thickened, glandular endometrium in a receptive state for potential implantation; if fertilization and implantation do not occur, the corpus luteum degenerates (becoming the corpus albicans), progesterone falls sharply, and the cycle restarts with menstruation.',
+            memoryTrick:'Menstrual (shed) → Follicular (FSH, rebuild) → Ovulation (LH surge) → Luteal (progesterone, corpus luteum).',
+            example:'A missed period is often the first sign of pregnancy because a successful implantation keeps the corpus luteum (and later the placenta) secreting progesterone, preventing endometrial shedding.',
+            flowchart:[
+              {heading:'Menstrual phase (Days 1–5)', text:'The endometrium is shed as menstrual flow because progesterone fell after the previous corpus luteum degenerated (no implantation occurred).'},
+              {heading:'Follicular phase (Days 1–13)', text:'Rising FSH matures a cohort of ovarian follicles; the dominant follicle secretes oestrogen, which rebuilds and thickens the endometrium.'},
+              {heading:'Ovulation (~Day 14)', text:'A mid-cycle LH surge (triggered by peak oestrogen) causes the mature Graafian follicle to rupture, releasing the secondary oocyte.'},
+              {heading:'Luteal phase (Days 15–28)', text:'The ruptured follicle becomes the corpus luteum, secreting progesterone to maintain the endometrium; without implantation, it degenerates and the cycle restarts.'},
+            ] },
+          { id:'fertilization-implantation', name:'Fertilization & Implantation', keywords:['acrosome reaction','zona pellucida','blastocyst','implantation','trophoblast'],
+            def2:'Fertilization (fusion of sperm and egg, usually in the ampulla) forms a zygote, which develops into a blastocyst that implants in the uterine wall about a week later.',
+            def3:'Sperm undergo capacitation in the female tract, then the acrosome reaction releases enzymes to penetrate the egg\'s corona radiata and zona pellucida. Fusion forms the diploid zygote, which cleaves repeatedly while moving down the fallopian tube, forming a morula and then a blastocyst by the time it reaches the uterus, which implants into the endometrium.',
+            def5:'For fertilization to succeed, ejaculated sperm must first undergo capacitation (functional maturation) within the female reproductive tract. Upon reaching the egg (typically in the ampulla of the fallopian tube), a sperm undergoes the acrosome reaction, releasing hydrolytic enzymes that digest a path through the egg\'s outer coverings — the corona radiata (follicle cells) and the glycoprotein zona pellucida — allowing one sperm to fuse with the egg\'s plasma membrane. This fusion triggers the completion of the egg\'s meiosis II and immediately induces changes in the zona pellucida (the "zona reaction" or cortical reaction) that block any additional sperm from entering (preventing polyspermy). The resulting diploid zygote begins mitotic cleavage divisions while being moved down the fallopian tube by cilia and muscular contractions, first forming a solid ball of cells (morula), then, by around day 5-6, a fluid-filled blastocyst with an outer trophoblast layer (destined to form the placenta) and an inner cell mass (destined to form the embryo proper). The blastocyst reaches the uterus and, after "hatching" from the zona pellucida, implants by attaching to and burrowing into the endometrium, typically about 6-7 days after fertilization.',
+            memoryTrick:'Fertilization (ampulla) → cleavage → morula → blastocyst → implantation in uterus (~day 6-7).',
+            example:'In IVF (in-vitro fertilization), embryos are cultured outside the body up to the blastocyst stage before being transferred into the uterus to implant.' },
+          { id:'pregnancy-parturition', name:'Pregnancy, Embryonic Development & Parturition', keywords:['placenta','gestation','hCG','parturition','lactation'],
+            def2:'Pregnancy (~9 months/280 days) involves placenta formation for nutrient/gas exchange, embryonic and fetal development, and ends in parturition (childbirth) triggered by hormonal and neural signals.',
+            def3:'The placenta, formed from both fetal (chorionic villi) and maternal tissue, exchanges nutrients, oxygen, and waste between mother and fetus, and secretes hormones including hCG (detected in pregnancy tests), oestrogen, and progesterone. At the end of gestation, uterine contractions (parturition), triggered by a complex neuroendocrine signal involving the hormone oxytocin, expel the baby, followed by lactation stimulated by prolactin.',
+            def5:'After implantation, the developing embryo\'s trophoblast layer forms finger-like chorionic villi that interdigitate with the maternal endometrial (uterine) tissue to form the placenta, a specialised organ that serves as the structural and functional connection between the fetus and mother, facilitating the supply of oxygen and nutrients and the removal of carbon dioxide and excretory waste, largely by simple diffusion. The placenta also functions as an endocrine gland, secreting human chorionic gonadotropin (hCG) — whose detection in urine forms the basis of pregnancy tests — as well as human placental lactogen, oestrogen, and progesterone, which maintain the pregnancy and prepare the mammary glands for lactation. Human gestation lasts about 9 months (280 days from the last menstrual period), during which the embryo undergoes organogenesis (major organs form within the first trimester) and the fetus grows and matures through the second and third trimesters. Parturition (childbirth) is induced by a complex neuroendocrine mechanism: signals from the fully-developed fetus and the placenta trigger mild uterine contractions ("Ferguson reflex") that release the hormone oxytocin from the maternal pituitary; oxytocin further stimulates stronger uterine contractions, causing progressively increasing labour that results in delivery of the baby, followed shortly by expulsion of the placenta. After childbirth, the pituitary hormone prolactin stimulates milk production (lactogenesis) in the mammary glands, and the initial milk, colostrum, is rich in antibodies that provide the newborn with passive immunity.',
+            memoryTrick:'Placenta = nutrient exchange + hormone factory (hCG = pregnancy test marker). Oxytocin = labour; Prolactin = milk.',
+            example:'Home pregnancy tests detect hCG in urine, since hCG is uniquely secreted by the placenta from very early in pregnancy to maintain the corpus luteum until the placenta itself takes over hormone production.' },
+        ] },
+      { id:'reproductive-health', name:'Reproductive Health',
+        subtopics:[
+          { id:'reproductive-health-rch', name:'Reproductive Health & RCH Programmes', keywords:['rch','reproductive health','population explosion','sex education'],
+            def2:'Reproductive health means total physical, emotional, behavioural and social well-being in matters of reproduction, promoted in India through Reproductive and Child Health Care (RCH) programmes.',
+            def3:'India\'s RCH programmes aim to create awareness among people about reproduction-related aspects, provide facilities and support for building a reproductively healthy society, including sex education in schools, medical assistance, and improved postnatal care.',
+            def5:'Reproductive health refers to a total state of well-being — physical, emotional, behavioural, and social — in all aspects of reproduction, not merely the absence of disease. Recognising this, the Indian government has run "Reproductive and Child Health Care" (RCH) programmes since the 1950s, with substantially expanded efforts from the 1990s onward. These programmes aim to spread awareness among people (especially in rural areas and among adolescents) about safe and hygienic sexual practices, family planning options, prenatal and postnatal care, and the legal rights around reproduction, while also improving healthcare infrastructure and access to skilled medical assistance during pregnancy and delivery. Introducing age-appropriate sex education in schools is considered essential to this effort, to discourage myths and misconceptions about sex-related issues and to provide accurate information about reproductive organs, safe sexual practices, contraception, and STIs, ultimately aiming to check the growing problem of population explosion and improve overall societal reproductive health.',
+            memoryTrick:'RCH = awareness + facilities + support for a reproductively healthy society.',
+            example:'School-based sex education programmes and government antenatal check-up camps are both part of India\'s broader RCH strategy.' },
+          { id:'contraception-methods', name:'Contraception Methods', keywords:['barrier method','iucd','oral pill','vasectomy','tubectomy'],
+            def2:'Contraceptive methods prevent pregnancy: natural (rhythm method, withdrawal), barrier (condoms, diaphragms), IUCDs, oral pills, and surgical sterilization (vasectomy, tubectomy).',
+            def3:'Natural methods avoid intercourse during the fertile period or use withdrawal, but have higher failure rates. Barrier methods (condoms, diaphragms) physically block sperm from reaching the egg and also help prevent STIs. IUCDs (e.g. Copper-T) are inserted in the uterus. Oral contraceptive pills use hormones to prevent ovulation. Surgical methods — vasectomy (cutting the vas deferens in males) and tubectomy (cutting the fallopian tubes in females) — are permanent.',
+            def5:'Contraceptive methods are grouped by mechanism. Natural/traditional methods rely on avoiding conditions favourable for fertilization: the rhythm (safe period) method avoids intercourse during the fertile ovulatory window, coitus interruptus (withdrawal) removes the penis before ejaculation, and lactational amenorrhea exploits the natural infertile period during intense breastfeeding — all are relatively less effective due to inherent unreliability. Barrier methods physically prevent sperm from reaching the egg: condoms (for males and females) also offer significant protection against sexually transmitted infections, while diaphragms, cervical caps, and vaults are inserted to cover the cervix, often used with spermicidal creams/jellies for extra effectiveness. Intra-uterine contraceptive devices (IUCDs), such as the copper-releasing Copper-T (which increases phagocytosis of sperm and copper ions suppress sperm motility) or hormone-releasing IUCDs (which additionally thicken cervical mucus), are inserted into the uterus by a doctor and can remain effective for years. Oral contraceptive pills contain synthetic oestrogen-progestogen combinations that primarily inhibit ovulation and also alter the uterine environment, and must be taken correctly and regularly to be effective; emergency contraceptive pills can be used within 72 hours of unprotected intercourse to prevent pregnancy. Surgical/sterilization methods are permanent: vasectomy involves a small incision to cut and tie the vas deferens in the male, blocking sperm transport, and tubectomy similarly cuts and blocks the fallopian tubes in the female, preventing the egg from meeting sperm.',
+            memoryTrick:'Barrier = physical block; IUCD = in the uterus; Pill = hormonal; Vasectomy/Tubectomy = permanent surgical.',
+            example:'A Copper-T is a commonly used IUCD in India; oral contraceptive pills must be taken daily/regularly to remain effective.',
+            diffTable:{ title:'Vasectomy vs Tubectomy', columns:['Feature','Vasectomy (Male)','Tubectomy (Female)'], rows:[
+              ['Site of surgery','Vas deferens (sperm duct)','Fallopian tube (oviduct)'],
+              ['Effect','Blocks sperm transport out of testis','Blocks egg from reaching uterus / meeting sperm'],
+              ['Permanence','Permanent (surgical sterilization)','Permanent (surgical sterilization)'],
+            ] } },
+          { id:'mtp', name:'Medical Termination of Pregnancy (MTP)', keywords:['abortion','mtp act','induced abortion'],
+            def2:'MTP is the intentional/induced termination of pregnancy before full term, legalised in India (with conditions) under the MTP Act.',
+            def3:'MTP, or induced abortion, is legally permitted in India under specific conditions (e.g. risk to the mother\'s life, fetal abnormality, contraceptive failure in a married woman) up to a specified gestational limit under the Medical Termination of Pregnancy Act, and is considered relatively safe up to 12 weeks of pregnancy.',
+            def5:'Medical Termination of Pregnancy (MTP) is the deliberate or induced ending of a pregnancy before it reaches full term, as distinct from a spontaneous abortion (miscarriage). Recognising both medical necessity and social realities, India legalised MTP under the Medical Termination of Pregnancy Act, permitting termination under defined conditions such as a serious risk to the physical or mental health of the mother, substantial risk of the child being born with serious physical or mental abnormalities, or pregnancy resulting from failure of a contraceptive method used by a married woman or her husband. MTPs are considered comparatively safe when performed up to 12 weeks of pregnancy, with increasing risk in later stages, and every year millions of MTPs are performed worldwide; the legal availability of safe MTP services is also an important tool in reducing the number of illegal and unsafe abortions, which are a significant cause of maternal mortality and reproductive health complications where safe services are unavailable or inaccessible.',
+            memoryTrick:'MTP = legal, medically-supervised, induced termination of pregnancy (safer up to 12 weeks).',
+            example:'A pregnancy resulting from failure of a condom or IUCD in a married woman is one of the legally recognised grounds for MTP in India.' },
+          { id:'sti', name:'Sexually Transmitted Infections (STIs)', keywords:['gonorrhoea','syphilis','hiv-aids','hpv','herpes'],
+            def2:'STIs (or STDs) are infections transmitted through sexual contact, including gonorrhoea, syphilis, genital herpes, genital warts (HPV), and HIV/AIDS.',
+            def3:'Common STIs include bacterial infections (gonorrhoea, syphilis), viral infections (genital herpes, genital warts caused by HPV, hepatitis-B, HIV/AIDS), and a protozoal infection (trichomoniasis). Except for hepatitis-B, genital herpes and HIV/AIDS, most STIs are curable if detected early; all except HIV/AIDS and genital herpes are largely curable with prompt medical treatment.',
+            def5:'Sexually transmitted infections (STIs), also historically called sexually transmitted diseases (STDs) or venereal diseases (VD), are a group of infections transmitted through sexual contact, and India\'s ISC/NCERT curriculum specifically names gonorrhoea, syphilis, genital herpes, genital warts (caused by human papillomavirus, HPV), hepatitis-B, and HIV/AIDS as examples students should know, alongside trichomoniasis as a protozoal example. Early detection through symptoms — such as itching, fluid discharge, mild pain, and swelling in the genital region, though some STIs including HIV infection can remain asymptomatic — allows for prompt medical treatment, and it is emphasised that except for genital herpes and HIV/AIDS, most other STIs are largely curable if detected early and treated properly. Prevention centres on avoiding sex with unknown/multiple partners, always using condoms during intercourse, seeking prompt medical treatment in case of doubt, and, when required, going for tests to confirm infection, since untreated STIs can lead to serious secondary complications like pelvic inflammatory disease, infertility, and (particularly relevant during pregnancy) can be transmitted to the fetus or newborn.',
+            memoryTrick:'Most STIs are curable if caught early — except genital herpes and HIV/AIDS. Prevention: avoid multiple partners, use condoms, seek prompt treatment.',
+            example:'HIV/AIDS and genital herpes are viral STIs without a cure, unlike gonorrhoea and syphilis (bacterial), which are curable with antibiotics if detected early.' },
+          { id:'infertility-art', name:'Infertility & Assisted Reproductive Technologies (ART)', keywords:['ivf','zift','gift','icsi','infertility'],
+            def2:'Infertility is the inability to conceive despite unprotected intercourse. Assisted Reproductive Technologies (ART) — IVF, ZIFT, GIFT, ICSI — help infertile couples have children.',
+            def3:'IVF (in-vitro fertilization, "test-tube baby" programme) fertilizes eggs with sperm outside the body; the resulting embryo (up to 8 cells) is transferred to the fallopian tube (ZIFT) or, if older, to the uterus (IUT). GIFT transfers an unfertilized egg to a donor\'s fallopian tube. ICSI directly injects a single sperm into an egg\'s cytoplasm, used for severe male infertility.',
+            def5:'Infertility — the inability of a couple to conceive despite unprotected sexual intercourse over a reasonable period — can arise from a wide range of physical, congenital, hormonal, or even psychological causes affecting either or both partners, and increasingly, Assisted Reproductive Technologies (ART) offer solutions. In vitro fertilization (IVF), popularly termed the "test-tube baby" programme, involves collecting eggs from the female (and sperm from the male) and allowing fertilization to occur in a laboratory dish rather than inside the body; the resulting zygote/embryo, once it has divided up to about the 8-celled stage, can be transferred into the fallopian tube — a procedure called Zygote Intra-Fallopian Transfer (ZIFT); if the embryo has developed beyond the 8-celled stage, it is instead transferred into the uterus, called Intra-Uterine Transfer (IUT). Gamete Intra-Fallopian Transfer (GIFT) is a related technique in which an unfertilized ovum from a donor is transferred into the fallopian tube of a female who cannot produce her own eggs, so that fertilization occurs naturally inside the body. For cases of severe male infertility (e.g. very low sperm count or poor motility), Intra-Cytoplasmic Sperm Injection (ICSI) is used, in which a single sperm is directly injected into the cytoplasm of an egg using a fine micro-needle, bypassing the need for the sperm to penetrate the egg unassisted.',
+            memoryTrick:'IVF = fertilize outside body; ZIFT = transfer zygote to tube; GIFT = transfer unfertilized egg to tube; ICSI = inject single sperm directly into egg.',
+            example:'ICSI is specifically used when the male partner has an extremely low sperm count, since it requires only a single viable sperm per egg.' },
+        ] },
+    ] },
+];
+
+/* Biology practice-zone question bank, same shape as SOC_QA_BANK/ECON_QA_BANK/MATH_QA_BANK. */
+const BIO_QA_BANK = [
+  { id:'bio-flower-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Flower Structure', marks:2, question:'Differentiate between a bisexual and a unisexual flower, with one example each.', keywords:['bisexual','unisexual','androecium','gynoecium'],
+    answer:{ intro:'A flower is bisexual if it bears both male and female reproductive whorls; it is unisexual if it bears only one.',
+      explanation:'A bisexual (hermaphrodite) flower contains both the androecium (stamens) and gynoecium (carpels) in the same flower, e.g. Hibiscus. A unisexual flower contains only one of the two — either just stamens (staminate) or just carpels (pistillate) — e.g. maize bears separate male (tassel) and female (cob) flowers on the same plant.',
+      conclusion:'This distinction affects pollination strategy: unisexual plants cannot self-pollinate within the same flower and typically rely more heavily on cross-pollination.' } },
+  { id:'bio-flower-2', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Flower Structure', marks:3, question:'Name the four whorls of a flower in order from outermost to innermost, and state one function of each.', keywords:['calyx','corolla','androecium','gynoecium'],
+    answer:{ intro:'A complete flower has four whorls arranged from outermost to innermost: calyx, corolla, androecium, and gynoecium.',
+      explanation:'The calyx (sepals) protects the flower bud before it opens. The corolla (petals) is often coloured and scented to attract pollinators. The androecium (stamens) is the male reproductive whorl, producing pollen. The gynoecium (carpels/pistil) is the female reproductive whorl, containing the ovary, style and stigma.',
+      conclusion:'The outer two whorls (calyx, corolla) are accessory, protecting and attracting, while the inner two (androecium, gynoecium) are directly reproductive.' } },
+  { id:'bio-micro-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Microsporogenesis & Anther Structure', marks:5, question:'Describe the structure of a mature anther and explain the process of microsporogenesis.', keywords:['anther','tapetum','microspore mother cell','meiosis','pollen grain'],
+    answer:{ intro:'A mature anther is a bilobed, tetragonal structure with four microsporangia (pollen sacs), which produce pollen grains through microsporogenesis.',
+      explanation:'Each microsporangium has, from outside to inside, an epidermis, endothecium, 2-3 middle layers, and a nutritive tapetum layer surrounding sporogenous tissue. Cells of this sporogenous tissue develop into diploid microspore mother cells, which undergo meiosis (microsporogenesis) to form a tetrad of four haploid microspores. As the anther matures, the microspores separate and develop a hard, sporopollenin exine and soft intine to become mature pollen grains.',
+      conclusion:'This process, occurring in every pollen sac of a functioning anther, is essential to producing the male gametophyte (pollen grain) required for fertilization.' } },
+  { id:'bio-mega-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Megasporogenesis & Ovule Structure', marks:5, question:'With the help of a labelled description, explain the structure of a typical angiosperm embryo sac.', keywords:['embryo sac','egg apparatus','synergid','polar nuclei','antipodal'],
+    answer:{ intro:'A typical (Polygonum-type) angiosperm embryo sac is 7-celled and 8-nucleate, developing from a single surviving megaspore.',
+      explanation:'At the micropylar end lies the egg apparatus: one egg cell flanked by two synergids, which have a filiform apparatus guiding the pollen tube. At the chalazal end lie three antipodal cells. In the centre is the large central cell containing two polar nuclei, which fuse (or remain separate) until triple fusion at double fertilization.',
+      conclusion:'This 7-cell, 8-nuclei arrangement is the female gametophyte generation of the angiosperm life cycle, produced via megasporogenesis and subsequent free-nuclear divisions.' } },
+  { id:'bio-pollination-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Pollination — Types & Agents', marks:3, question:'Distinguish between autogamy, geitonogamy and xenogamy.', keywords:['autogamy','geitonogamy','xenogamy'],
+    answer:{ intro:'These three terms classify pollination by the source of the pollen relative to the flower receiving it.',
+      explanation:'Autogamy is pollination within the same flower, requiring no external agent between anther and stigma of one flower. Geitonogamy transfers pollen from one flower to a different flower on the same plant — it needs a pollinating agent but is genetically equivalent to self-pollination. Xenogamy transfers pollen between two genetically different plants of the same species, the only type that produces new genetic combinations.',
+      conclusion:'Only xenogamy achieves true cross-pollination in the genetic sense, even though geitonogamy also physically requires an external pollinator.' } },
+  { id:'bio-pollination-2', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Pollination — Types & Agents', marks:2, question:'Give one floral adaptation each for wind-pollinated and insect-pollinated flowers.', keywords:['anemophily','entomophily','pollen'],
+    answer:{ intro:'Wind- and insect-pollinated flowers show contrasting floral adaptations suited to their respective pollinating agent.',
+      explanation:'Wind-pollinated (anemophilous) flowers, like maize, produce large quantities of light, non-sticky pollen and often lack showy petals, since they do not need to attract anything. Insect-pollinated (entomophilous) flowers, like sunflower, are typically large, colourful and scented, and produce nectar to attract insects, with pollen that is often sticky or spiny so it clings to the insect\'s body.',
+      conclusion:'These adaptations directly reflect the different mechanisms by which pollen reaches the stigma in each case.' } },
+  { id:'bio-outbreed-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Outbreeding Devices', marks:3, question:'What are outbreeding devices? Explain dichogamy and herkogamy with examples.', keywords:['outbreeding devices','dichogamy','herkogamy'],
+    answer:{ intro:'Outbreeding devices are mechanisms evolved by flowering plants to discourage self-pollination and encourage cross-pollination.',
+      explanation:'Dichogamy is the maturation of anther and stigma at different times within the same flower — protandry if the anther matures first, protogyny if the stigma matures first — preventing self-pollen from being available when the stigma is receptive. Herkogamy, seen in Calotropis, is a physical barrier or spatial separation between the anther and stigma within a bisexual flower, physically preventing self-pollen from reaching the stigma.',
+      conclusion:'Both mechanisms increase the likelihood of cross-pollination by preventing effective self-pollination within the same flower.' } },
+  { id:'bio-doublefert-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Double Fertilization', marks:5, question:'Describe the process of double fertilization in angiosperms and explain its significance.', keywords:['syngamy','triple fusion','zygote','endosperm'],
+    answer:{ intro:'Double fertilization is the fusion of two male gametes with two different targets inside the embryo sac, a process unique to flowering plants, discovered by Strasburger.',
+      explanation:'After the pollen tube releases its two male gametes into the embryo sac, one gamete fuses with the egg cell (syngamy), forming the diploid zygote. The other gamete fuses with the two polar nuclei of the central cell (triple fusion), forming the triploid primary endosperm nucleus. The zygote develops into the embryo, and the primary endosperm nucleus develops into the nutritive endosperm.',
+      conclusion:'Double fertilization ensures both male gametes are used productively — one to form the next generation (embryo) and one to form its immediate food supply (endosperm) — a key evolutionary innovation of flowering plants.' } },
+  { id:'bio-postfert-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Post-Fertilization: Embryo, Endosperm, Seed & Fruit', marks:3, question:'Differentiate between albuminous and non-albuminous seeds with one example each.', keywords:['albuminous','non-albuminous','endosperm','cotyledon'],
+    answer:{ intro:'Albuminous and non-albuminous seeds differ in whether the endosperm persists into the mature seed.',
+      explanation:'In an albuminous (endospermic) seed, such as wheat, the endosperm is not fully consumed during development and persists in the mature seed, providing nutrition to the germinating seedling. In a non-albuminous (non-endospermic) seed, such as pea, the endosperm is completely absorbed by the growing embryo before the seed matures, and food is instead stored in the thick cotyledons.',
+      conclusion:'This distinction reflects two different evolutionary strategies for storing nutrition needed by the embryo during germination.' } },
+  { id:'bio-special-1', chapter:'Reproduction', topic:'Sexual Reproduction in Flowering Plants', subtopic:'Special Modes: Apomixis, Polyembryony, Parthenocarpy', marks:3, question:'Define apomixis and polyembryony, and explain why apomixis is commercially significant.', keywords:['apomixis','polyembryony','hybrid seed'],
+    answer:{ intro:'Apomixis is a form of asexual reproduction that produces seeds without meiosis or fertilization, and polyembryony is the presence of more than one embryo in a single seed.',
+      explanation:'In apomixis, seeds develop that are genetically identical to the mother plant, since no fertilization or reduction division occurs. Polyembryony, common in Citrus, often arises when nucellar cells around the embryo sac develop into additional embryos alongside the zygotic one. Apomixis is commercially valuable because if bred into hybrid crop seeds, farmers could resow seeds from a hybrid harvest and still get uniform hybrid-quality plants, instead of losing hybrid vigour in the next generation as normally happens with sexual reproduction.',
+      conclusion:'Introducing apomixis into hybrid crop varieties remains an active area of plant breeding research for exactly this reason.' } },
+  { id:'bio-male-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Male Reproductive System', marks:3, question:'Trace the path of sperm from their site of production to ejaculation.', keywords:['seminiferous tubule','epididymis','vas deferens','urethra'],
+    answer:{ intro:'Sperm travel through a defined series of ducts from their production site to their release from the body.',
+      explanation:'Sperm are produced in the seminiferous tubules of the testis, then pass into the epididymis where they mature and are stored, then travel through the vas deferens, which joins the duct of the seminal vesicle to form the ejaculatory duct, finally passing through the urethra and out of the body during ejaculation, mixed with secretions from the accessory glands to form semen.',
+      conclusion:'Each accessory structure along this path contributes either to sperm maturation, storage, or the nutritive/lubricating seminal fluid.' } },
+  { id:'bio-female-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Female Reproductive System', marks:2, question:'Name the usual site of fertilization in the human female reproductive tract, and explain why.', keywords:['ampulla','fallopian tube','fertilization'],
+    answer:{ intro:'Fertilization normally occurs in the ampulla region of the fallopian tube (oviduct).',
+      explanation:'The egg released at ovulation is picked up by the fimbriae of the fallopian tube and moves toward the uterus; sperm travelling up from the cervix typically meet the egg in the ampulla, the wider region of the tube close to the ovary, before the egg reaches the uterus.',
+      conclusion:'This is why the fallopian tube, not the uterus, is described as the actual site of fertilization in humans.' } },
+  { id:'bio-gameto-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Gametogenesis — Spermatogenesis & Oogenesis', marks:5, question:'Compare spermatogenesis and oogenesis in terms of timing, number of functional gametes, and cytoplasm division.', keywords:['spermatogenesis','oogenesis','polar body','meiosis'],
+    answer:{ intro:'Spermatogenesis and oogenesis both use meiosis to form haploid gametes, but differ significantly in timing, output, and cell division pattern.',
+      explanation:'Spermatogenesis begins only at puberty and continues throughout adult male life, with one primary spermatocyte producing four functional, equally-sized sperm through two equal meiotic divisions. Oogenesis begins in the female fetus before birth, arrests at prophase I for years to decades, and resumes only around ovulation each cycle; one primary oocyte produces only one functional ovum, with the divisions being highly unequal — most cytoplasm goes to the egg while the rest is discarded as small, non-functional polar bodies.',
+      conclusion:'This asymmetry in oogenesis conserves nutrients and cytoplasmic resources in the single functional egg, which will need to support early embryonic development if fertilized.' } },
+  { id:'bio-menstrual-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Menstrual Cycle', marks:5, question:'Describe the four phases of the human menstrual cycle and the key hormone driving each.', keywords:['menstrual phase','follicular phase','ovulation','luteal phase'],
+    answer:{ intro:'The human menstrual cycle has four phases, each driven by a shifting balance of hormones from the hypothalamus-pituitary-ovary axis.',
+      explanation:'The menstrual phase (days 1-5) is the shedding of the endometrium as progesterone from the previous cycle falls. The follicular phase is driven by rising FSH, which matures ovarian follicles that secrete oestrogen, rebuilding the endometrium. A sharp mid-cycle LH surge triggers ovulation, rupturing the mature Graafian follicle. The luteal phase follows, in which the ruptured follicle becomes the corpus luteum, secreting progesterone to maintain the endometrium for potential implantation.',
+      conclusion:'If implantation does not occur, the corpus luteum degenerates, progesterone falls, and the cycle restarts with menstruation.' } },
+  { id:'bio-fert-implant-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Fertilization & Implantation', marks:3, question:'What is the acrosome reaction, and what does it prevent?', keywords:['acrosome reaction','zona pellucida','polyspermy'],
+    answer:{ intro:'The acrosome reaction is the release of hydrolytic enzymes from the sperm\'s acrosome when it contacts the egg, allowing it to penetrate the egg\'s protective coverings.',
+      explanation:'These enzymes digest a path through the corona radiata and zona pellucida surrounding the egg, allowing one sperm to fuse with the egg\'s plasma membrane. This fusion triggers a "zona reaction" that hardens the zona pellucida, blocking any further sperm from entering.',
+      conclusion:'This blocking mechanism prevents polyspermy — fertilization by more than one sperm — which would produce a non-viable embryo with an abnormal chromosome number.' } },
+  { id:'bio-pregnancy-1', chapter:'Reproduction', topic:'Human Reproduction', subtopic:'Pregnancy, Embryonic Development & Parturition', marks:3, question:'What is the placenta, and what are two of its main functions?', keywords:['placenta','hcg','nutrient exchange'],
+    answer:{ intro:'The placenta is a specialised structure formed from both fetal (chorionic villi) and maternal (endometrial) tissue that connects the fetus to the mother during pregnancy.',
+      explanation:'One key function is exchange: the placenta allows oxygen and nutrients to pass from mother to fetus, and carbon dioxide and excretory wastes to pass from fetus to mother, largely by diffusion. A second key function is endocrine: the placenta secretes hormones including human chorionic gonadotropin (hCG), oestrogen, and progesterone, which maintain the pregnancy.',
+      conclusion:'Because hCG is uniquely produced by the placenta from very early in pregnancy, its detection in urine is the basis of standard pregnancy tests.' } },
+  { id:'bio-rch-1', chapter:'Reproduction', topic:'Reproductive Health', subtopic:'Reproductive Health & RCH Programmes', marks:2, question:'What is meant by "reproductive health," and name one goal of India\'s RCH programmes.', keywords:['reproductive health','rch','well-being'],
+    answer:{ intro:'Reproductive health refers to total physical, emotional, behavioural and social well-being in all matters related to reproduction, not merely the absence of disease.',
+      explanation:'India\'s Reproductive and Child Health Care (RCH) programmes aim to spread awareness of reproduction-related aspects among the general population, including safe sexual practices, family planning, and antenatal/postnatal care, in order to build a reproductively healthy society.',
+      conclusion:'A reproductively healthy society, in turn, is considered essential to addressing broader population and public-health challenges.' } },
+  { id:'bio-contraception-1', chapter:'Reproduction', topic:'Reproductive Health', subtopic:'Contraception Methods', marks:3, question:'Differentiate between a barrier method and an IUCD as forms of contraception, with one example each.', keywords:['barrier method','iucd','condom','copper-t'],
+    answer:{ intro:'Barrier methods and IUCDs are both non-permanent contraceptive methods, but they work in different ways.',
+      explanation:'A barrier method, such as a condom, works by physically preventing sperm from reaching the egg, and also offers protection against sexually transmitted infections. An IUCD, such as the Copper-T, is a device inserted into the uterus by a doctor; copper ions released by the device suppress sperm motility and increase phagocytosis of sperm, preventing fertilization.',
+      conclusion:'Unlike barrier methods, IUCDs do not need to be applied at the time of intercourse and can remain effective for an extended period once inserted.' } },
+  { id:'bio-mtp-1', chapter:'Reproduction', topic:'Reproductive Health', subtopic:'Medical Termination of Pregnancy (MTP)', marks:2, question:'Give one legally recognised ground for medical termination of pregnancy (MTP) in India.', keywords:['mtp','legal grounds','contraceptive failure'],
+    answer:{ intro:'The Medical Termination of Pregnancy Act permits abortion in India under specific, defined conditions.',
+      explanation:'One recognised ground is when the pregnancy resulted from the failure of a contraceptive method used by a married woman or her husband. Other grounds include serious risk to the physical or mental health of the mother, or substantial risk of the child being born with serious physical or mental abnormalities.',
+      conclusion:'MTPs performed under these legal conditions, especially within the first 12 weeks, are considered comparatively safe.' } },
+  { id:'bio-sti-1', chapter:'Reproduction', topic:'Reproductive Health', subtopic:'Sexually Transmitted Infections (STIs)', marks:2, question:'Name two STIs that are NOT curable, and one preventive measure against STIs in general.', keywords:['sti','hiv','herpes','prevention'],
+    answer:{ intro:'Most STIs are curable if detected and treated early, but genital herpes and HIV/AIDS are notable exceptions with no cure.',
+      explanation:'Genital herpes and HIV/AIDS are both viral infections without a cure, unlike bacterial STIs such as gonorrhoea and syphilis, which can be treated with antibiotics. A key preventive measure against STIs in general is consistently using a condom during sexual intercourse.',
+      conclusion:'Avoiding sex with unknown or multiple partners and seeking prompt medical treatment at the first sign of infection are also important preventive practices.' } },
+  { id:'bio-art-1', chapter:'Reproduction', topic:'Reproductive Health', subtopic:'Infertility & Assisted Reproductive Technologies (ART)', marks:5, question:'Explain the IVF procedure and distinguish between ZIFT and GIFT.', keywords:['ivf','zift','gift','test-tube baby'],
+    answer:{ intro:'In vitro fertilization (IVF) is the fertilization of an egg by sperm outside the body, popularly called the "test-tube baby" programme, and is the basis of related techniques like ZIFT and GIFT.',
+      explanation:'In IVF, eggs are collected from the female and fertilized with sperm in a laboratory dish. If the resulting embryo has developed up to about the 8-celled stage, it is transferred into the fallopian tube — this specific transfer procedure is called Zygote Intra-Fallopian Transfer (ZIFT). If the embryo is older than the 8-celled stage, it is instead transferred into the uterus. Gamete Intra-Fallopian Transfer (GIFT), by contrast, does not involve fertilization outside the body at all — it transfers an unfertilized egg from a donor into the fallopian tube of a woman who cannot produce her own eggs, so that fertilization then occurs naturally inside her body.',
+      conclusion:'ZIFT and GIFT are therefore distinguished mainly by whether fertilization has already occurred (ZIFT, transferring a zygote) or has not yet occurred (GIFT, transferring an unfertilized egg).' } },
+];
+
+/* Biology memorize-mode: true 4-option MCQs (factual recall), distinct from the
+   example-to-concept matching pattern used in Sociology/Economics/Math. */
+const BIO_MCQ_BANK = [
+  { topic:'plant-reproduction', question:'Which of the following shows herkogamy, an outbreeding device based on physical separation of anther and stigma?', options:['Calotropis','Primula','Vallisneria','Zea mays'], answer:'Calotropis', explanation:'Calotropis is the standard ISC/NCERT example of herkogamy, where a physical barrier within the flower prevents self-pollen from reaching the stigma.' },
+  { topic:'plant-reproduction', question:'In a typical angiosperm embryo sac, how many nuclei are present at maturity?', options:['4','6','8','16'], answer:'8', explanation:'The typical (monosporic, Polygonum-type) embryo sac is 7-celled but 8-nucleate: 3 antipodals + 2 polar nuclei (in the central cell) + 1 egg + 2 synergids = 8 nuclei.' },
+  { topic:'plant-reproduction', question:'The primary endosperm nucleus (PEN) formed after triple fusion is:', options:['Haploid (n)','Diploid (2n)','Triploid (3n)','Tetraploid (4n)'], answer:'Triploid (3n)', explanation:'Triple fusion combines one haploid male gamete with the two haploid polar nuclei of the central cell (1n + 1n + 1n = 3n), forming the triploid PEN.' },
+  { topic:'plant-reproduction', question:'Which pollination agent is responsible for pollinating Kigelia (the sausage tree)?', options:['Wind','Insects','Water','Bats'], answer:'Bats', explanation:'Kigelia and Adansonia (baobab) are classic ISC examples of chiropterophily (bat pollination); their flowers open at night and have a strong odour.' },
+  { topic:'plant-reproduction', question:'A seed in which the endosperm is completely consumed by the embryo before maturity is called:', options:['Albuminous','Non-albuminous','Apomictic','Parthenocarpic'], answer:'Non-albuminous', explanation:'Non-albuminous (non-endospermic) seeds, like pea and gram, have their endosperm fully absorbed by the growing embryo, storing food in the cotyledons instead.' },
+  { topic:'plant-reproduction', question:'Polyembryony (multiple embryos in one seed) is most commonly and classically observed in:', options:['Wheat','Citrus (orange)','Pea','Maize'], answer:'Citrus (orange)', explanation:'Citrus commonly shows polyembryony via nucellar embryony, where cells of the nucellus around the embryo sac develop into extra embryos alongside the zygotic one.' },
+  { topic:'human-reproduction', question:'Sertoli cells, found within the seminiferous tubules, primarily function to:', options:['Secrete testosterone','Nourish developing sperm','Produce the egg','Secrete oxytocin'], answer:'Nourish developing sperm', explanation:'Sertoli cells nourish and support developing sperm cells within the seminiferous tubule; testosterone is secreted separately by the interstitial Leydig cells.' },
+  { topic:'human-reproduction', question:'The usual site of fertilization in humans is the:', options:['Uterus','Cervix','Ampulla of the fallopian tube','Ovary'], answer:'Ampulla of the fallopian tube', explanation:'The egg, picked up by the fimbriae, is usually fertilized in the ampulla region of the fallopian tube before the resulting zygote moves toward the uterus.' },
+  { topic:'human-reproduction', question:'The mid-cycle LH surge in the menstrual cycle directly triggers:', options:['Menstruation','Ovulation','Implantation','Formation of the corpus albicans'], answer:'Ovulation', explanation:'A sharp surge of LH around day 14, triggered by peak oestrogen through positive feedback, causes the mature Graafian follicle to rupture and release the egg — ovulation.' },
+  { topic:'human-reproduction', question:'Which hormone, detected in urine, forms the basis of a standard home pregnancy test?', options:['Oestrogen','Progesterone','Human chorionic gonadotropin (hCG)','Prolactin'], answer:'Human chorionic gonadotropin (hCG)', explanation:'hCG is secreted uniquely by the placenta from very early in pregnancy, so its presence in urine is used as a reliable, early pregnancy marker.' },
+  { topic:'human-reproduction', question:'In oogenesis, the unequal division of cytoplasm during meiosis results in the formation of:', options:['Four equal-sized eggs','One egg and polar bodies','Two eggs and two sperm','Four polar bodies only'], answer:'One egg and polar bodies', explanation:'Unlike spermatogenesis (which divides cytoplasm equally into four sperm), oogenesis divides cytoplasm very unequally, conserving nutrients in a single large egg while discarding the rest as small, non-functional polar bodies.' },
+  { topic:'reproductive-health', question:'Which of the following contraceptive methods is a permanent, surgical method for males?', options:['Condom','Copper-T','Vasectomy','Oral pill'], answer:'Vasectomy', explanation:'Vasectomy involves surgically cutting and blocking the vas deferens in the male, permanently preventing sperm from being transported out of the testis.' },
+  { topic:'reproductive-health', question:'Which of these STIs currently has NO cure?', options:['Gonorrhoea','Syphilis','HIV/AIDS','Trichomoniasis'], answer:'HIV/AIDS', explanation:'Genital herpes and HIV/AIDS are the two STIs specifically noted as having no cure, unlike bacterial/protozoal STIs which are largely curable if detected early.' },
+  { topic:'reproductive-health', question:'In Assisted Reproductive Technology, the transfer of an unfertilized egg into the fallopian tube of a woman who cannot produce her own eggs is called:', options:['IVF','ZIFT','GIFT','ICSI'], answer:'GIFT', explanation:'GIFT (Gamete Intra-Fallopian Transfer) transfers an unfertilized donor egg into the recipient\'s fallopian tube, so fertilization then occurs naturally inside the body.' },
+  { topic:'reproductive-health', question:'ICSI (Intra-Cytoplasmic Sperm Injection) is a technique primarily used to treat:', options:['Female infertility due to blocked tubes','Severe male infertility (very low sperm count)','Genetic disorders in the embryo','STIs during pregnancy'], answer:'Severe male infertility (very low sperm count)', explanation:'ICSI directly injects a single sperm into an egg\'s cytoplasm, bypassing the need for a large number of viable sperm, making it ideal for severe male infertility.' },
+];
 
 /* ============================================================
    SOCIOLOGY — ISC Class XII, transcribed and structured from the
@@ -3267,8 +3551,13 @@ const SOC_TOPIC_META = {
   'change-and-development': { weightage:'8–10 marks', frequentlyAsked:16, difficulty:'Medium', studyTime:'3–4 hrs' },
   'agents-institutions': { weightage:'6–8 marks', frequentlyAsked:11, difficulty:'Easy', studyTime:'2–3 hrs' },
 };
+const BIO_TOPIC_META = {
+  'plant-reproduction': { weightage:'8–10 marks', pyqCount:19 },
+  'human-reproduction': { weightage:'4–6 marks', pyqCount:14 },
+  'reproductive-health': { weightage:'2–4 marks', pyqCount:9 },
+};
 function getTopicMeta(subject, topicId){
-  const table = subject==='math' ? MATH_TOPIC_META : subject==='economics' ? ECON_TOPIC_META : SOC_TOPIC_META;
+  const table = subject==='math' ? MATH_TOPIC_META : subject==='economics' ? ECON_TOPIC_META : subject==='biology' ? BIO_TOPIC_META : SOC_TOPIC_META;
   return table[topicId] || null;
 }
 function renderTopicMetaStrip(subject, topicId){
@@ -4774,7 +5063,7 @@ let savedAnswers = {}; // qaId -> {studentText, score, maxMarks, feedback, missi
 let bookmarks = {}; // key -> {label, subject, subjectLabel, chapterId, topicId, subtopicId, qaId, ts}
 let recentSearches = []; // most-recent-first array of query strings
 let lastVisited = {}; // subjectId -> {subtopicId, chapterId, topicId, label, ts}
-let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null };
+let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{} };
 let mathPTypeState = { instance:null, solutionShown:false }; // current Problem Type practice instance + reveal state
 
 /* ============================================================
@@ -4863,6 +5152,15 @@ function buildSearchIndex(){
       });
     });
   });
+  BIO_CHAPTERS.forEach(c=>{
+    items.push({type:'Chapter', label:c.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);}});
+    c.topics.forEach(t=>{
+      items.push({type:'Topic', label:t.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);openBioTopic(t.id);}});
+      t.subtopics.forEach(s=>{
+        items.push({type:'Subtopic', label:s.name, subject:'biology', nav:()=>{openSubject('biology');openBioChapter(c.id);openBioTopic(t.id);openBioSubtopic(s.id);}});
+      });
+    });
+  });
   searchIndex = items;
 }
 function ensureSearchIndex(){ if(!searchIndex) buildSearchIndex(); }
@@ -4939,6 +5237,7 @@ function resumeBookmark(key){
   if(b.subject==='sociology'){ appState.section='dashboard'; appState.socChapterId=b.chapterId; appState.socTopicId=b.topicId; appState.socSubtopicId=b.subtopicId; }
   else if(b.subject==='economics'){ appState.section='dashboard'; appState.econChapterId=b.chapterId; appState.econTopicId=b.topicId; appState.econSubtopicId=b.subtopicId; }
   else if(b.subject==='math'){ appState.section='dashboard'; appState.mathChapterId=b.chapterId; appState.mathTopicId=b.topicId; appState.mathSubtopicId=b.subtopicId; }
+  else if(b.subject==='biology'){ appState.section='dashboard'; appState.bioChapterId=b.chapterId; appState.bioTopicId=b.topicId; appState.bioSubtopicId=b.subtopicId; }
   else { appState.section='dashboard'; }
   renderApp();
 }
@@ -4982,7 +5281,7 @@ function handleLogin(e){
     document.getElementById('who-board').textContent = session.board + ' · Grade ' + session.grade;
   }
   goTo('app');
-  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null };
+  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{}, mathPTypeId:null, bioChapterId:null, bioTopicId:null, bioSubtopicId:null, bioTopicTab:{} };
   loadPersistedState();
   renderApp();
 }
@@ -5005,6 +5304,9 @@ function goDashboardHome(){
   appState.mathChapterId = null;
   appState.mathTopicId = null;
   appState.mathSubtopicId = null;
+  appState.bioChapterId = null;
+  appState.bioTopicId = null;
+  appState.bioSubtopicId = null;
   renderApp();
 }
 
@@ -5098,6 +5400,26 @@ function renderCrumb(){
           }
         }
       }
+    } else if(appState.subjectId==='biology'){
+      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      if(!appState.bioChapterId){
+        html += `<span class="current">Biology</span>`;
+      } else {
+        const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
+        html += `<button onclick="backBioToChapters()">Biology</button><span>›</span>`;
+        if(!appState.bioTopicId){
+          html += `<span class="current">${escapeHtml(chapter.name)}</span>`;
+        } else {
+          const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
+          html += `<button onclick="backBioToTopics()">${escapeHtml(chapter.name)}</button><span>›</span>`;
+          if(!appState.bioSubtopicId){
+            html += `<span class="current">${escapeHtml(topic.name)}</span>`;
+          } else {
+            const subtopic = topic.subtopics.find(s=>s.id===appState.bioSubtopicId);
+            html += `<button onclick="backBioToTopic()">${escapeHtml(topic.name)}</button><span>›</span><span class="current">${escapeHtml(subtopic.name)}</span>`;
+          }
+        }
+      }
     }
   } else if(appState.section==='settings'){
     html = `<span class="current">Settings</span>`;
@@ -5140,18 +5462,26 @@ function mathProgressCounts(){
   return {done, total};
 }
 
+function bioProgressCounts(){
+  const subtopics = BIO_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics));
+  const total = subtopics.length;
+  const done = subtopics.filter(s=>learnedItems.has('bio-subtopic-'+s.id)).length;
+  return {done, total};
+}
+
 function subjectProgress(id){
   if(id==='english') return englishProgressCounts();
   if(id==='sociology') return socProgressCounts();
   if(id==='economics') return econProgressCounts();
   if(id==='math') return mathProgressCounts();
+  if(id==='biology') return bioProgressCounts();
   return {done:0, total:0};
 }
 
 /* ============================================================
    CONTINUE WHERE YOU LEFT OFF
    ============================================================ */
-const SUBJECT_LABELS = { english:'English', sociology:'Sociology', economics:'Economics', math:'Mathematics' };
+const SUBJECT_LABELS = { english:'English', sociology:'Sociology', economics:'Economics', math:'Mathematics', biology:'Biology' };
 function renderContinueCards(){
   const cards = Object.keys(lastVisited).sort((a,b)=>lastVisited[b].ts-lastVisited[a].ts).map(subjectId=>{
     const lv = lastVisited[subjectId];
@@ -5172,6 +5502,7 @@ function resumeLastVisited(subjectId){
   if(subjectId==='sociology'){ appState.socChapterId=lv.chapterId; appState.socTopicId=lv.topicId; appState.socSubtopicId=lv.subtopicId; }
   else if(subjectId==='economics'){ appState.econChapterId=lv.chapterId; appState.econTopicId=lv.topicId; appState.econSubtopicId=lv.subtopicId; }
   else if(subjectId==='math'){ appState.mathChapterId=lv.chapterId; appState.mathTopicId=lv.topicId; appState.mathSubtopicId=lv.subtopicId; }
+  else if(subjectId==='biology'){ appState.bioChapterId=lv.chapterId; appState.bioTopicId=lv.topicId; appState.bioSubtopicId=lv.subtopicId; }
   else if(subjectId==='english'){
     appState.engTab = lv.chapterId; // 'stories' or 'poetry'
     if(lv.chapterId==='stories') appState.storyId = lv.subtopicId; else appState.poemId = lv.subtopicId;
@@ -5184,7 +5515,7 @@ function resumeLastVisited(subjectId){
    (savedAnswers), grouped per subject by matching QA id prefixes.
    ============================================================ */
 function renderAreasOfImprovement(){
-  const bySubject = { english:[], sociology:[], economics:[], math:[] };
+  const bySubject = { english:[], sociology:[], economics:[], math:[], biology:[] };
   Object.keys(savedAnswers).forEach(qaId=>{
     const result = savedAnswers[qaId];
     if(!result || !result.maxMarks) return;
@@ -5193,6 +5524,7 @@ function renderAreasOfImprovement(){
     if(qaId.startsWith('soc-')) subject='sociology';
     else if(qaId.startsWith('econ-')) subject='economics';
     else if(qaId.startsWith('math-')) subject='math';
+    else if(qaId.startsWith('bio-')) subject='biology';
     else if(qaId.startsWith('qa-')) subject='english';
     if(!subject) return;
     const qa = findQaById(qaId);
@@ -5233,7 +5565,7 @@ function renderDashboardBody(){
         <div class="s-icon" style="background:${s.bg};">${s.emoji}</div>
         <h3 class="display">${s.name}</h3>
         <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:${s.color};"></div></div>
-        <div class="s-sub">Mastery: ${pct}% (${done}/${total} ${(s.id==='sociology'||s.id==='economics'||s.id==='math')?'subtopics':'texts'})</div>
+        <div class="s-sub">Mastery: ${pct}% (${done}/${total} ${(s.id==='sociology'||s.id==='economics'||s.id==='math'||s.id==='biology')?'subtopics':'texts'})</div>
       </button>`;
     }).join('');
     container.innerHTML = `
@@ -5241,7 +5573,7 @@ function renderDashboardBody(){
       ${renderContinueCards()}
       ${renderAreasOfImprovement()}
       <div class="subject-grid">${tiles}</div>
-      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters) and Mathematics (all 10 chapters, both grades) are fully built. Physics, Biology, Psychology and CBSE are coming soon.</div>
+      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters), Mathematics (all 10 chapters, both grades) and Biology (Unit 1: Reproduction) are built. Physics, Psychology, remaining Biology units, and CBSE are coming soon.</div>
     `;
   } else if(appState.subjectId==='english'){
     container.innerHTML = renderEnglishHub();
@@ -5251,6 +5583,8 @@ function renderDashboardBody(){
     container.innerHTML = renderEconomics();
   } else if(appState.subjectId==='math'){
     container.innerHTML = renderMathematics();
+  } else if(appState.subjectId==='biology'){
+    container.innerHTML = renderBiology();
   }
   renderCrumb();
   typesetMath(container);
@@ -5673,7 +6007,8 @@ function findQaById(id){
   return QA_BANK.find(q=>q.id===id)
     || (typeof SOC_QA_BANK!=='undefined' && SOC_QA_BANK.find(q=>q.id===id))
     || (typeof ECON_QA_BANK!=='undefined' && ECON_QA_BANK.find(q=>q.id===id))
-    || (typeof MATH_QA_BANK!=='undefined' && MATH_QA_BANK.find(q=>q.id===id));
+    || (typeof MATH_QA_BANK!=='undefined' && MATH_QA_BANK.find(q=>q.id===id))
+    || (typeof BIO_QA_BANK!=='undefined' && BIO_QA_BANK.find(q=>q.id===id));
 }
 
 function gradeStudentAnswer(qa, studentText){
@@ -5751,6 +6086,7 @@ function qaBankSubject(qaId){
   if(qaId.startsWith('soc-')) return 'sociology';
   if(qaId.startsWith('econ-')) return 'economics';
   if(qaId.startsWith('math-')) return 'math';
+  if(qaId.startsWith('bio-')) return 'biology';
   return 'english';
 }
 function renderQaItem(qa){
@@ -5930,7 +6266,8 @@ function renderMemoMode(deckKey, cards, onAnswerFn){
       <div class="m-prompt">${card.prompt}</div>
     </div>
     <div class="memo-options">${optionsHtml}</div>
-    ${answered ? `<div style="text-align:center;"><button class="btn btn-primary" onclick="memoNext('${deckKey}')">Next card →</button></div>` : `<p style="text-align:center;font-size:12px;color:#9b9a95;">Choose an option to check.</p>`}
+    ${answered && card.explanation ? `<div class="tip-box" style="margin-top:14px;"><div class="tip-head">💡 Explanation</div><div class="tip-body">${escapeHtml(card.explanation)}</div></div>` : ''}
+    ${answered ? `<div style="text-align:center;margin-top:14px;"><button class="btn btn-primary" onclick="memoNext('${deckKey}')">Next card →</button></div>` : `<p style="text-align:center;font-size:12px;color:#9b9a95;">Choose an option to check.</p>`}
   `;
 }
 
@@ -7280,6 +7617,197 @@ function renderMathSubtopicPage(chapter, topic, subtopic){
     <div class="eng-tabs">${tabsHtml}</div>
     <div>${body}</div>
   `;
+}
+
+/* ============================================================
+   BIOLOGY — ISC Class XII. Chapter (Unit) > Topic > Subtopic,
+   mirroring Sociology's structure exactly: 2-mark visible box,
+   3/5-mark accordions, lesson-flow subtopic navigation, real
+   examples list, and a true 4-option MCQ memorize deck (distinct
+   from the example-matching pattern used elsewhere).
+   ============================================================ */
+function openBioChapter(id){ appState.bioChapterId=id; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
+function openBioTopic(id){ appState.bioTopicId=id; appState.bioSubtopicId=null; renderDashboardBody(); }
+function openBioSubtopic(id){
+  appState.bioSubtopicId=id; renderDashboardBody();
+  const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
+  const topic = chapter && chapter.topics.find(t=>t.id===appState.bioTopicId);
+  const subtopic = topic && topic.subtopics.find(s=>s.id===id);
+  touchLastVisited('biology', id, appState.bioChapterId, appState.bioTopicId, subtopic?subtopic.name:id);
+}
+function backBioToChapters(){ appState.bioChapterId=null; appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
+function backBioToTopics(){ appState.bioTopicId=null; appState.bioSubtopicId=null; renderDashboardBody(); }
+function backBioToTopic(){ appState.bioSubtopicId=null; renderDashboardBody(); }
+function setBioTopicTab(topicId, tab){ appState.bioTopicTab[topicId] = tab; renderDashboardBody(); }
+function jumpBioSubtopic(chapterId, topicId, subtopicId){
+  appState.bioChapterId = chapterId; appState.bioTopicId = topicId; openBioSubtopic(subtopicId);
+}
+function bioTopicSubtopicCount(topic){
+  const done = topic.subtopics.filter(s=>learnedItems.has('bio-subtopic-'+s.id)).length;
+  return { done, total: topic.subtopics.length };
+}
+
+function renderBiology(){
+  if(!appState.bioChapterId) return renderBioChapterList();
+  const chapter = BIO_CHAPTERS.find(c=>c.id===appState.bioChapterId);
+  if(!appState.bioTopicId) return renderBioTopicList(chapter);
+  const topic = chapter.topics.find(t=>t.id===appState.bioTopicId);
+  if(appState.bioSubtopicId){
+    const subtopic = topic.subtopics.find(s=>s.id===appState.bioSubtopicId);
+    return renderBioSubtopicPage(chapter, topic, subtopic);
+  }
+  return renderBioTopicPage(chapter, topic);
+}
+
+function renderBioChapterList(){
+  const tiles = BIO_CHAPTERS.map(c=>{
+    const total = c.topics.reduce((n,t)=>n+t.subtopics.length,0);
+    const done = c.topics.reduce((n,t)=>n+t.subtopics.filter(s=>learnedItems.has('bio-subtopic-'+s.id)).length,0);
+    const pct = total? Math.round(done/total*100):0;
+    return `<button class="subject-tile" onclick="openBioChapter('${c.id}')">
+      <div class="s-icon" style="background:#EAFBEF;">${c.icon}</div>
+      <h3 class="display">${escapeHtml(c.name)}</h3>
+      <div class="s-sub" style="margin-top:4px;">${c.topics.length} topics</div>
+      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#16A34A;"></div></div>
+      <div class="s-sub">Mastery: ${pct}%</div>
+    </button>`;
+  }).join('');
+  return `
+    <h1 style="font-size:26px;margin-bottom:4px;">Biology</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">ISC Class XII · Unit 1: Reproduction is fully built (plant reproduction, human reproduction, reproductive health). Genetics &amp; Evolution, Human Welfare, Biotechnology and Ecology are planned next.</p>
+    <div class="subject-grid">${tiles}</div>
+  `;
+}
+
+function renderBioTopicList(chapter){
+  const rows = chapter.topics.map(t=>{
+    const {done,total} = bioTopicSubtopicCount(t);
+    return listRow(t.id, t.name, `${t.subtopics.length} subtopics · Mastery: ${total?Math.round(done/total*100):0}%`, done===total && total>0, `openBioTopic('${t.id}')`);
+  }).join('');
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToChapters()">← All chapters</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a topic to see its overview, practice zone, memorize mode and key definitions.</p>
+    ${rows}
+  `;
+}
+
+/* Biology: same accordion treatment as Sociology (2-mark visible, 3/5-mark collapse), plus a real-world examples list where present. */
+function renderBioDefBoxes(subtopic){
+  return `
+    <div class="soc-def-grid" style="grid-template-columns:1fr;">
+      <div class="soc-def-box"><div class="soc-def-label">2-mark <span>· keywords only</span></div><p>${highlight(subtopic.def2, subtopic.keywords)}</p></div>
+    </div>
+    ${renderAccordion('3-mark answer · keywords + example', `<p>${highlight(subtopic.def3, subtopic.keywords)}</p>`)}
+    ${renderAccordion('5-mark answer · keywords + example + scope/functions', `<p>${highlight(subtopic.def5, subtopic.keywords)}</p>`)}
+    ${renderExamplesList(subtopic)}
+  `;
+}
+
+const BIO_TOPIC_TABS = [
+  {id:'overview', label:'Overview'},
+  {id:'practice', label:'Practice Zone'},
+  {id:'memorize', label:'Memorize Mode (MCQ)'},
+  {id:'keydefs', label:'Key Definitions'},
+];
+function bioAllMcqsForTopic(topicId){ return BIO_MCQ_BANK.filter(m=>m.topic===topicId); }
+
+function renderBioTopicPage(chapter, topic){
+  if(!appState.bioTopicTab[topic.id]) appState.bioTopicTab[topic.id] = 'overview';
+  const tab = appState.bioTopicTab[topic.id];
+  const tabsHtml = BIO_TOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setBioTopicTab('${topic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+
+  let body = '';
+  if(tab==='overview'){
+    body = topic.subtopics.map(s=>`
+      <div class="lesson-card">
+        <h2>📘 ${escapeHtml(s.name)}</h2>
+        ${renderBioDefBoxes(s)}
+        <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
+        <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
+        ${s.flowchart ? renderFlowchart(s.flowchart) : ''}
+        ${s.diffTable ? renderDiffTable(s.diffTable) : ''}
+      </div>
+    `).join('');
+  } else if(tab==='practice'){
+    const qs = BIO_QA_BANK.filter(q=>q.topic===topic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Every question for ${escapeHtml(topic.name)}. Answers save automatically and re-grade whenever you edit them.</p>${renderPracticeSection('bio-topic-'+topic.id, qs, {subtopic:true, marks:true})}`;
+  } else if(tab==='memorize'){
+    const mcqs = bioAllMcqsForTopic(topic.id);
+    if(!mcqs.length){
+      body = `<p style="color:var(--ink-soft);font-size:13.5px;">No MCQs tagged for this topic yet.</p>`;
+    } else {
+      const cards = mcqs.map(m=>({
+        prompt: `${escapeHtml(m.question)}`,
+        answer: m.answer,
+        options: shuffleArr([...m.options]),
+        explanation: m.explanation,
+      }));
+      body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">True 4-option MCQs, board-style quick recall. Spaced repetition (Leitner boxes) resurfaces the ones you get wrong more often.</p>${renderMemoMode('memo-bio-topic-'+topic.id, cards, 'memoAnswer')}`;
+    }
+  } else if(tab==='keydefs'){
+    body = topic.subtopics.map(s=>`
+      <div class="lesson-card">
+        <h2>🔑 ${escapeHtml(s.name)}</h2>
+        ${renderBioDefBoxes(s)}
+      </div>
+    `).join('');
+  }
+
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToTopics()">← ${escapeHtml(chapter.name)}</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${escapeHtml(topic.name)}</h1>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
+    ${renderTopicMetaStrip('biology', topic.id)}
+    <div class="eng-tabs">${tabsHtml}</div>
+    <div>${body}</div>
+  `;
+}
+
+const BIO_SUBTOPIC_TABS = [
+  {id:'learn', label:'Learn'},
+  {id:'practice', label:'Practice Zone'},
+];
+const bioSubtopicTabState = {};
+function setBioSubtopicTab(subtopicId, tab){ bioSubtopicTabState[subtopicId] = tab; renderDashboardBody(); }
+
+function renderBioSubtopicPage(chapter, topic, subtopic){
+  const tab = bioSubtopicTabState[subtopic.id] || 'learn';
+  const tabsHtml = BIO_SUBTOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setBioSubtopicTab('${subtopic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+  const learnedKey = 'bio-subtopic-'+subtopic.id;
+  const learned = learnedItems.has(learnedKey);
+
+  let body = '';
+  if(tab==='learn'){
+    body = `
+      ${renderBioDefBoxes(subtopic)}
+      <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
+      <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
+      ${subtopic.flowchart ? `<div class="lesson-card"><h2>🔁 ${escapeHtml(subtopic.name)}</h2>${renderFlowchart(subtopic.flowchart)}</div>` : ''}
+      ${subtopic.diffTable ? renderDiffTable(subtopic.diffTable) : ''}
+      <button class="btn btn-primary mark-learned-btn" ${learned?'disabled':''} onclick="markLearned('${learnedKey}')" style="${learned?'background:var(--green);':''}">
+        ${learned?'✓ Marked as learned':'Mark this subtopic as learned'}
+      </button>
+      ${renderPrereqNext('biology', BIO_CHAPTERS, subtopic.id, 'jumpBioSubtopic')}
+    `;
+  } else if(tab==='practice'){
+    const qs = BIO_QA_BANK.filter(q=>q.subtopic===subtopic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('bio-subtopic-'+subtopic.id, qs, {marks:true})}`;
+  }
+
+  const inner = `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backBioToTopic()">← ${escapeHtml(topic.name)}</button>
+    <div style="margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+      <div>
+        <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
+        <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
+      </div>
+      ${bookmarkBtn('bio-subtopic-'+subtopic.id, {label:subtopic.name, subject:'biology', chapterId:chapter.id, topicId:topic.id, subtopicId:subtopic.id, kind:'Subtopic'})}
+    </div>
+    <div class="eng-tabs">${tabsHtml}</div>
+    <div>${body}</div>
+  `;
+  return renderLessonFlow('bio', topic.subtopics, subtopic.id, 'openBioSubtopic', inner);
 }
 
 /* ============================================================
