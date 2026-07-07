@@ -701,7 +701,7 @@ const SUBJECTS = [
   { id:'economics', name:'Economics', emoji:'⚖️', color:'#0EA5E9', bg:'#E8F7FF', enabled:true },
   { id:'physics', name:'Physics', emoji:'⚛️', color:'#3B82F6', bg:'#EAF2FF', enabled:false },
   { id:'biology', name:'Biology', emoji:'🌿', color:'#16A34A', bg:'#EAFBEF', enabled:false },
-  { id:'math', name:'Mathematics', emoji:'∑', color:'#D97706', bg:'#FEF3E2', enabled:false },
+  { id:'math', name:'Mathematics', emoji:'∑', color:'#D97706', bg:'#FEF3E2', enabled:true },
   { id:'psychology', name:'Psychology', emoji:'🧠', color:'#DB2777', bg:'#FDECF3', enabled:false },
 ];
 
@@ -2595,12 +2595,538 @@ const ECON_QA_BANK = [
 ];
 
 /* ============================================================
+   MATHEMATICS — ISC Grades XI & XII. Same Chapter > Topic >
+   Subtopic hierarchy as Economics, with `grade`, `formulas`,
+   `graph` (line/circle/parabola via the InteractiveGraph engine)
+   and `numericalGen` on subtopics where applicable.
+   ============================================================ */
+const MATH_CHAPTERS = [
+  { id:'sets-functions', grade:11, name:'Sets & Functions', icon:'🔢',
+    topics:[
+      { id:'sets-topic', name:'Sets',
+        subtopics:[
+          { id:'sets-basics', name:'Sets & Set Operations', keywords:['set','union','intersection','complement','subset'],
+            def2:'A set is a well-defined collection of distinct objects. Union (A∪B) combines elements of both sets; intersection (A∩B) takes only common elements.',
+            def3:'Union: A∪B = {x : x∈A or x∈B}. Intersection: A∩B = {x : x∈A and x∈B}. Complement A′ is everything in the universal set not in A. Example: if A={1,2,3}, B={2,3,4}, then A∪B={1,2,3,4} and A∩B={2,3}.',
+            def5:'Sets are the foundational language of mathematics, and set operations let us combine or compare collections precisely. Union (A∪B) contains every element in either set; intersection (A∩B) contains only elements common to both; the complement (A′) contains everything in the universal set outside A; and set difference (A−B) contains elements in A but not B. These operations obey algebraic laws directly analogous to arithmetic — De Morgan\'s Laws state (A∪B)′ = A′∩B′ and (A∩B)′ = A′∪B′, which are frequently tested. Venn diagrams provide the standard visual proof technique for these laws, and set operations underlie later topics like relations, functions, and probability (where events are treated as sets of outcomes).',
+            memoryTrick:'Union = "OR" (combine everything); Intersection = "AND" (only what\'s shared).',
+            example:'If A = {students who play cricket} and B = {students who play football}, then A∩B is the set of students who play both sports.',
+            formulas:[{ name:"De Morgan's Laws", expr:"(A∪B)′ = A′∩B′;  (A∩B)′ = A′∪B′", derivation:'Proved using Venn diagrams or by showing each side contains exactly the same elements via direct element-wise argument.', units:'—', mistakes:'Swapping ∪ and ∩ when taking the complement — students often forget the operation flips.' }] },
+          { id:'venn-diagrams', name:'Venn Diagrams & Cardinality', keywords:['venn diagram','cardinality','n(a∪b)'],
+            def2:'A Venn diagram visually represents sets as overlapping circles; cardinality n(A) is the number of elements in set A.',
+            def3:'The cardinality formula n(A∪B) = n(A) + n(B) − n(A∩B) avoids double-counting elements common to both sets, and is frequently used in word problems about overlapping groups (e.g. students studying multiple subjects).',
+            def5:'Venn diagrams give a visual proof method for set identities and a practical tool for solving cardinality word problems. The key formula n(A∪B) = n(A) + n(B) − n(A∩B) corrects for double-counting: elements in both A and B are counted once in n(A) and once in n(B), so their count must be subtracted once. This extends to three sets: n(A∪B∪C) = n(A)+n(B)+n(C) − n(A∩B) − n(B∩C) − n(A∩C) + n(A∩B∩C), a common source of exam word problems involving three overlapping groups (e.g. students who like tea, coffee, both, neither).',
+            memoryTrick:'n(A∪B) = n(A) + n(B) − n(A∩B) — always subtract the overlap once.',
+            example:'In a class of 50, if 30 like tea, 25 like coffee, and 10 like both, then n(tea∪coffee) = 30+25−10 = 45 students like at least one drink.',
+            formulas:[{ name:'Cardinality of Union', expr:'n(A∪B) = n(A) + n(B) − n(A∩B)', derivation:'Elements common to both sets are counted twice when adding n(A) and n(B), so subtracting n(A∩B) once corrects the double-count.', units:'Count (no units)', mistakes:'Forgetting to subtract the intersection, which overcounts elements present in both sets.' }],
+            numericalGen:'set-cardinality' },
+        ]},
+      { id:'relations-functions-11', name:'Relations & Functions',
+        subtopics:[
+          { id:'relations-basics', name:'Relations (Domain, Range, Types)', keywords:['relation','domain','range','ordered pair'],
+            def2:'A relation from set A to set B is a subset of the Cartesian product A×B — a set of ordered pairs.',
+            def3:'The domain is the set of all first elements of the ordered pairs; the range is the set of all second elements. A relation can be reflexive, symmetric, or transitive depending on how its pairs behave.',
+            def5:'A relation R from set A to set B is formally any subset of A×B, so it consists of ordered pairs (a,b) where a∈A and b∈B. The domain of R is the set of all first components actually used, and the range is the set of all second components actually used (a subset of the co-domain B). Relations are classified by properties: reflexive (every element relates to itself), symmetric (if a relates to b, then b relates to a), and transitive (if a relates to b and b relates to c, then a relates to c) — a relation satisfying all three is called an equivalence relation, a concept extended further in Grade 12.',
+            memoryTrick:'Domain = inputs used; Range = outputs actually produced.',
+            example:'The relation "is a factor of" on the set {1,2,3,4,6,12} includes the pair (3,12) since 3 is a factor of 12.' },
+          { id:'functions-basics', name:'Functions (Types & Domain/Range)', keywords:['function','one-to-one','onto','domain','range'],
+            def2:'A function is a relation where every element of the domain maps to exactly one element of the range.',
+            def3:'A one-to-one (injective) function maps distinct inputs to distinct outputs. An onto (surjective) function covers the entire co-domain. A function that is both is called a bijection, and only bijections have proper inverses.',
+            def5:'A function f: A→B assigns to every element of A exactly one element of B — this "exactly one" condition is what distinguishes a function from a general relation. Functions are classified by how they map: one-to-one (injective) functions never send two different inputs to the same output; onto (surjective) functions have every element of the co-domain hit by at least one input; a bijective function is both one-to-one and onto, and only bijective functions have a genuine inverse function, since inverting requires both that no output is repeated (injective) and that every output is reachable (surjective). Finding domain and range in practice usually means identifying restrictions — such as excluding values that make a denominator zero or a square root negative.',
+            memoryTrick:'Injective = no output repeats; Surjective = every output is hit; Bijective = both, so it can be inverted.',
+            example:'f(x) = 1/x is one-to-one but not onto the full real numbers (0 is never an output); f(x) = x³ is both one-to-one and onto, so it is bijective and invertible.',
+            graph:{ title:'A Simple Linear Function f(x) = mx + c', xLabel:'x', yLabel:'f(x)', xMax:20, yMax:20, shiftRange:10,
+              curves:[ {id:'fn', label:'f(x)', color:'#c94a05', p1:[0,10], p2:[20,18], draggable:true} ],
+              note:'Drag to shift the function vertically — this changes c (the intercept) without changing its slope (rate of change).' } },
+        ]},
+      { id:'trig-functions', name:'Trigonometric Functions',
+        subtopics:[
+          { id:'trig-ratios-identities', name:'Trigonometric Ratios & Identities', keywords:['sin','cos','tan','identity','radian'],
+            def2:'Trigonometric ratios (sin, cos, tan, etc.) relate angles to side ratios in a right triangle, extended to all real angles using radians.',
+            def3:'The fundamental identity sin²θ + cos²θ = 1 holds for all θ. Angles are measured in radians (π radians = 180°), and functions repeat periodically (sin and cos have period 2π).',
+            def5:'Trigonometric functions extend the right-triangle ratios of sine, cosine and tangent to all real-numbered angles by using the unit circle definition, measured in radians rather than degrees for calculus compatibility (since π radians = 180°). The Pythagorean identity sin²θ + cos²θ = 1 follows directly from the unit circle definition and generates related identities: 1+tan²θ = sec²θ and 1+cot²θ = cosec²θ. Compound angle formulas — sin(A±B), cos(A±B) — allow angles to be split or combined, and are essential for solving trigonometric equations and simplifying expressions in exams.',
+            memoryTrick:'sin²θ + cos²θ = 1 is the parent identity; divide through by cos²θ or sin²θ to get the other two.',
+            example:'Since sin30° = 1/2 and cos30° = √3/2, checking the identity: (1/2)² + (√3/2)² = 1/4 + 3/4 = 1. ✓',
+            formulas:[{ name:'Compound Angle Formula', expr:'sin(A+B) = sinA·cosB + cosA·sinB', derivation:'Proved geometrically using a unit circle construction or via rotation matrices (seen later in the course).', units:'—', mistakes:'Writing sin(A+B) = sinA + sinB, which is incorrect — trigonometric functions do not distribute over addition.' }] },
+          { id:'trig-equations', name:'Trigonometric Equations', keywords:['general solution','trigonometric equation','principal value'],
+            def2:'A trigonometric equation is solved by finding all angles satisfying it, expressed as a general solution using the periodicity of the functions.',
+            def3:'Example: sinθ = 1/2 has principal solutions θ = 30° or 150°, and the general solution θ = nπ + (−1)ⁿ(π/6) for any integer n, capturing every angle where the equation holds.',
+            def5:'Solving trigonometric equations requires using the periodic nature of sine, cosine and tangent to express not just one solution but the entire infinite family of solutions, using an integer parameter n (n∈ℤ). The general solution formulas differ by function: for sinθ = sinα, θ = nπ + (−1)ⁿα; for cosθ = cosα, θ = 2nπ ± α; for tanθ = tanα, θ = nπ + α. Board exams typically expect the general solution to be stated in this exact form, since a single numeric answer omits the infinitely many other valid angles.',
+            memoryTrick:'sin general solution has the (−1)ⁿ twist; cos general solution has the ± twist; tan general solution is the simplest (just +nπ).',
+            example:'Solving cosθ = 1/2 gives the general solution θ = 2nπ ± π/3, covering every angle coterminal with 60° or −60°.' },
+        ]},
+    ]},
+  { id:'algebra-11', grade:11, name:'Algebra', icon:'🧮',
+    topics:[
+      { id:'complex-quadratic', name:'Complex Numbers & Quadratic Equations',
+        subtopics:[
+          { id:'complex-numbers', name:'Complex Numbers', keywords:['complex number','imaginary','modulus','argand'],
+            def2:'A complex number z = a + bi has a real part a and an imaginary part b, where i = √−1.',
+            def3:'Complex numbers are added, subtracted, and multiplied like binomials, using i² = −1. The modulus |z| = √(a²+b²) measures its distance from the origin on the Argand plane.',
+            def5:'Complex numbers extend the real number system to include square roots of negative numbers, defined via i = √−1 so that i² = −1. Every complex number z = a+bi can be represented as a point (a,b) on the Argand plane, where the modulus |z| = √(a²+b²) gives its distance from the origin, and the argument (arg z) gives the angle it makes with the positive real axis — together forming the polar form z = r(cosθ + i·sinθ). The conjugate of z = a+bi is z̄ = a−bi, and multiplying a complex number by its conjugate always yields a real number (a²+b²), a trick used to rationalise complex denominators.',
+            memoryTrick:'i² = −1 is the one rule that generates all complex number arithmetic.',
+            example:'For z = 3+4i, the modulus |z| = √(9+16) = √25 = 5, and multiplying by its conjugate (3−4i) gives 9+16 = 25, a real number.',
+            formulas:[{ name:'Modulus of a Complex Number', expr:'|z| = √(a² + b²) for z = a + bi', derivation:'Follows from the Pythagorean theorem, treating the real and imaginary parts as perpendicular legs of a right triangle on the Argand plane.', units:'Same units as a, b', mistakes:'Forgetting to take the square root, or mixing up modulus (a distance, always non-negative) with the argument (an angle).' }] },
+          { id:'quadratic-equations', name:'Quadratic Equations', keywords:['quadratic formula','discriminant','roots'],
+            def2:'A quadratic equation ax²+bx+c=0 (a≠0) is solved using the quadratic formula, giving up to two roots.',
+            def3:'The discriminant D = b²−4ac determines the nature of the roots: D>0 gives two distinct real roots, D=0 gives one repeated real root, and D<0 gives two complex conjugate roots.',
+            def5:'Every quadratic equation ax²+bx+c=0 can be solved using the quadratic formula x = (−b ± √(b²−4ac)) / 2a, derived by completing the square on the general quadratic. The discriminant D = b²−4ac, the expression under the square root, determines the nature of the roots without needing to compute them fully: a positive discriminant gives two distinct real roots (the parabola crosses the x-axis twice), a zero discriminant gives one repeated real root (the parabola touches the x-axis at its vertex), and a negative discriminant gives two complex conjugate roots (the parabola never touches the x-axis). The sum and product of roots relate directly to the coefficients: sum = −b/a, product = c/a, a shortcut frequently used to construct or verify quadratic equations without solving them fully.',
+            memoryTrick:'D>0: two real roots; D=0: one repeated root; D<0: complex roots — the parabola "misses" the x-axis.',
+            example:'For x²−5x+6=0, D = 25−24 = 1 > 0, giving two distinct real roots x=2 and x=3 (sum=5=−(−5)/1, product=6=6/1, confirming the shortcut).',
+            formulas:[{ name:'Quadratic Formula', expr:'x = (−b ± √(b² − 4ac)) / 2a', derivation:'Derived by dividing the equation by a, completing the square on the x terms, and isolating x.', units:'Same units as x', mistakes:'Forgetting the ± sign (missing one of the two roots), or making a sign error when substituting negative values of b or c.' }],
+            numericalGen:'quadratic-roots',
+            graph:{ title:'A Parabola: y = a(x−h)² + k', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:8,
+              curves:[ {id:'parab', type:'parabola', label:'Parabola', color:'#c94a05', a:0.15, h:10, k:2, xRange:[0,20], draggable:true} ],
+              note:'Drag to shift the parabola vertically (changing k, the vertex height) — notice how this changes whether it crosses the x-axis (real roots) or not (complex roots).' } },
+        ]},
+      { id:'sequences-series', name:'Sequences & Series',
+        subtopics:[
+          { id:'arithmetic-progression', name:'Arithmetic Progression (AP)', keywords:['arithmetic progression','common difference','nth term'],
+            def2:'An arithmetic progression (AP) is a sequence where each term differs from the previous one by a constant common difference (d).',
+            def3:'The nth term is aₙ = a + (n−1)d, where a is the first term. The sum of the first n terms is Sₙ = n/2 [2a + (n−1)d].',
+            def5:'An arithmetic progression is defined by a first term a and a constant common difference d, so consecutive terms always differ by the same amount. The nth term formula aₙ = a + (n−1)d lets any term be found directly without listing the whole sequence, and the sum formula Sₙ = n/2 [2a + (n−1)d] (equivalently n/2 [a + l] where l is the last term) allows quick summation of long sequences. A key property is that three numbers a, b, c are in AP if and only if 2b = a+c (b is the arithmetic mean of its neighbours) — a frequently tested shortcut for verifying or constructing an AP.',
+            memoryTrick:'AP: add the same number each time. Sum formula = average of first and last term, times number of terms.',
+            example:'For the AP 3, 7, 11, 15,... with a=3, d=4: the 10th term = 3+(10−1)(4) = 39, and the sum of the first 10 terms = 10/2[2(3)+9(4)] = 5×42 = 210.',
+            formulas:[{ name:'AP nth Term & Sum', expr:'aₙ = a + (n−1)d;  Sₙ = n/2 [2a + (n−1)d]', derivation:'The nth term formula follows by adding d exactly (n−1) times to the first term. The sum formula is derived by pairing the first and last terms, second and second-last, etc., each pair summing to the same constant (2a+(n−1)d).', units:'Same units as the terms', mistakes:'Using n instead of (n−1) in the nth term formula, an off-by-one error.' }],
+            numericalGen:'ap-nth-term' },
+          { id:'geometric-progression', name:'Geometric Progression (GP)', keywords:['geometric progression','common ratio','sum to infinity'],
+            def2:'A geometric progression (GP) is a sequence where each term is obtained by multiplying the previous term by a constant common ratio (r).',
+            def3:'The nth term is aₙ = ar^(n−1). The sum of the first n terms is Sₙ = a(rⁿ−1)/(r−1) for r≠1. If |r|<1, the sum to infinity converges to S∞ = a/(1−r).',
+            def5:'A geometric progression is defined by a first term a and a constant common ratio r, so each term is r times the one before it. The nth term formula aₙ = ar^(n−1) allows direct computation of any term, and the finite sum formula Sₙ = a(rⁿ−1)/(r−1) sums the first n terms. When |r| < 1, successive terms shrink toward zero, and the infinite sum converges to a finite value, S∞ = a/(1−r) — this result underlies applications like recurring decimals and certain economic multiplier calculations. Three numbers a, b, c are in GP if and only if b² = ac (b is the geometric mean).',
+            memoryTrick:'GP: multiply by the same ratio each time. If |r|<1, an infinite GP still sums to a finite number.',
+            example:'The GP 2, 6, 18, 54,... has a=2, r=3, so the 6th term = 2×3⁵ = 486. For the GP 1, 1/2, 1/4,... with r=1/2, the sum to infinity = 1/(1−1/2) = 2.',
+            formulas:[{ name:'GP nth Term, Sum & Sum to Infinity', expr:'aₙ = ar^(n−1);  Sₙ = a(rⁿ−1)/(r−1);  S∞ = a/(1−r) for |r|<1', derivation:'The sum formula is derived by multiplying Sₙ by r, subtracting from the original Sₙ, and solving — most terms cancel, leaving a(rⁿ−1)/(r−1). Letting n→∞ with |r|<1 makes rⁿ→0, giving S∞ = a/(1−r).', units:'Same units as the terms', mistakes:'Applying the sum-to-infinity formula when |r|≥1, where the series does not actually converge.' }],
+            numericalGen:'gp-nth-term' },
+        ]},
+      { id:'perm-comb-binomial', name:'Permutations, Combinations & Binomial Theorem',
+        subtopics:[
+          { id:'permutations-combinations', name:'Permutations & Combinations', keywords:['permutation','combination','factorial','arrangement'],
+            def2:'A permutation counts arrangements where order matters; a combination counts selections where order does not matter.',
+            def3:'Permutations of n items taken r at a time: ⁿPᵣ = n!/(n−r)!. Combinations: ⁿCᵣ = n!/(r!(n−r)!). Example: arranging 3 books from 5 (order matters) uses P; choosing 3 books from 5 (order doesn\'t matter) uses C.',
+            def5:'Permutations and combinations both count ways of selecting r items from n, but they differ crucially on whether order matters. Permutations (ⁿPᵣ = n!/(n−r)!) count ordered arrangements, appropriate for problems like arranging people in a line or assigning distinct roles. Combinations (ⁿCᵣ = n!/(r!(n−r)!) = ⁿPᵣ/r!) count unordered selections, appropriate for problems like choosing a committee or a hand of cards, and are obtained by dividing the permutation count by r! to remove the r! ways of ordering each selected group. Since ⁿCᵣ = ⁿCₙ₋ᵣ, choosing r items to include is equivalent to choosing n−r items to exclude — a symmetry frequently used to simplify calculations.',
+            memoryTrick:'Permutation cares about order (Position matters); Combination does not (Committee/group only).',
+            example:'Choosing 2 students from 5 to form a team (order irrelevant) uses ⁵C₂ = 10 ways; assigning 2 of those 5 students to "President" and "Secretary" (order matters) uses ⁵P₂ = 20 ways.',
+            formulas:[{ name:'Permutations & Combinations', expr:'ⁿPᵣ = n! / (n−r)!;  ⁿCᵣ = n! / (r!(n−r)!)', derivation:'ⁿPᵣ counts ordered selections by filling r positions one at a time from n, n−1, n−2,... remaining choices. ⁿCᵣ divides this by r! since each unordered group of r items can be arranged in r! different orders.', units:'Count (no units)', mistakes:'Using the permutation formula for a problem where order does not matter (or vice versa) — always check whether the problem cares about arrangement.' }],
+            numericalGen:'permutations-combinations' },
+          { id:'binomial-theorem', name:'Binomial Theorem', keywords:['binomial theorem','binomial coefficient','general term'],
+            def2:'The Binomial Theorem expands (x+y)ⁿ as a sum of terms involving binomial coefficients ⁿCᵣ.',
+            def3:'(x+y)ⁿ = Σ (from r=0 to n) ⁿCᵣ xⁿ⁻ʳ yʳ. The general term (r+1)th term is Tᵣ₊₁ = ⁿCᵣ xⁿ⁻ʳ yʳ, used to find a specific term (like the coefficient of a particular power) without expanding the whole expression.',
+            def5:'The Binomial Theorem gives a systematic formula for expanding any power of a binomial: (x+y)ⁿ = Σᵣ₌₀ⁿ ⁿCᵣ xⁿ⁻ʳ yʳ, where the coefficients ⁿCᵣ are exactly the combinations from Pascal\'s Triangle. The general term formula, Tᵣ₊₁ = ⁿCᵣ xⁿ⁻ʳ yʳ, is the more exam-relevant tool, since board questions typically ask for a specific term (e.g. "the term independent of x" or "the coefficient of x⁵") rather than the full expansion — this is found by setting the exponent of the relevant variable to the required value and solving for r.',
+            memoryTrick:'The exponents of x and y in each term always add up to n.',
+            example:'To find the term independent of x in (x + 1/x)⁶, set the exponent of x to zero: Tᵣ₊₁ = ⁶Cᵣ x⁶⁻ʳ (1/x)ʳ = ⁶Cᵣ x⁶⁻²ʳ, so 6−2r=0 gives r=3, and the term is ⁶C₃ = 20.',
+            formulas:[{ name:'General Term of Binomial Expansion', expr:'Tᵣ₊₁ = ⁿCᵣ xⁿ⁻ʳ yʳ', derivation:'Follows directly from the full binomial expansion by isolating the (r+1)th term in the summation.', units:'—', mistakes:'Confusing the "rth term" with the "(r+1)th term" — the general term formula is indexed starting from T₁ = term when r=0.' }] },
+        ]},
+    ]},
+  { id:'coordinate-geometry-11', grade:11, name:'Coordinate Geometry', icon:'📐',
+    topics:[
+      { id:'straight-lines', name:'Straight Lines',
+        subtopics:[
+          { id:'line-equations', name:'Slope & Equations of a Line', keywords:['slope','equation of a line','intercept'],
+            def2:'The slope of a line measures its steepness: m = (y2−y1)/(x2−x1). The equation y = mx+c describes a line with slope m and y-intercept c.',
+            def3:'Other useful forms include point-slope form y−y1 = m(x−x1), and two-point form (y−y1)/(x−x1) = (y2−y1)/(x2−x1). Parallel lines have equal slopes; perpendicular lines have slopes multiplying to −1.',
+            def5:'A straight line can be represented in several equivalent forms depending on the information given: slope-intercept form (y=mx+c) is most useful when the slope and y-intercept are known; point-slope form (y−y1=m(x−x1)) is useful when a point and slope are known; two-point form is useful when two points are known; and intercept form (x/a + y/b = 1) is useful when both axis intercepts are known. Two lines are parallel if and only if their slopes are equal (m1=m2), and perpendicular if and only if the product of their slopes is −1 (m1·m2 = −1) — both frequently tested conditions. The general form Ax+By+C=0 covers all lines including vertical ones (which have undefined slope and cannot be written in slope-intercept form).',
+            memoryTrick:'Parallel: same slope. Perpendicular: slopes multiply to −1 ("negative reciprocal").',
+            example:'A line through (1,2) with slope 3 has equation y−2 = 3(x−1), simplifying to y = 3x−1; a line perpendicular to it has slope −1/3.',
+            formulas:[{ name:'Slope Formula', expr:'m = (y2 − y1) / (x2 − x1)', derivation:'Slope is defined as the ratio of vertical change (rise) to horizontal change (run) between any two points on the line.', units:'—', mistakes:'Swapping the order of subtraction between numerator and denominator (must use the same point order in both).' }],
+            graph:{ title:'A Straight Line', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:10,
+              curves:[ {id:'line1', label:'y = mx + c', color:'#c94a05', p1:[0,4], p2:[20,16], draggable:true} ],
+              note:'Drag to shift the line vertically (changing c) while its slope stays constant — try comparing with a second line to check the parallel condition.' } },
+          { id:'distance-angle-formulas', name:'Distance & Angle Between Lines', keywords:['distance formula','angle between lines','perpendicular distance'],
+            def2:'The distance from a point to a line, and the angle between two lines, can both be computed directly from their equations.',
+            def3:'Perpendicular distance from point (x1,y1) to line Ax+By+C=0 is |Ax1+By1+C| / √(A²+B²). The angle θ between two lines with slopes m1, m2 satisfies tanθ = |(m1−m2)/(1+m1m2)|.',
+            def5:'Two key formulas connect points, lines and angles in coordinate geometry. The perpendicular distance from a point (x1,y1) to a line Ax+By+C=0 is |Ax1+By1+C| / √(A²+B²), derived by finding the foot of the perpendicular and computing the distance directly — this is the formula used for finding the shortest distance from a point to a line, not the distance along any other path. The angle between two lines with slopes m1 and m2 is found via tanθ = |(m1−m2)/(1+m1m2)|; a zero result confirms parallel lines, and an undefined result (denominator zero) confirms perpendicular lines, connecting back to the parallel/perpendicular slope conditions.',
+            memoryTrick:'Distance to a line = plug the point into the line equation, take absolute value, divide by √(A²+B²).',
+            example:'The distance from (0,0) to the line 3x+4y−10=0 is |3(0)+4(0)−10| / √(9+16) = 10/5 = 2 units.',
+            formulas:[{ name:'Perpendicular Distance from a Point to a Line', expr:'d = |Ax1 + By1 + C| / √(A² + B²)', derivation:'Derived by minimising the distance from the point to a general point on the line using calculus, or via a geometric projection argument.', units:'Same units as the coordinates', mistakes:'Forgetting the absolute value, which can give a negative "distance."' }] },
+        ]},
+      { id:'conic-sections', name:'Conic Sections',
+        subtopics:[
+          { id:'circle-conic', name:'Circle', keywords:['circle','centre','radius','standard equation'],
+            def2:'A circle is the set of all points equidistant (radius r) from a fixed point (centre). Standard equation: (x−h)² + (y−k)² = r² for centre (h,k).',
+            def3:'When the centre is at the origin, the equation simplifies to x²+y² = r². The general form x²+y²+2gx+2fy+c=0 has centre (−g,−f) and radius √(g²+f²−c).',
+            def5:'A circle is defined as the locus of points at a fixed distance (the radius) from a fixed point (the centre), giving the standard equation (x−h)²+(y−k)² = r². This expands into the general form x²+y²+2gx+2fy+c=0, from which the centre (−g,−f) and radius √(g²+f²−c) can be recovered by comparing coefficients — a common exam task working backward from a general equation. A given equation represents a real circle only if g²+f²−c > 0; if this expression equals zero the "circle" degenerates to a single point, and if negative, no real circle exists.',
+            memoryTrick:'Standard form directly shows centre (h,k) and radius r; general form needs g²+f²−c to recover the radius.',
+            example:'The equation x²+y²−4x+6y−12=0 has 2g=−4 so g=−2, and 2f=6 so f=3, giving centre (2,−3) and radius √(4+9+12)=5.',
+            formulas:[{ name:'Circle: General to Standard Form', expr:'Centre = (−g, −f);  Radius = √(g² + f² − c)', derivation:'Obtained by completing the square on both x and y terms in the general equation x²+y²+2gx+2fy+c=0.', units:'Same units as coordinates', mistakes:'Forgetting to halve the coefficients of x and y before reading off −g and −f (the general form uses 2g and 2f, not g and f directly).' }],
+            graph:{ title:'A Circle: (x−h)² + (y−k)² = r²', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:5,
+              curves:[ {id:'circ1', type:'circle', label:'Circle', color:'#c94a05', cx:10, cy:10, r:6, draggable:true} ],
+              note:'Drag to shift the circle vertically (changing k, the y-coordinate of the centre) while the radius stays fixed.' } },
+          { id:'parabola-conic', name:'Parabola', keywords:['parabola','focus','directrix','vertex'],
+            def2:'A parabola is the set of points equidistant from a fixed point (focus) and a fixed line (directrix). Standard equation: y² = 4ax.',
+            def3:'For y²=4ax, the focus is at (a,0) and the directrix is x=−a. The parabola opens rightward if a>0. Other standard forms (y²=−4ax, x²=4ay, x²=−4ay) open left, up, or down respectively.',
+            def5:'A parabola is the locus of points equidistant from a fixed point, the focus, and a fixed line, the directrix — this equidistance condition is what generates the characteristic curved shape. For the standard form y²=4ax, the vertex is at the origin, the focus is at (a,0), and the directrix is the vertical line x=−a; the parabola opens toward the focus (rightward for a>0). The latus rectum, the chord through the focus perpendicular to the axis, has length 4a and is a frequently tested measurement. The three other standard orientations (y²=−4ax opening left, x²=4ay opening up, x²=−4ay opening down) follow the same pattern with axes swapped or signs flipped.',
+            memoryTrick:'y²=4ax opens toward positive x; the sign and squared variable tell you the opening direction.',
+            example:'For y²=8x, comparing to y²=4ax gives 4a=8 so a=2; the focus is at (2,0), the directrix is x=−2, and the latus rectum has length 8.',
+            formulas:[{ name:'Parabola (Standard Form)', expr:'y² = 4ax  (vertex at origin, focus at (a,0), directrix x = −a)', derivation:'Derived directly from the equidistance definition: setting the distance from a point (x,y) to the focus (a,0) equal to its distance to the directrix x=−a, then simplifying.', units:'Same units as coordinates', mistakes:'Mixing up which variable is squared — y² = 4ax opens along the x-axis, while x² = 4ay opens along the y-axis.' } ] },
+        ]},
+      { id:'3d-geometry-intro', name:'Introduction to Three-Dimensional Geometry',
+        subtopics:[
+          { id:'3d-coordinates-distance', name:'3D Coordinates & Distance Formula', keywords:['three dimensional','distance formula','octant'],
+            def2:'A point in 3D space is located by three coordinates (x,y,z), one for each axis. The distance between two points extends the 2D distance formula with a third coordinate.',
+            def3:'Distance between (x1,y1,z1) and (x2,y2,z2) is √[(x2−x1)² + (y2−y1)² + (z2−z1)²]. The three coordinate planes divide space into 8 octants, analogous to the 4 quadrants in 2D.',
+            def5:'Three-dimensional coordinate geometry extends familiar 2D concepts by adding a third axis (z), so every point is located by an ordered triple (x,y,z). The distance formula generalises directly by Pythagoras applied twice: √[(x2−x1)²+(y2−y1)²+(z2−z1)²]. The three coordinate planes (xy, yz, zx) divide space into 8 octants (compared to 4 quadrants in the plane), and the section formula (for finding a point dividing a segment in a given ratio) also extends naturally by applying the 2D formula to each coordinate separately. This chapter builds essential groundwork for the fuller treatment of vectors and 3D geometry in Grade 12.',
+            memoryTrick:'3D distance formula = 2D distance formula + one more squared term for z.',
+            example:'The distance between (1,2,3) and (4,6,3) is √[(3)²+(4)²+(0)²] = √25 = 5 units.',
+            formulas:[{ name:'3D Distance Formula', expr:'d = √[(x2−x1)² + (y2−y1)² + (z2−z1)²]', derivation:'Apply the 2D distance formula within the xy-plane first to get the horizontal distance, then apply Pythagoras once more with the vertical (z) difference as the second leg.', units:'Same units as coordinates', mistakes:'Forgetting the z-coordinate term entirely, effectively solving the problem as if it were 2D.' }] },
+        ]},
+    ]},
+  { id:'calculus-11', grade:11, name:'Calculus', icon:'📈',
+    topics:[
+      { id:'limits-derivatives', name:'Limits & Derivatives',
+        subtopics:[
+          { id:'limits-basics', name:'Limits', keywords:['limit','left hand limit','right hand limit','indeterminate form'],
+            def2:'The limit of a function f(x) as x approaches a is the value f(x) gets arbitrarily close to, written lim(x→a) f(x) = L.',
+            def3:'A limit exists at a point only if the left-hand limit (x→a⁻) and right-hand limit (x→a⁺) both exist and are equal. Indeterminate forms like 0/0 often require algebraic simplification (factoring, rationalising) before the limit can be evaluated directly.',
+            def5:'A limit describes the value a function approaches as the input gets arbitrarily close to a point, without necessarily requiring the function to be defined, or equal to that value, exactly at that point. Formally, the limit exists at x=a only if the left-hand limit (approaching from values less than a) and the right-hand limit (approaching from values greater than a) both exist and are equal to each other. When direct substitution gives an indeterminate form such as 0/0, algebraic techniques — factoring and cancelling common terms, or rationalising a numerator/denominator involving square roots — usually resolve the limit. Standard results, such as lim(x→0) (sinx)/x = 1, are frequently used building blocks for more complex limit problems.',
+            memoryTrick:'A limit exists only if both one-sided limits agree — check both sides, not just direct substitution.',
+            example:'lim(x→2) (x²−4)/(x−2) initially gives 0/0, but factoring the numerator as (x−2)(x+2) allows cancellation, giving lim(x→2) (x+2) = 4.' },
+          { id:'derivatives-basics', name:'Derivatives (First Principles & Basic Rules)', keywords:['derivative','first principles','power rule','product rule'],
+            def2:'The derivative of f(x) measures its instantaneous rate of change, defined as f\'(x) = lim(h→0) [f(x+h) − f(x)] / h.',
+            def3:'Basic rules include the power rule (d/dx xⁿ = nxⁿ⁻¹), and standard derivatives for sin x, cos x, eˣ, and ln x. The product and quotient rules extend differentiation to combinations of functions.',
+            def5:'The derivative of a function at a point is defined as the limit of the average rate of change over a shrinking interval — formally f\'(x) = lim(h→0) [f(x+h)−f(x)]/h — which geometrically represents the slope of the tangent line to the curve at that point. While this "first principles" definition is foundational and occasionally tested directly (e.g. proving d/dx(sinx)=cosx from the limit definition), in practice standard rules are used: the power rule (d/dx xⁿ = nxⁿ⁻¹), sum/difference rule (derivatives add/subtract termwise), product rule (d/dx[uv] = u\'v + uv\'), and quotient rule (d/dx[u/v] = (u\'v − uv\') / v²). These rules combine to differentiate virtually any algebraic or trigonometric expression encountered at this level.',
+            memoryTrick:'First principles derivative = slope of a shrinking secant line, becoming the tangent line in the limit.',
+            example:'Using first principles for f(x)=x²: f\'(x) = lim(h→0) [(x+h)²−x²]/h = lim(h→0) [2xh+h²]/h = lim(h→0) (2x+h) = 2x, matching the power rule.',
+            formulas:[{ name:'Derivative from First Principles', expr:"f'(x) = lim(h→0) [f(x+h) − f(x)] / h", derivation:'Defined as the limiting slope of the secant line through (x,f(x)) and (x+h,f(x+h)) as h shrinks to zero.', units:'Units of f(x) per unit of x', mistakes:'Substituting h=0 directly without simplifying first, which always gives the indeterminate form 0/0 rather than the actual derivative.' }],
+            numericalGen:'differentiation-power-rule',
+            graph:{ title:'Tangent Line to a Curve', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:10,
+              curves:[ {id:'parab', type:'parabola', label:'y = 0.1x²', color:'#1e8e5a', a:0.1, h:10, k:0, xRange:[0,20], draggable:false},
+                       {id:'tangent', label:'Tangent line', color:'#c94a05', p1:[0,8], p2:[20,12], draggable:true} ],
+              note:'Drag the tangent line to see how only one specific position actually touches the curve at a single point without crossing it — that position is the true tangent.' } },
+        ]},
+    ]},
+  { id:'stats-probability-11', grade:11, name:'Statistics & Probability', icon:'📊',
+    topics:[
+      { id:'statistics-11', name:'Statistics (Dispersion)',
+        subtopics:[
+          { id:'mean-deviation-variance', name:'Mean Deviation, Variance & Standard Deviation', keywords:['mean deviation','variance','standard deviation'],
+            def2:'Mean deviation, variance and standard deviation all measure how spread out data is around its mean.',
+            def3:'Mean deviation = average of |x − mean| for all data points. Variance = average of (x − mean)² for all data points. Standard deviation = √variance, returning the measure to original units.',
+            def5:'These three measures quantify dispersion with increasing mathematical sophistication. Mean deviation averages the absolute differences from the mean, treating positive and negative deviations equally without needing squaring, but it is less amenable to further algebraic manipulation. Variance instead squares each deviation before averaging (Σ(x−x̄)²/n), which avoids the awkwardness of absolute values and gives greater weight to larger deviations, but results in units that are squared relative to the original data. Standard deviation, the square root of variance, restores the original units, making it the most commonly reported and interpreted measure of spread — for example, in a normal distribution, roughly 68% of data lies within one standard deviation of the mean.',
+            memoryTrick:'Mean deviation uses |...|; Variance squares the deviations; SD = √variance (back to original units).',
+            example:'For data {2,4,6,8}, the mean is 5; mean deviation = (3+1+1+3)/4 = 2; variance = (9+1+1+9)/4 = 5; SD = √5 ≈ 2.24.',
+            formulas:[{ name:'Variance & Standard Deviation', expr:'Variance = Σ(x−x̄)² / n;  SD = √Variance', derivation:'Deviations from the mean are squared (to eliminate negative signs and emphasise larger gaps), summed, and averaged; the square root then returns the result to the original units.', units:'Variance in squared units; SD in original units', mistakes:'Reporting variance when standard deviation was asked for (or vice versa) — always check units in the question.' }],
+            numericalGen:'variance-sd' },
+        ]},
+      { id:'probability-11', name:'Probability',
+        subtopics:[
+          { id:'probability-basics', name:'Basic Probability & Addition Theorem', keywords:['probability','sample space','addition theorem','mutually exclusive'],
+            def2:'Probability of an event E is P(E) = (favourable outcomes) / (total outcomes), always between 0 and 1.',
+            def3:'The Addition Theorem states P(A∪B) = P(A) + P(B) − P(A∩B), correcting for double-counting when events overlap. For mutually exclusive events (which cannot occur together), P(A∩B)=0, simplifying to P(A∪B) = P(A) + P(B).',
+            def5:'Probability quantifies the likelihood of an event as a ratio of favourable outcomes to the total number of equally likely outcomes in the sample space, always yielding a value between 0 (impossible) and 1 (certain). The Addition Theorem, P(A∪B) = P(A) + P(B) − P(A∩B), directly parallels the set cardinality formula for n(A∪B), since probability is fundamentally built on treating events as sets of outcomes. When two events are mutually exclusive (they share no outcomes, so cannot both occur), P(A∩B)=0 and the theorem simplifies to simple addition. Complementary events (E and "not E") always satisfy P(E) + P(E\') = 1, a frequently used shortcut when it is easier to compute the probability of an event not happening.',
+            memoryTrick:'P(A∪B) = P(A) + P(B) − P(A∩B) — exactly the same logic as the set cardinality formula.',
+            example:'Rolling a fair die, let A = "even number" (P=3/6) and B = "greater than 4" (P=2/6); A∩B = {6} (P=1/6). So P(A∪B) = 3/6+2/6−1/6 = 4/6 = 2/3.',
+            formulas:[{ name:'Addition Theorem of Probability', expr:'P(A∪B) = P(A) + P(B) − P(A∩B)', derivation:'Directly mirrors the set cardinality formula n(A∪B)=n(A)+n(B)−n(A∩B), since probability of an event is the cardinality of its outcome-set divided by the total sample space size.', units:'—', mistakes:'Forgetting to subtract P(A∩B) when events are not mutually exclusive, resulting in double-counted probability.' }],
+            numericalGen:'basic-probability' },
+        ]},
+    ]},
+  { id:'relations-functions-12', grade:12, name:'Relations & Functions', icon:'🔗',
+    topics:[
+      { id:'relations-functions-extended', name:'Relations & Functions (Extended)',
+        subtopics:[
+          { id:'equivalence-relations', name:'Equivalence Relations', keywords:['reflexive','symmetric','transitive','equivalence relation'],
+            def2:'An equivalence relation is one that is reflexive, symmetric, and transitive all at once.',
+            def3:'Reflexive: every element relates to itself (aRa). Symmetric: if aRb then bRa. Transitive: if aRb and bRc then aRc. An equivalence relation partitions its set into disjoint equivalence classes.',
+            def5:'An equivalence relation satisfies three properties simultaneously: reflexivity (every element is related to itself), symmetry (the relation works in both directions), and transitivity (relations chain together). What makes equivalence relations especially important is that any equivalence relation on a set partitions that set into disjoint equivalence classes — subsets where every element is related to every other element in the same class, and no element is related to anything outside its class. This connects directly to everyday examples: "has the same birthday month as" is an equivalence relation on people, partitioning them into 12 birthday-month classes.',
+            memoryTrick:'Equivalence relation = Reflexive + Symmetric + Transitive (all three, together).',
+            example:'"Is congruent to" on the set of all triangles is an equivalence relation: every triangle is congruent to itself (reflexive), if triangle A is congruent to B then B is congruent to A (symmetric), and congruence chains transitively.' },
+          { id:'inverse-trig-functions', name:'Inverse Trigonometric Functions', keywords:['inverse trig','principal value','domain restriction'],
+            def2:'Inverse trigonometric functions (sin⁻¹x, cos⁻¹x, tan⁻¹x, etc.) reverse the trigonometric functions, restricted to a principal value range so they remain functions.',
+            def3:'Since sin, cos, tan are periodic (many-to-one), their domains must be restricted before inverting: sin⁻¹x has range [−π/2, π/2], cos⁻¹x has range [0,π], tan⁻¹x has range (−π/2, π/2).',
+            def5:'Because trigonometric functions are periodic and therefore many-to-one over their natural domain, they are not directly invertible — inverting requires first restricting the domain to a range where the function is one-to-one, called the principal value branch. sin⁻¹x is defined with range [−π/2, π/2], cos⁻¹x with range [0, π], and tan⁻¹x with range (−π/2, π/2), chosen by convention to keep the inverse functions single-valued and continuous. Board exams frequently test identities relating these functions, such as sin⁻¹x + cos⁻¹x = π/2 for all x in [−1,1], and simplification problems requiring careful attention to which quadrant the principal value falls in.',
+            memoryTrick:'sin⁻¹ and cos⁻¹ are complementary: sin⁻¹x + cos⁻¹x = π/2 always (for valid x).',
+            example:'sin⁻¹(1/2) = π/6 (not 5π/6, even though sin(5π/6)=1/2 too) because π/6 is the value within the principal range [−π/2,π/2].' },
+        ]},
+    ]},
+  { id:'matrices-determinants', grade:12, name:'Matrices & Determinants', icon:'⬛',
+    topics:[
+      { id:'matrices-topic', name:'Matrices',
+        subtopics:[
+          { id:'matrix-basics-operations', name:'Matrix Basics & Operations', keywords:['matrix','addition','multiplication','transpose'],
+            def2:'A matrix is a rectangular array of numbers arranged in rows and columns. Matrices can be added, subtracted, and multiplied following specific rules.',
+            def3:'Matrix addition/subtraction requires identical dimensions, done element-by-element. Matrix multiplication requires the number of columns in the first matrix to equal the number of rows in the second, and is NOT commutative (AB ≠ BA in general).',
+            def5:'A matrix organises numbers into rows and columns, denoted by its order (rows × columns). Addition and subtraction require matrices of identical order and are performed element-by-element. Multiplication is more restrictive: matrix A (order m×n) can be multiplied by matrix B only if B has n rows, and the resulting product has order m×(columns of B); crucially, matrix multiplication is generally not commutative, so AB and BA can be entirely different (or one may not even be defined while the other is). The transpose of a matrix (Aᵀ), formed by swapping rows and columns, satisfies (AB)ᵀ = BᵀAᵀ (note the reversed order), a frequently tested property.',
+            memoryTrick:'Matrix multiplication order matters: AB ≠ BA in general. "Rows of A meet columns of B" for multiplication to be valid.',
+            example:'A 2×3 matrix can be multiplied by a 3×2 matrix (giving a 2×2 result), but not by another 2×3 matrix, since the column count of the first (3) does not match the row count of the second (2).',
+            formulas:[{ name:'Matrix Multiplication Compatibility', expr:'A(m×n) × B(n×p) = C(m×p)', derivation:'Each entry of C is computed as the dot product of a row of A and a column of B, which requires A\'s columns to match B\'s rows in count.', units:'—', mistakes:'Assuming AB = BA, which is false in general for matrices, unlike ordinary number multiplication.' }],
+            numericalGen:'matrix-multiplication' },
+        ]},
+      { id:'determinants-topic', name:'Determinants',
+        subtopics:[
+          { id:'determinant-basics', name:'Determinants & Inverse of a Matrix', keywords:['determinant','adjoint','inverse matrix','singular'],
+            def2:'The determinant of a square matrix is a single number summarising key properties, such as whether the matrix is invertible.',
+            def3:'For a 2×2 matrix [[a,b],[c,d]], the determinant = ad−bc. A matrix has an inverse only if its determinant is non-zero (a "singular" matrix, with determinant zero, has no inverse). The inverse is A⁻¹ = adj(A)/|A|.',
+            def5:'The determinant is a single scalar value computed from a square matrix that reveals crucial structural information: a non-zero determinant means the matrix is invertible ("non-singular") and its corresponding system of linear equations has a unique solution; a zero determinant means the matrix is "singular," has no inverse, and its associated system either has no solution or infinitely many. For a 2×2 matrix, the determinant ad−bc is computed directly; for larger matrices, expansion along a row or column (using cofactors) is used. The inverse of a matrix, when it exists, is given by A⁻¹ = adj(A)/|A|, where adj(A) is the adjoint (transpose of the cofactor matrix) — this inverse is essential for solving matrix equations like AX=B by computing X=A⁻¹B.',
+            memoryTrick:'Determinant = 0 means "no inverse exists" — think of it as the matrix collapsing information.',
+            example:'For A = [[2,3],[1,4]], |A| = (2)(4)−(3)(1) = 8−3 = 5 ≠ 0, so A is invertible, and A⁻¹ = (1/5)[[4,−3],[−1,2]].',
+            formulas:[{ name:'2×2 Determinant & Inverse', expr:'|A| = ad − bc;  A⁻¹ = (1/|A|) [[d,−b],[−c,a]]', derivation:'The inverse formula is derived from the adjoint method: swap the diagonal entries, negate the off-diagonal entries, then divide every entry by the determinant.', units:'—', mistakes:'Attempting to find A⁻¹ when |A|=0 — a singular matrix has no inverse at all.' }],
+            numericalGen:'determinant-2x2' },
+        ]},
+    ]},
+  { id:'calculus-12', grade:12, name:'Calculus', icon:'∫',
+    topics:[
+      { id:'continuity-differentiability', name:'Continuity & Differentiability',
+        subtopics:[
+          { id:'continuity-basics', name:'Continuity', keywords:['continuity','discontinuity','continuous function'],
+            def2:'A function f(x) is continuous at x=a if lim(x→a) f(x) = f(a) — the limit exists, the function is defined there, and they match.',
+            def3:'Continuity requires three conditions simultaneously: f(a) is defined, lim(x→a) f(x) exists (both one-sided limits are equal), and the limit equals f(a). Failing any one condition means the function is discontinuous at that point.',
+            def5:'Continuity at a point formalises the intuitive idea of a function having "no break" there, requiring three conditions to hold together: f(a) must be defined (the function has a value there), the limit lim(x→a) f(x) must exist (both one-sided limits agree), and this limit must equal f(a) itself (not some other value). A function that is continuous at every point of an interval is called continuous on that interval. Common examples of discontinuity include removable discontinuities (where the limit exists but doesn\'t match f(a), or f(a) is undefined) and jump discontinuities (where the one-sided limits disagree entirely, common in piecewise functions).',
+            memoryTrick:'Continuity needs all three: f(a) defined, limit exists, and limit = f(a).',
+            example:'f(x) = (x²−1)/(x−1) is undefined at x=1 (a removable discontinuity), even though lim(x→1) f(x) = 2, because f(1) itself is not defined.' },
+          { id:'differentiability-rules', name:'Differentiability & Advanced Rules', keywords:['differentiability','chain rule','implicit differentiation','logarithmic differentiation'],
+            def2:'Differentiability at a point means the derivative exists there; every differentiable function is continuous, but not every continuous function is differentiable.',
+            def3:'The Chain Rule differentiates composite functions: d/dx[f(g(x))] = f\'(g(x))·g\'(x). Implicit differentiation handles equations not solved for y explicitly. Logarithmic differentiation simplifies differentiating products, quotients, or variable exponents by taking logs first.',
+            def5:'A function is differentiable at a point if its derivative exists there, which requires the function to be continuous at that point first (differentiability implies continuity, but the reverse is false — for example, |x| is continuous at x=0 but not differentiable there, since the left and right derivatives disagree, creating a "corner"). The Chain Rule, d/dx[f(g(x))] = f\'(g(x))·g\'(x), is essential for differentiating nested (composite) functions and is used constantly throughout the rest of the calculus syllabus. Implicit differentiation is used when y cannot easily be isolated (e.g. x²+y²=25), differentiating both sides with respect to x and treating y as a function of x (applying the chain rule to any y term). Logarithmic differentiation is a technique for functions like y=xˣ or complicated products/quotients, where taking the natural log of both sides first converts multiplication into addition, making the derivative far easier to compute.',
+            memoryTrick:'Differentiable ⟹ Continuous, but Continuous does NOT imply Differentiable (think of the sharp corner in |x|).',
+            example:'For y = (sin x)ˣ, logarithmic differentiation is the practical approach: take ln of both sides to get ln y = x·ln(sin x), then differentiate implicitly.',
+            formulas:[{ name:'Chain Rule', expr:"d/dx[f(g(x))] = f'(g(x)) · g'(x)", derivation:'Follows from treating the composite function as a chain of small changes: a small change in x causes a small change in g(x), which in turn causes a small change in f(g(x)); multiplying these rates of change together gives the total rate.', units:'—', mistakes:'Forgetting to multiply by the derivative of the inner function (g\'(x)) — a very common omission when differentiating nested functions.' }],
+            numericalGen:'differentiation-power-rule' },
+        ]},
+      { id:'applications-derivatives', name:'Applications of Derivatives',
+        subtopics:[
+          { id:'increasing-decreasing-maxima-minima', name:'Maxima, Minima & Increasing/Decreasing Functions', keywords:['maxima','minima','critical point','second derivative test'],
+            def2:'A function is increasing where f\'(x)>0 and decreasing where f\'(x)<0. Maxima and minima occur at critical points where f\'(x)=0.',
+            def3:'The First Derivative Test checks the sign of f\'(x) on either side of a critical point: changing from + to − indicates a maximum; − to + indicates a minimum. The Second Derivative Test is a shortcut: f\'\'(x)<0 confirms a maximum, f\'\'(x)>0 confirms a minimum, at a critical point.',
+            def5:'Derivatives reveal a function\'s shape: where f\'(x)>0 the function is increasing (rising left to right), and where f\'(x)<0 it is decreasing. Critical points, where f\'(x)=0 or is undefined, are candidates for local maxima or minima. The First Derivative Test examines how the sign of f\'(x) changes across a critical point — from positive to negative signals a local maximum, from negative to positive signals a local minimum, and no sign change means it is neither (an inflection-like point). The Second Derivative Test offers a faster check at a critical point: if f\'\'(x)<0 the function is concave down there (a maximum), if f\'\'(x)>0 it is concave up (a minimum); if f\'\'(x)=0 the test is inconclusive and the first derivative test must be used instead. These techniques underlie real-world optimisation problems, such as finding the dimensions that minimise the material used for a given volume.',
+            memoryTrick:'f\'\'(x) < 0 → cave-in shape (∩) → maximum; f\'\'(x) > 0 → cup shape (∪) → minimum.',
+            example:'For f(x)=x³−3x, f\'(x)=3x²−3=0 gives critical points x=±1; f\'\'(x)=6x, so f\'\'(1)=6>0 (minimum at x=1) and f\'\'(−1)=−6<0 (maximum at x=−1).',
+            formulas:[{ name:'Second Derivative Test', expr:"At a critical point: f''(x) < 0 ⟹ local maximum;  f''(x) > 0 ⟹ local minimum", derivation:'Concavity, measured by the second derivative, describes whether the slope itself is increasing or decreasing near the critical point, which directly determines whether the curve bends into a peak or a trough there.', units:'—', mistakes:'Applying the second derivative test when f\'\'(x)=0, where the test is inconclusive — the first derivative test or higher-order tests must be used instead.' }] },
+          { id:'tangents-normals', name:'Tangents & Normals', keywords:['tangent line','normal line','slope of tangent'],
+            def2:'The tangent to a curve at a point has slope equal to the derivative there; the normal is perpendicular to the tangent at that same point.',
+            def3:'Tangent equation: y−y1 = f\'(x1)(x−x1). Normal equation: y−y1 = −1/f\'(x1) · (x−x1), using the negative reciprocal slope since tangent and normal are perpendicular.',
+            def5:'At any point on a differentiable curve, the tangent line touches the curve and has slope exactly equal to the derivative evaluated at that point, f\'(x1). The normal line is defined as the line perpendicular to the tangent at that same point, so its slope is the negative reciprocal of the tangent\'s slope, −1/f\'(x1) — directly using the perpendicular-lines condition from coordinate geometry. Both lines pass through the same point (x1,y1) on the curve, so their equations are found using the point-slope form with the appropriate slope substituted in.',
+            memoryTrick:'Tangent slope = f\'(x1); Normal slope = −1/f\'(x1) (negative reciprocal, since they are perpendicular).',
+            example:'For y=x² at the point (2,4), f\'(x)=2x so the tangent slope is 4, giving tangent equation y−4=4(x−2); the normal slope is −1/4, giving y−4=−1/4(x−2).',
+            graph:{ title:'Tangent Line to y = x² at a Point', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:10,
+              curves:[ {id:'curve', type:'parabola', label:'y = 0.1x²', color:'#1e8e5a', a:0.1, h:10, k:0, xRange:[0,20], draggable:false},
+                       {id:'tangent', label:'Tangent line', color:'#c94a05', p1:[0,6], p2:[20,10], draggable:true} ],
+              note:'Drag the tangent line up or down — only one position actually touches the curve at exactly one point without crossing it.' } },
+        ]},
+      { id:'integrals-topic', name:'Integrals',
+        subtopics:[
+          { id:'indefinite-integration', name:'Indefinite Integration', keywords:['indefinite integral','antiderivative','integration by substitution','integration by parts'],
+            def2:'Indefinite integration finds the antiderivative of a function — reversing differentiation — and always includes an arbitrary constant (+C).',
+            def3:'Basic rules mirror differentiation in reverse: ∫xⁿdx = xⁿ⁺¹/(n+1) + C (for n≠−1). Integration by substitution simplifies complex integrals via a variable change; integration by parts, ∫u dv = uv − ∫v du, handles products of functions.',
+            def5:'Indefinite integration is the reverse process of differentiation: finding a function F(x) whose derivative is the given f(x), written ∫f(x)dx = F(x) + C, where the constant C accounts for the fact that infinitely many functions share the same derivative (differing only by a constant). Direct integration formulas mirror differentiation rules in reverse. Integration by substitution (writing u=g(x) to simplify the integral into a standard form) works when a function and its derivative both appear in the integrand. Integration by parts, ∫u dv = uv − ∫v du, is used for products of dissimilar functions (like x·eˣ or x·sinx), with the choice of u typically guided by the mnemonic "ILATE" (Inverse trig, Logarithmic, Algebraic, Trigonometric, Exponential — prioritised in that order as u).',
+            memoryTrick:'ILATE order for choosing u in integration by parts: Inverse trig, Log, Algebraic, Trig, Exponential.',
+            example:'∫x·eˣ dx using integration by parts with u=x, dv=eˣdx gives du=dx, v=eˣ, so the integral = x·eˣ − ∫eˣdx = x·eˣ − eˣ + C.',
+            formulas:[{ name:'Integration by Parts', expr:'∫u dv = uv − ∫v du', derivation:'Derived by reversing the product rule for differentiation: d/dx(uv) = u\'v + uv\', then integrating both sides and rearranging.', units:'—', mistakes:'Choosing u and dv in the wrong order (not following ILATE), which can make the resulting integral more complicated rather than simpler.' }],
+            numericalGen:'basic-integration' },
+          { id:'definite-integration', name:'Definite Integration', keywords:['definite integral','fundamental theorem of calculus','limits of integration'],
+            def2:'A definite integral ∫[a to b] f(x)dx computes the net signed area under the curve between x=a and x=b, evaluated as F(b)−F(a).',
+            def3:'The Fundamental Theorem of Calculus links definite integrals to antiderivatives: if F\'(x)=f(x), then ∫[a to b] f(x)dx = F(b)−F(a). Properties include ∫[a to b] f(x)dx = −∫[b to a] f(x)dx, and splitting the interval at any point c: ∫[a to b] = ∫[a to c] + ∫[c to b].',
+            def5:'The definite integral computes the net signed area between a curve and the x-axis over a specific interval [a,b], with area below the axis counted as negative. The Fundamental Theorem of Calculus is what makes definite integrals computable in practice: rather than summing infinitely many infinitesimal strips directly, it suffices to find any antiderivative F(x) of f(x) and compute F(b)−F(a). Key properties simplify calculations: reversing the limits of integration negates the integral; splitting the interval at an intermediate point c allows the integral to be computed in pieces; and if f(x) is an odd function, ∫[−a to a] f(x)dx = 0, while if f(x) is even, ∫[−a to a] f(x)dx = 2∫[0 to a] f(x)dx — both useful shortcuts for symmetric intervals.',
+            memoryTrick:'Definite integral = F(b) − F(a), where F is any antiderivative — the "+C" always cancels out.',
+            example:'∫[0 to 2] x²dx = [x³/3] from 0 to 2 = 8/3 − 0 = 8/3.',
+            numericalGen:'definite-integral' },
+        ]},
+      { id:'applications-integrals', name:'Applications of Integrals',
+        subtopics:[
+          { id:'area-under-curve', name:'Area Under a Curve', keywords:['area under curve','area between curves'],
+            def2:'The area under a curve y=f(x) between x=a and x=b (above the x-axis) equals the definite integral ∫[a to b] f(x)dx.',
+            def3:'When a curve dips below the x-axis, that portion contributes a negative value to the plain integral, so the actual (positive) area requires taking the absolute value of that portion separately. The area between two curves f(x) and g(x) (with f above g) is ∫[a to b] [f(x)−g(x)]dx.',
+            def5:'The definite integral gives the exact area under a curve by treating the region as infinitely many infinitesimally thin vertical strips and summing them — precisely the geometric meaning behind ∫[a to b] f(x)dx. Care is needed when a curve crosses the x-axis within the interval: the plain integral computes signed area, so portions below the axis subtract rather than add, meaning the actual geometric area requires splitting the interval at the crossing point(s) and taking the absolute value of each piece separately before summing. Finding the area between two curves generalises this by integrating the difference of the two functions (upper curve minus lower curve) across their interval of overlap, first finding their intersection points as the limits of integration.',
+            memoryTrick:'Signed area from a plain integral can be negative; true geometric area always requires taking absolute values of any below-axis portions.',
+            example:'The area between y=x and y=x² from x=0 to x=1 (where x is on top) is ∫[0 to 1] (x−x²)dx = [x²/2 − x³/3] from 0 to 1 = 1/2−1/3 = 1/6.',
+            graph:{ title:'Area Under a Parabola', xLabel:'x', yLabel:'y', xMax:20, yMax:20, shiftRange:5,
+              curves:[ {id:'curve', type:'parabola', label:'y = 0.15x²', color:'#c94a05', a:0.15, h:0, k:2, xRange:[0,15], draggable:true} ],
+              note:'Drag the curve up or down to see how the enclosed area between it and the x-axis would change.' } },
+        ]},
+      { id:'differential-equations', name:'Differential Equations',
+        subtopics:[
+          { id:'de-basics-variable-separable', name:'Differential Equations & Variable Separable Method', keywords:['differential equation','order','degree','variable separable'],
+            def2:'A differential equation involves derivatives of an unknown function. Its order is the highest derivative present; its degree is the power of that highest derivative.',
+            def3:'The variable separable method solves equations of the form dy/dx = g(x)h(y) by rearranging so all y-terms (with dy) are on one side and all x-terms (with dx) are on the other, then integrating both sides.',
+            def5:'A differential equation relates a function to its own derivatives, and solving it means finding the original function. The order of a differential equation is the highest-order derivative appearing in it (e.g. an equation involving d²y/dx² has order 2), and the degree is the power to which that highest-order derivative is raised (after the equation has been made free of fractional or negative powers of derivatives). The variable separable method applies when a first-order equation can be algebraically rearranged into the form f(y)dy = g(x)dx, with all y-terms on one side and all x-terms on the other; integrating both sides independently then yields the general solution (containing an arbitrary constant), and a given initial condition can pin down the specific ("particular") solution.',
+            memoryTrick:'Variable separable: get all y\'s (with dy) on one side, all x\'s (with dx) on the other, then integrate both sides.',
+            example:'For dy/dx = xy, separating gives dy/y = x dx; integrating both sides gives ln|y| = x²/2 + C, so y = Ae^(x²/2) for constant A.' },
+        ]},
+    ]},
+  { id:'vectors-3d-geometry', grade:12, name:'Vectors & 3D Geometry', icon:'➡️',
+    topics:[
+      { id:'vector-algebra', name:'Vector Algebra',
+        subtopics:[
+          { id:'vector-basics-dot-cross', name:'Vectors, Dot Product & Cross Product', keywords:['vector','dot product','cross product','magnitude'],
+            def2:'A vector has both magnitude and direction. The dot product of two vectors gives a scalar; the cross product gives a vector perpendicular to both.',
+            def3:'Dot product: a·b = |a||b|cosθ, used to find the angle between vectors or to check perpendicularity (a·b=0). Cross product: a×b = |a||b|sinθ n̂ (where n̂ is a unit vector perpendicular to both), used to find area of a parallelogram/triangle or a vector perpendicular to two given vectors.',
+            def5:'Vectors represent quantities with both magnitude and direction, distinguishing them from plain numbers (scalars). The dot (scalar) product, a·b = |a||b|cosθ = a1b1+a2b2+a3b3 in component form, produces a scalar and is used to find the angle between two vectors or to test perpendicularity, since a·b=0 exactly when the vectors are perpendicular (given both are non-zero). The cross (vector) product, a×b, produces a new vector perpendicular to both original vectors, with magnitude |a||b|sinθ equal to the area of the parallelogram formed by a and b — making it directly useful for area and volume calculations, and its direction is found using the right-hand rule. Both products appear constantly throughout 3D geometry problems involving lines and planes.',
+            memoryTrick:'Dot product → scalar (measures alignment/angle); Cross product → vector (measures perpendicular area).',
+            example:'For a=(1,0,0) and b=(0,1,0), a·b=0 (they are perpendicular), and a×b=(0,0,1), a unit vector perpendicular to both, with magnitude 1 equal to the area of the unit square they form.',
+            formulas:[{ name:'Dot Product & Cross Product', expr:'a·b = |a||b|cosθ;  |a×b| = |a||b|sinθ', derivation:'The dot product formula follows from the law of cosines applied to the triangle formed by a, b, and (a−b). The cross product magnitude follows from the geometric definition of a parallelogram\'s area as base times height, with sinθ providing the height component.', units:'Dot product: scalar; Cross product: vector, magnitude in area units', mistakes:'Confusing when to use dot vs cross product — dot product answers questions about angle/perpendicularity, cross product answers questions about area or finding a perpendicular vector.' }] },
+        ]},
+      { id:'3d-geometry-12', name:'Three-Dimensional Geometry',
+        subtopics:[
+          { id:'lines-planes-3d', name:'Equations of Lines & Planes in 3D', keywords:['direction ratios','equation of a line','equation of a plane'],
+            def2:'A line in 3D is described using a point on it and its direction ratios/cosines. A plane is described using a point on it and a normal vector perpendicular to it.',
+            def3:'Line (vector form): r = a + λb, where a is a position vector on the line and b gives its direction. Plane (vector form): r·n = d, where n is the normal vector to the plane and d relates to its distance from the origin.',
+            def5:'Lines and planes in three dimensions are both described relative to a reference point plus a direction: a line requires a point on it and direction ratios/cosines (proportional to a vector along the line), giving the vector equation r = a + λb where λ varies over all real numbers to trace out every point on the line. A plane requires a point on it and a normal vector n (perpendicular to the entire plane), giving the equation r·n = d. The angle between two lines is found via their direction vectors using the dot product formula; the angle between two planes is found via their normal vectors similarly; and a line is parallel to a plane exactly when its direction vector is perpendicular to the plane\'s normal vector (their dot product is zero).',
+            memoryTrick:'Lines need a direction vector; Planes need a normal vector (perpendicular to the whole plane).',
+            example:'The plane x+2y+3z=6 has normal vector (1,2,3); a line with direction vector (1,2,3) would therefore be perpendicular to this plane, not parallel to it, since its direction exactly matches the normal.' },
+        ]},
+    ]},
+  { id:'probability-lp', grade:12, name:'Probability & Linear Programming', icon:'🎲',
+    topics:[
+      { id:'conditional-probability', name:'Conditional Probability & Bayes\' Theorem',
+        subtopics:[
+          { id:'conditional-probability-basics', name:'Conditional Probability & Independence', keywords:['conditional probability','independent events','multiplication theorem'],
+            def2:'Conditional probability P(A|B) is the probability of event A occurring given that event B has already occurred.',
+            def3:'P(A|B) = P(A∩B) / P(B), provided P(B)>0. Two events are independent if P(A|B) = P(A) — knowing B occurred doesn\'t change the probability of A — which simplifies the Multiplication Theorem to P(A∩B) = P(A)·P(B).',
+            def5:'Conditional probability updates the probability of an event based on new information — specifically, that another event has already occurred — computed as P(A|B) = P(A∩B)/P(B), restricting the sample space to only those outcomes where B has already happened. Events A and B are independent precisely when this conditioning has no effect at all: P(A|B) = P(A), which algebraically simplifies the general Multiplication Theorem P(A∩B) = P(A|B)·P(B) down to the simpler P(A∩B) = P(A)·P(B) for independent events only. A common exam error is confusing "independent" events with "mutually exclusive" events — mutually exclusive events (which cannot both occur) are actually never independent (unless one has zero probability), since knowing one occurred tells you the other definitely did not.',
+            memoryTrick:'Independent: P(A∩B) = P(A)×P(B). Mutually exclusive: P(A∩B) = 0. These are NOT the same thing.',
+            example:'Drawing two cards with replacement, "first card is a King" and "second card is a King" are independent (each draw doesn\'t affect the other), so P(both Kings) = (4/52)×(4/52).',
+            numericalGen:'conditional-probability' },
+          { id:'bayes-theorem', name:'Bayes\' Theorem', keywords:['bayes theorem','total probability','posterior probability'],
+            def2:'Bayes\' Theorem reverses conditional probability, finding P(B|A) from known values of P(A|B).',
+            def3:'Bayes\' Theorem: P(Bᵢ|A) = P(A|Bᵢ)·P(Bᵢ) / Σ P(A|Bⱼ)·P(Bⱼ), where the Bⱼ partition the sample space. It is used in "reverse" probability problems, like finding the probability a product came from a specific factory given that it was found defective.',
+            def5:'Bayes\' Theorem solves the problem of reversing a conditional probability: given P(A|B), it computes P(B|A), which is often what is actually needed in real decision-making (e.g. given a positive test result, what is the probability of actually having a disease?). It relies on the Law of Total Probability to compute the denominator, summing P(A|Bⱼ)·P(Bⱼ) across every possible way event A could occur, given a partition of the sample space into mutually exclusive and exhaustive events B1, B2, ..., Bn. This "reverse" reasoning is exactly what appears in classic ISC word problems: given failure rates from three machines producing a shared batch of items, and a randomly selected item found defective, find the probability it came from a specific machine.',
+            memoryTrick:"Bayes' Theorem = reverse conditional probability, using the Law of Total Probability as its denominator.",
+            example:'If Machine A produces 60% of items with a 2% defect rate, and Machine B produces 40% with a 5% defect rate, Bayes\' Theorem finds the probability a randomly found defective item came from Machine A.' },
+        ]},
+      { id:'linear-programming', name:'Linear Programming',
+        subtopics:[
+          { id:'lp-basics', name:'Linear Programming: Formulation & Graphical Solution', keywords:['linear programming','objective function','constraints','feasible region'],
+            def2:'Linear Programming optimises (maximises or minimises) a linear objective function subject to linear constraints.',
+            def3:'The feasible region is the set of all points satisfying every constraint simultaneously, typically a polygon when graphed. The Corner Point Theorem states the optimal value of the objective function always occurs at a vertex (corner) of the feasible region, not somewhere in its interior.',
+            def5:'Linear Programming problems involve maximising or minimising a linear objective function (e.g. profit = 3x+5y) subject to a system of linear inequality constraints (e.g. limited resources). Graphing each constraint and shading the region satisfying all of them simultaneously produces the feasible region, typically a convex polygon. The Corner Point Theorem is the key result that makes these problems solvable by hand: the optimal value of any linear objective function over a bounded feasible region always occurs at one of the region\'s corner points (vertices), never at an interior point — so solving the problem reduces to finding all corner points, evaluating the objective function at each, and comparing the results.',
+            memoryTrick:'The optimal solution is always at a corner (vertex) of the feasible region — never inside it.',
+            example:'A furniture maker with limited wood and labour maximising profit from tables and chairs would graph both resource constraints, find the feasible region\'s corners, and evaluate the profit function at each corner to find the best production mix.',
+            graph:{ title:'Feasible Region (Linear Programming)', xLabel:'x (units of Product A)', yLabel:'y (units of Product B)', xMax:20, yMax:20, shiftRange:8,
+              curves:[ {id:'c1', label:'Constraint 1', color:'#c94a05', p1:[0,16], p2:[16,0], draggable:true}, {id:'c2', label:'Constraint 2', color:'#1e8e5a', p1:[0,10], p2:[20,10], draggable:true} ],
+              note:'Each line represents a resource constraint boundary — the feasible region is bounded by these lines and the axes; drag either line to see the feasible region change.' } },
+        ]},
+    ]},
+];
+
+/* ============================================================
+   MATHEMATICS PRACTICE QUESTION BANK — tagged by grade/chapter/
+   topic/subtopic/marks, same shape as ECON_QA_BANK/SOC_QA_BANK
+   for reuse with the existing grading/practice-zone engine.
+   ============================================================ */
+const MATH_QA_BANK = [
+  { id:'math-sets-1', grade:11, chapter:'Sets & Functions', topic:'Sets', subtopic:'Venn Diagrams & Cardinality', marks:4, question:'In a survey of 100 people, 60 like tea, 50 like coffee, and 30 like both. How many like neither tea nor coffee?', keywords:['cardinality','union','neither'],
+    answer:{ intro:'This problem uses the cardinality formula for the union of two sets, then subtracts from the total to find those who like neither.',
+      explanation:'Using n(Tea∪Coffee) = n(Tea) + n(Coffee) − n(Tea∩Coffee) = 60 + 50 − 30 = 80 people like at least one of the two drinks. Since the survey covered 100 people in total, the remaining 100 − 80 = 20 people like neither.',
+      conclusion:'This two-step approach — first finding the union, then subtracting from the total — is the standard method for "neither" word problems in set theory.' } },
+  { id:'math-functions-1', grade:11, chapter:'Sets & Functions', topic:'Relations & Functions', subtopic:'Functions (Types & Domain/Range)', marks:3, question:'Explain why f(x) = 1/x is not defined at x=0, and state its domain.', keywords:['domain','undefined','restriction'],
+    answer:{ intro:'f(x) = 1/x is undefined at x=0 because division by zero has no meaningful value.',
+      explanation:'As x approaches 0 from either side, 1/x grows without bound (toward positive or negative infinity), so no finite value can be assigned to f(0), making the function undefined exactly at that single point.',
+      conclusion:'The domain of f(x) = 1/x is therefore all real numbers except 0, written as ℝ − {0}.' } },
+  { id:'math-complex-1', grade:11, chapter:'Algebra', topic:'Complex Numbers & Quadratic Equations', subtopic:'Complex Numbers', marks:3, question:'Find the modulus of the complex number z = 5 − 12i.', keywords:['modulus','complex number'],
+    answer:{ intro:'The modulus of a complex number z = a+bi is given by |z| = √(a²+b²).',
+      explanation:'For z = 5 − 12i, a=5 and b=−12, so |z| = √(5² + (−12)²) = √(25+144) = √169 = 13.',
+      conclusion:'The modulus represents the distance of the point (5,−12) from the origin on the Argand plane, which is 13 units.' } },
+  { id:'math-quadratic-1', grade:11, chapter:'Algebra', topic:'Complex Numbers & Quadratic Equations', subtopic:'Quadratic Equations', marks:5, question:'Without solving, determine the nature of the roots of 2x² + 3x + 5 = 0, and explain what this means geometrically.', keywords:['discriminant','nature of roots','complex roots'],
+    answer:{ intro:'The nature of the roots of a quadratic equation can be determined from its discriminant without fully solving the equation.',
+      explanation:'For 2x²+3x+5=0, a=2, b=3, c=5, so the discriminant D = b²−4ac = 9 − 40 = −31, which is negative. A negative discriminant means the equation has two complex conjugate roots rather than real roots.',
+      conclusion:'Geometrically, this means the parabola y=2x²+3x+5 never touches or crosses the x-axis — it lies entirely above it, since the coefficient of x² is positive.' } },
+  { id:'math-ap-1', grade:11, chapter:'Algebra', topic:'Sequences & Series', subtopic:'Arithmetic Progression (AP)', marks:4, question:'The 5th term of an AP is 23 and the 9th term is 39. Find the first term and common difference.', keywords:['arithmetic progression','common difference','first term'],
+    answer:{ intro:'Two terms of an AP give two equations that can be solved simultaneously for the first term and common difference.',
+      explanation:'Using aₙ=a+(n−1)d: the 5th term gives a+4d=23, and the 9th term gives a+8d=39. Subtracting the first equation from the second: 4d=16, so d=4. Substituting back: a+4(4)=23, so a=7.',
+      conclusion:'The AP therefore has first term 7 and common difference 4, giving the sequence 7, 11, 15, 19, 23, ...' } },
+  { id:'math-gp-1', grade:11, chapter:'Algebra', topic:'Sequences & Series', subtopic:'Geometric Progression (GP)', marks:3, question:'Find the sum to infinity of the GP 8, 4, 2, 1, ...', keywords:['sum to infinity','common ratio'],
+    answer:{ intro:'Since the common ratio of this GP has absolute value less than 1, its sum to infinity converges to a finite value.',
+      explanation:'The first term a=8 and the common ratio r = 4/8 = 1/2. Since |r|<1, the sum to infinity formula applies: S∞ = a/(1−r) = 8/(1−1/2) = 8/(1/2) = 16.',
+      conclusion:'Even though this GP has infinitely many terms, they shrink fast enough that their total sum converges to exactly 16.' } },
+  { id:'math-permcomb-1', grade:11, chapter:'Algebra', topic:'Permutations, Combinations & Binomial Theorem', subtopic:'Permutations & Combinations', marks:4, question:'In how many ways can a committee of 4 people be selected from 10 people?', keywords:['combination','committee','selection'],
+    answer:{ intro:'Since a committee has no internal ordering (all members have equal status), this is a combination problem.',
+      explanation:'The number of ways to choose 4 people from 10, where order does not matter, is ¹⁰C₄ = 10!/(4!×6!) = (10×9×8×7)/(4×3×2×1) = 5040/24 = 210.',
+      conclusion:'There are 210 different possible committees, since selecting a committee is a matter of which people are chosen, not the order in which they are chosen.' } },
+  { id:'math-binomial-1', grade:11, chapter:'Algebra', topic:'Permutations, Combinations & Binomial Theorem', subtopic:'Binomial Theorem', marks:5, question:'Find the coefficient of x⁵ in the expansion of (x+2)⁸.', keywords:['general term','binomial coefficient'],
+    answer:{ intro:'The general term of a binomial expansion lets us find a specific coefficient without expanding the entire expression.',
+      explanation:'Using Tᵣ₊₁ = ⁿCᵣ xⁿ⁻ʳ yʳ with n=8, x=x, y=2: the term with xⁿ⁻ʳ=x⁵ requires n−r=5, so r=3. This gives T₄ = ⁸C₃ x⁵ (2)³ = 56 × 8 × x⁵ = 448x⁵.',
+      conclusion:'The coefficient of x⁵ in the expansion is therefore 448.' } },
+  { id:'math-lines-1', grade:11, chapter:'Coordinate Geometry', topic:'Straight Lines', subtopic:'Slope & Equations of a Line', marks:4, question:'Find the equation of the line passing through (2,3) and parallel to the line 4x−2y+5=0.', keywords:['parallel','slope','equation of a line'],
+    answer:{ intro:'Parallel lines share the same slope, so the slope of the given line can be reused to find the equation of the new line.',
+      explanation:'Rewriting 4x−2y+5=0 as y=2x+5/2 shows its slope is 2. A line parallel to it through (2,3) has the same slope, so using point-slope form: y−3 = 2(x−2), which simplifies to y = 2x−1.',
+      conclusion:'The required line has equation y = 2x − 1, or equivalently 2x − y − 1 = 0.' } },
+  { id:'math-circle-1', grade:11, chapter:'Coordinate Geometry', topic:'Conic Sections', subtopic:'Circle', marks:5, question:'Find the centre and radius of the circle x²+y²−6x+8y−11=0.', keywords:['centre','radius','general form'],
+    answer:{ intro:'Comparing the given equation to the general form of a circle reveals its centre and radius.',
+      explanation:'Comparing x²+y²−6x+8y−11=0 to x²+y²+2gx+2fy+c=0 gives 2g=−6 so g=−3, and 2f=8 so f=4, with c=−11. The centre is (−g,−f) = (3,−4), and the radius is √(g²+f²−c) = √(9+16+11) = √36 = 6.',
+      conclusion:'The circle has centre (3,−4) and radius 6 units.' } },
+  { id:'math-limits-1', grade:11, chapter:'Calculus', topic:'Limits & Derivatives', subtopic:'Limits', marks:4, question:'Evaluate lim(x→3) (x²−9)/(x−3).', keywords:['limit','indeterminate form','factoring'],
+    answer:{ intro:'Direct substitution gives the indeterminate form 0/0, so the expression must be simplified algebraically first.',
+      explanation:'Factoring the numerator: x²−9 = (x−3)(x+3). This allows the (x−3) terms to cancel (valid since x≠3 while taking the limit): lim(x→3) (x−3)(x+3)/(x−3) = lim(x→3) (x+3).',
+      conclusion:'Substituting x=3 into the simplified expression gives 3+3 = 6, so the limit equals 6.' } },
+  { id:'math-derivatives-1', grade:11, chapter:'Calculus', topic:'Limits & Derivatives', subtopic:'Derivatives (First Principles & Basic Rules)', marks:5, question:'Find the derivative of f(x) = 3x⁴ − 2x² + 7 using the power rule.', keywords:['power rule','derivative'],
+    answer:{ intro:'The power rule can be applied term by term to differentiate this polynomial.',
+      explanation:'Differentiating each term separately: d/dx(3x⁴) = 12x³, d/dx(−2x²) = −4x, and d/dx(7) = 0 (the derivative of a constant is always zero).',
+      conclusion:'Combining these gives f\'(x) = 12x³ − 4x.' } },
+  { id:'math-stats-1', grade:11, chapter:'Statistics & Probability', topic:'Statistics (Dispersion)', subtopic:'Mean Deviation, Variance & Standard Deviation', marks:5, question:'Find the variance and standard deviation of the data set {4, 8, 6, 5, 3}.', keywords:['variance','standard deviation','mean'],
+    answer:{ intro:'Variance and standard deviation are computed by first finding the mean, then measuring squared deviations from it.',
+      explanation:'The mean is (4+8+6+5+3)/5 = 26/5 = 5.2. The squared deviations are (4−5.2)²=1.44, (8−5.2)²=7.84, (6−5.2)²=0.64, (5−5.2)²=0.04, (3−5.2)²=4.84, summing to 14.8. Variance = 14.8/5 = 2.96.',
+      conclusion:'The standard deviation is √2.96 ≈ 1.72.' } },
+  { id:'math-prob-1', grade:11, chapter:'Statistics & Probability', topic:'Probability', subtopic:'Basic Probability & Addition Theorem', marks:4, question:'A card is drawn from a standard deck. Find the probability that it is a King or a Heart.', keywords:['addition theorem','mutually exclusive'],
+    answer:{ intro:'Since "King" and "Heart" can overlap (the King of Hearts), the Addition Theorem must correct for this overlap.',
+      explanation:'P(King) = 4/52, P(Heart) = 13/52, and P(King∩Heart) = 1/52 (just the King of Hearts). By the Addition Theorem, P(King∪Heart) = 4/52 + 13/52 − 1/52 = 16/52 = 4/13.',
+      conclusion:'The probability of drawing a King or a Heart is 4/13.' } },
+  { id:'math-equiv-1', grade:12, chapter:'Relations & Functions', topic:'Relations & Functions (Extended)', subtopic:'Equivalence Relations', marks:5, question:'Show that the relation "is parallel to" on the set of all lines in a plane is an equivalence relation.', keywords:['reflexive','symmetric','transitive'],
+    answer:{ intro:'To prove a relation is an equivalence relation, all three properties — reflexive, symmetric, and transitive — must be verified.',
+      explanation:'Reflexive: every line is parallel to itself. Symmetric: if line A is parallel to line B, then line B is parallel to line A. Transitive: if line A is parallel to line B, and line B is parallel to line C, then line A is parallel to line C.',
+      conclusion:'Since all three properties hold, "is parallel to" is indeed an equivalence relation, partitioning all lines in the plane into classes of mutually parallel lines.' } },
+  { id:'math-invtrig-1', grade:12, chapter:'Relations & Functions', topic:'Relations & Functions (Extended)', subtopic:'Inverse Trigonometric Functions', marks:3, question:'Find the principal value of sin⁻¹(−1/2).', keywords:['principal value','inverse trig'],
+    answer:{ intro:'The principal value of sin⁻¹x must lie within the range [−π/2, π/2].',
+      explanation:'Since sin(−π/6) = −1/2, and −π/6 lies within the required range [−π/2, π/2], this is the principal value.',
+      conclusion:'sin⁻¹(−1/2) = −π/6.' } },
+  { id:'math-matrix-1', grade:12, chapter:'Matrices & Determinants', topic:'Matrices', subtopic:'Matrix Basics & Operations', marks:5, question:'If A = [[1,2],[3,4]] and B = [[2,0],[1,2]], find AB and BA, and show that AB ≠ BA.', keywords:['matrix multiplication','non-commutative'],
+    answer:{ intro:'This problem demonstrates that matrix multiplication is not commutative by computing both AB and BA.',
+      explanation:'AB = [[1(2)+2(1), 1(0)+2(2)],[3(2)+4(1), 3(0)+4(2)]] = [[4,4],[10,8]]. BA = [[2(1)+0(3), 2(2)+0(4)],[1(1)+2(3), 1(2)+2(4)]] = [[2,4],[7,10]].',
+      conclusion:'Since AB = [[4,4],[10,8]] and BA = [[2,4],[7,10]] are different matrices, this confirms AB ≠ BA in general.' } },
+  { id:'math-det-1', grade:12, chapter:'Matrices & Determinants', topic:'Determinants', subtopic:'Determinants & Inverse of a Matrix', marks:4, question:'Determine whether the matrix A = [[2,4],[1,2]] is invertible.', keywords:['singular','determinant','invertible'],
+    answer:{ intro:'A matrix is invertible only if its determinant is non-zero.',
+      explanation:'For A = [[2,4],[1,2]], the determinant |A| = (2)(2) − (4)(1) = 4 − 4 = 0.',
+      conclusion:'Since |A| = 0, the matrix is singular and does not have an inverse.' } },
+  { id:'math-continuity-1', grade:12, chapter:'Calculus', topic:'Continuity & Differentiability', subtopic:'Continuity', marks:5, question:'Examine whether f(x) = (x²−1)/(x−1) for x≠1, f(1)=2, is continuous at x=1.', keywords:['continuity','removable discontinuity'],
+    answer:{ intro:'Checking continuity at x=1 requires comparing the limit of f(x) as x approaches 1 with the actual defined value f(1).',
+      explanation:'lim(x→1) (x²−1)/(x−1) = lim(x→1) (x−1)(x+1)/(x−1) = lim(x→1) (x+1) = 2. The function is defined with f(1)=2, and this matches the limit.',
+      conclusion:'Since the limit exists, f(1) is defined, and they are equal (both equal 2), f(x) is continuous at x=1.' } },
+  { id:'math-chainrule-1', grade:12, chapter:'Calculus', topic:'Continuity & Differentiability', subtopic:'Differentiability & Advanced Rules', marks:4, question:'Differentiate y = sin(3x² + 1) with respect to x.', keywords:['chain rule'],
+    answer:{ intro:'This is a composite function, so the Chain Rule must be applied.',
+      explanation:'Let u = 3x²+1 (the inner function), so y = sin(u). Then dy/du = cos(u) and du/dx = 6x. By the Chain Rule, dy/dx = dy/du × du/dx = cos(3x²+1) × 6x.',
+      conclusion:'dy/dx = 6x·cos(3x²+1).' } },
+  { id:'math-maxima-1', grade:12, chapter:'Calculus', topic:'Applications of Derivatives', subtopic:'Maxima, Minima & Increasing/Decreasing Functions', marks:6, question:'Find the local maximum and minimum values of f(x) = x³ − 3x² − 9x + 5.', keywords:['critical point','second derivative test'],
+    answer:{ intro:'Local maxima and minima are found by locating critical points and then applying the second derivative test.',
+      explanation:'f\'(x) = 3x²−6x−9 = 3(x²−2x−3) = 3(x−3)(x+1), giving critical points x=3 and x=−1. The second derivative f\'\'(x)=6x−6: at x=3, f\'\'(3)=12>0 (local minimum); at x=−1, f\'\'(−1)=−12<0 (local maximum).',
+      conclusion:'f(x) has a local maximum at x=−1 (value f(−1)=10) and a local minimum at x=3 (value f(3)=−22).' } },
+  { id:'math-integration-1', grade:12, chapter:'Calculus', topic:'Integrals', subtopic:'Indefinite Integration', marks:5, question:'Evaluate ∫ x·ln(x) dx.', keywords:['integration by parts','ilate'],
+    answer:{ intro:'Since this is a product of an algebraic function and a logarithmic function, integration by parts is required, with ILATE guiding the choice of u.',
+      explanation:'By ILATE, logarithmic functions are chosen as u before algebraic ones, so u=ln(x), dv=x dx, giving du=(1/x)dx, v=x²/2. Applying ∫u dv = uv − ∫v du: = (x²/2)ln(x) − ∫(x²/2)(1/x)dx = (x²/2)ln(x) − ∫(x/2)dx = (x²/2)ln(x) − x²/4 + C.',
+      conclusion:'∫x·ln(x)dx = (x²/2)ln(x) − x²/4 + C.' } },
+  { id:'math-definiteintegral-1', grade:12, chapter:'Calculus', topic:'Integrals', subtopic:'Definite Integration', marks:4, question:'Evaluate ∫ from 1 to 3 of (2x+1) dx.', keywords:['fundamental theorem of calculus'],
+    answer:{ intro:'This definite integral is evaluated using the Fundamental Theorem of Calculus.',
+      explanation:'The antiderivative of 2x+1 is x²+x. Evaluating from 1 to 3: [3²+3] − [1²+1] = [9+3] − [1+1] = 12 − 2 = 10.',
+      conclusion:'The definite integral equals 10.' } },
+  { id:'math-area-1', grade:12, chapter:'Calculus', topic:'Applications of Integrals', subtopic:'Area Under a Curve', marks:6, question:'Find the area bounded by the curve y=x² and the lines x=1, x=3, and the x-axis.', keywords:['area under curve','definite integral'],
+    answer:{ intro:'The area under a curve above the x-axis is found using a definite integral.',
+      explanation:'Area = ∫ from 1 to 3 of x² dx = [x³/3] from 1 to 3 = (27/3) − (1/3) = 9 − 1/3 = 26/3.',
+      conclusion:'The bounded area is 26/3 square units.' } },
+  { id:'math-de-1', grade:12, chapter:'Calculus', topic:'Differential Equations', subtopic:'Differential Equations & Variable Separable Method', marks:5, question:'Solve the differential equation dy/dx = y/x, given that y=2 when x=1.', keywords:['variable separable','particular solution'],
+    answer:{ intro:'This first-order differential equation can be solved using the variable separable method.',
+      explanation:'Separating variables: dy/y = dx/x. Integrating both sides: ln|y| = ln|x| + C, which simplifies to y = Ax for some constant A. Using the initial condition y=2 when x=1: 2 = A(1), so A=2.',
+      conclusion:'The particular solution is y = 2x.' } },
+  { id:'math-vectors-1', grade:12, chapter:'Vectors & 3D Geometry', topic:'Vector Algebra', subtopic:'Vectors, Dot Product & Cross Product', marks:5, question:'Find the angle between the vectors a = (1,1,0) and b = (1,0,1).', keywords:['dot product','angle between vectors'],
+    answer:{ intro:'The angle between two vectors is found using the dot product formula a·b = |a||b|cosθ.',
+      explanation:'a·b = (1)(1)+(1)(0)+(0)(1) = 1. |a| = √(1+1+0) = √2, |b| = √(1+0+1) = √2. So cosθ = 1/(√2×√2) = 1/2.',
+      conclusion:'Since cosθ = 1/2, the angle θ = 60° (or π/3 radians).' } },
+  { id:'math-3d-1', grade:12, chapter:'Vectors & 3D Geometry', topic:'Three-Dimensional Geometry', subtopic:'Equations of Lines & Planes in 3D', marks:4, question:'Find the equation of a plane passing through the point (1,2,3) with normal vector (2,−1,4).', keywords:['equation of a plane','normal vector'],
+    answer:{ intro:'The equation of a plane can be found directly from a known point on it and its normal vector.',
+      explanation:'Using the form a(x−x1)+b(y−y1)+c(z−z1)=0 with normal (2,−1,4) and point (1,2,3): 2(x−1) − 1(y−2) + 4(z−3) = 0, which expands to 2x−2−y+2+4z−12=0.',
+      conclusion:'Simplifying gives the plane equation 2x − y + 4z − 12 = 0.' } },
+  { id:'math-bayes-1', grade:12, chapter:'Probability & Linear Programming', topic:'Conditional Probability & Bayes\' Theorem', subtopic:'Bayes\' Theorem', marks:6, question:'Two bags: Bag A has 3 red and 2 black balls; Bag B has 2 red and 4 black balls. A bag is chosen at random and a ball drawn is found to be red. Find the probability it came from Bag A.', keywords:['bayes theorem','posterior probability'],
+    answer:{ intro:'This is a classic reverse-probability problem solved using Bayes\' Theorem.',
+      explanation:'P(A)=P(B)=1/2. P(Red|A) = 3/5, P(Red|B) = 2/6 = 1/3. By Bayes\' Theorem: P(A|Red) = [P(Red|A)P(A)] / [P(Red|A)P(A) + P(Red|B)P(B)] = [(3/5)(1/2)] / [(3/5)(1/2) + (1/3)(1/2)] = (3/10) / (3/10 + 1/6).',
+      conclusion:'Computing the denominator: 3/10 + 1/6 = 9/30 + 5/30 = 14/30, so P(A|Red) = (9/30)/(14/30) = 9/14.' } },
+  { id:'math-lp-1', grade:12, chapter:'Probability & Linear Programming', topic:'Linear Programming', subtopic:'Linear Programming: Formulation & Graphical Solution', marks:6, question:'Explain the Corner Point Theorem and why it makes Linear Programming problems solvable graphically.', keywords:['corner point theorem','feasible region','optimal solution'],
+    answer:{ intro:'The Corner Point Theorem is the key result that makes graphical solutions to Linear Programming problems possible.',
+      explanation:'The theorem states that if a linear objective function has an optimal value (maximum or minimum) over a bounded feasible region, that optimal value must occur at one of the corner points (vertices) of the region, never at an interior point.',
+      conclusion:'This means solving an LP problem reduces to identifying all corner points of the feasible region, evaluating the objective function at each one, and simply comparing the results to find the best value — no need to check the infinite interior points.' } },
+];
+
+/* ============================================================
    STATE
    ============================================================ */
 let session = { name:'', board:'ICSE', grade:'11' };
 let learnedItems = new Set();
 let savedAnswers = {}; // qaId -> {studentText, score, maxMarks, feedback, missing}
-let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{} };
+let appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathGrade:null, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{} };
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2641,7 +3167,7 @@ function handleLogin(e){
     document.getElementById('who-board').textContent = session.board + ' · Grade ' + session.grade;
   }
   goTo('app');
-  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{} };
+  appState = { section:'dashboard', subjectId:null, engTab:'stories', storyId:null, poemId:null, playTab:{}, storyTab:{}, poemTab:{}, socChapterId:null, socTopicId:null, socSubtopicId:null, socTopicTab:{}, econGrade:null, econChapterId:null, econTopicId:null, econSubtopicId:null, econTopicTab:{}, mathGrade:null, mathChapterId:null, mathTopicId:null, mathSubtopicId:null, mathTopicTab:{} };
   renderApp();
 }
 
@@ -2661,6 +3187,10 @@ function goDashboardHome(){
   appState.econChapterId = null;
   appState.econTopicId = null;
   appState.econSubtopicId = null;
+  appState.mathGrade = null;
+  appState.mathChapterId = null;
+  appState.mathTopicId = null;
+  appState.mathSubtopicId = null;
   renderApp();
 }
 
@@ -2732,6 +3262,31 @@ function renderCrumb(){
           }
         }
       }
+    } else if(appState.subjectId==='math'){
+      html = `<button onclick="goDashboardHome()">Dashboard</button><span>›</span>`;
+      if(!appState.mathGrade){
+        html += `<span class="current">Mathematics</span>`;
+      } else {
+        html += `<button onclick="backMathToGrades()">Mathematics</button><span>›</span>`;
+        if(!appState.mathChapterId){
+          html += `<span class="current">Class ${appState.mathGrade}</span>`;
+        } else {
+          const chapter = MATH_CHAPTERS.find(c=>c.id===appState.mathChapterId);
+          html += `<button onclick="backMathToChapters()">Class ${appState.mathGrade}</button><span>›</span>`;
+          if(!appState.mathTopicId){
+            html += `<span class="current">${escapeHtml(chapter.name)}</span>`;
+          } else {
+            const topic = chapter.topics.find(t=>t.id===appState.mathTopicId);
+            html += `<button onclick="backMathToTopics()">${escapeHtml(chapter.name)}</button><span>›</span>`;
+            if(!appState.mathSubtopicId){
+              html += `<span class="current">${escapeHtml(topic.name)}</span>`;
+            } else {
+              const subtopic = topic.subtopics.find(s=>s.id===appState.mathSubtopicId);
+              html += `<button onclick="backMathToTopic()">${escapeHtml(topic.name)}</button><span>›</span><span class="current">${escapeHtml(subtopic.name)}</span>`;
+            }
+          }
+        }
+      }
     }
   } else if(appState.section==='settings'){
     html = `<span class="current">Settings</span>`;
@@ -2767,10 +3322,18 @@ function econProgressCounts(){
   return {done, total};
 }
 
+function mathProgressCounts(){
+  const subtopics = MATH_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics));
+  const total = subtopics.length;
+  const done = subtopics.filter(s=>learnedItems.has('math-subtopic-'+s.id)).length;
+  return {done, total};
+}
+
 function subjectProgress(id){
   if(id==='english') return englishProgressCounts();
   if(id==='sociology') return socProgressCounts();
   if(id==='economics') return econProgressCounts();
+  if(id==='math') return mathProgressCounts();
   return {done:0, total:0};
 }
 
@@ -2791,13 +3354,13 @@ function renderDashboardBody(){
         <div class="s-icon" style="background:${s.bg};">${s.emoji}</div>
         <h3 class="display">${s.name}</h3>
         <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:${s.color};"></div></div>
-        <div class="s-sub">${done} of ${total} ${(s.id==='sociology'||s.id==='economics')?'subtopics':'texts'} learned</div>
+        <div class="s-sub">${done} of ${total} ${(s.id==='sociology'||s.id==='economics'||s.id==='math')?'subtopics':'texts'} learned</div>
       </button>`;
     }).join('');
     container.innerHTML = `
       <h1 style="font-size:24px;margin-bottom:18px;">Grade ${session.grade} Subjects</h1>
       <div class="subject-grid">${tiles}</div>
-      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units) and Economics (all 9 chapters, both grades) are fully built. Physics, Biology, Mathematics, Psychology and CBSE are coming soon.</div>
+      <div class="release-note"><strong style="color:var(--ink);">This release:</strong> ICSE/ISC, Grades 11 &amp; 12 only. English (short stories, poetry, and full drama chapters), Sociology (all 7 units), Economics (all 9 chapters) and Mathematics (all 10 chapters, both grades) are fully built. Physics, Biology, Psychology and CBSE are coming soon.</div>
     `;
   } else if(appState.subjectId==='english'){
     container.innerHTML = renderEnglishHub();
@@ -2805,6 +3368,8 @@ function renderDashboardBody(){
     container.innerHTML = renderSociology();
   } else if(appState.subjectId==='economics'){
     container.innerHTML = renderEconomics();
+  } else if(appState.subjectId==='math'){
+    container.innerHTML = renderMathematics();
   }
   renderCrumb();
 }
@@ -3186,7 +3751,8 @@ const qaExpandState = {}; // qaId -> bool
 function findQaById(id){
   return QA_BANK.find(q=>q.id===id)
     || (typeof SOC_QA_BANK!=='undefined' && SOC_QA_BANK.find(q=>q.id===id))
-    || (typeof ECON_QA_BANK!=='undefined' && ECON_QA_BANK.find(q=>q.id===id));
+    || (typeof ECON_QA_BANK!=='undefined' && ECON_QA_BANK.find(q=>q.id===id))
+    || (typeof MATH_QA_BANK!=='undefined' && MATH_QA_BANK.find(q=>q.id===id));
 }
 
 function gradeStudentAnswer(qa, studentText){
@@ -3482,10 +4048,54 @@ function initGraphState(graphId, config){
   return graphState[graphId];
 }
 
+/* Sample data-space points for non-linear curve types (circle, parabola). Lines use the p1/p2 fields directly. */
+function graphCurveSamples(curve, config){
+  if(curve.type==='circle'){
+    const pts = [];
+    const cy = curve.cy + curve.shift;
+    /* Compensate for the plot area's x/y pixel scales differing (plotW/xMax vs plotH/yMax)
+       so a "circle" renders as a true circle on screen, not squashed into an ellipse. */
+    const scaleX = (config.plotW||340)/config.xMax;
+    const scaleY = (config.plotH||220)/config.yMax;
+    const ratio = scaleX/scaleY;
+    for(let a=0;a<=360;a+=6){
+      const rad = a*Math.PI/180;
+      pts.push([curve.cx + curve.r*Math.cos(rad), cy + curve.r*ratio*Math.sin(rad)]);
+    }
+    return pts;
+  }
+  if(curve.type==='parabola'){
+    const pts = [];
+    const k = curve.k + curve.shift;
+    const [xmin,xmax] = curve.xRange;
+    const steps = 40;
+    for(let i=0;i<=steps;i++){
+      const x = xmin + (xmax-xmin)*i/steps;
+      const y = curve.a*(x-curve.h)*(x-curve.h) + k;
+      pts.push([x,y]);
+    }
+    return pts;
+  }
+  return null;
+}
+function graphPathD(config, curve){
+  const pts = graphCurveSamples(curve, config);
+  if(!pts) return '';
+  return pts.map((p,i)=>{
+    const s = graphDataToSvg(config, p[0], p[1]);
+    return (i===0?'M':'L')+s.sx.toFixed(1)+','+s.sy.toFixed(1);
+  }).join(' ');
+}
+
 function redrawGraphLive(graphId){
   const state = graphState[graphId];
   const config = state.config;
   Object.values(state.curves).forEach(c=>{
+    if(c.type==='circle'||c.type==='parabola'){
+      const path = document.getElementById(`graphpath-${graphId}-${c.id}`);
+      if(path) path.setAttribute('d', graphPathD(config, c));
+      return;
+    }
     const line = document.getElementById(`graphline-${graphId}-${c.id}`);
     const lbl = document.getElementById(`graphlinelabel-${graphId}-${c.id}`);
     if(!line) return;
@@ -3540,6 +4150,11 @@ function renderInteractiveGraph(graphId, config){
   const rightBottom = graphDataToSvg(config,config.xMax,0);
 
   const curvesSvg = Object.values(state.curves).map(c=>{
+    if(c.type==='circle'||c.type==='parabola'){
+      const labelPt = c.type==='circle' ? graphDataToSvg(config, c.cx, c.cy+c.shift+c.r*((config.plotW||340)/config.xMax)/((config.plotH||220)/config.yMax)) : graphDataToSvg(config, c.xRange[1], c.a*(c.xRange[1]-c.h)*(c.xRange[1]-c.h)+c.k+c.shift);
+      return `<path id="graphpath-${graphId}-${c.id}" d="${graphPathD(config,c)}" stroke="${c.color}" stroke-width="2.5" fill="none"/>
+        <text x="${labelPt.sx+4}" y="${labelPt.sy}" font-size="11" fill="${c.color}" font-weight="700">${escapeHtml(c.label)}</text>`;
+    }
     const p1 = graphDataToSvg(config, c.p1[0], c.p1[1]+c.shift);
     const p2 = graphDataToSvg(config, c.p2[0], c.p2[1]+c.shift);
     return `<line id="graphline-${graphId}-${c.id}" x1="${p1.sx}" y1="${p1.sy}" x2="${p2.sx}" y2="${p2.sy}" stroke="${c.color}" stroke-width="2.5"/>
@@ -3711,6 +4326,238 @@ const NUMERICAL_GENERATORS = {
           `Primary Deficit = ${fiscalDef} − ${interest} = ₹${primaryDef.toLocaleString('en-IN')} crore`,
         ],
         hint:'Primary deficit strips out interest payments on past borrowing from the fiscal deficit.',
+      };
+    } },
+  'set-cardinality': {
+    title:'Set Cardinality (Union)', unit:'', formula:'n(A∪B) = n(A) + n(B) − n(A∩B)',
+    generate(){
+      const nA = randInt(20,45), nB = randInt(15,40);
+      const nAB = randInt(5, Math.min(nA,nB)-3);
+      const nUnion = nA + nB - nAB;
+      const total = nUnion + randInt(5,20);
+      return {
+        question: `In a class of ${total} students, ${nA} play cricket, ${nB} play football, and ${nAB} play both. How many students play at least one of the two sports?`,
+        answer: nUnion,
+        steps: [
+          `n(A∪B) = n(A) + n(B) − n(A∩B)`,
+          `n(A∪B) = ${nA} + ${nB} − ${nAB}`,
+          `n(A∪B) = ${nUnion} students play at least one sport`,
+        ],
+        hint:'Add the two group sizes, then subtract the overlap once to avoid double-counting.',
+      };
+    } },
+  'quadratic-roots': {
+    title:'Quadratic Equation: Finding Roots', unit:'', formula:'x = (−b ± √(b² − 4ac)) / 2a',
+    generate(){
+      const r1 = randInt(-8,8) || 2, r2 = randInt(-8,8) || -3;
+      const a = 1, b = -(r1+r2), c = r1*r2;
+      const D = b*b - 4*a*c;
+      return {
+        question: `Solve the quadratic equation x² ${b>=0?'+':'-'} ${Math.abs(b)}x ${c>=0?'+':'-'} ${Math.abs(c)} = 0.`,
+        answer: `x = ${r1} or x = ${r2}`,
+        steps: [
+          `Using the quadratic formula with a=${a}, b=${b}, c=${c}:`,
+          `Discriminant D = b² − 4ac = (${b})² − 4(${a})(${c}) = ${D}`,
+          `x = (−(${b}) ± √${D}) / 2(${a}) = (${-b} ± ${Math.sqrt(D)}) / 2`,
+          `x = ${r1} or x = ${r2}`,
+        ],
+        hint:'Since D is a perfect square here, the roots come out as clean integers — factor if you can spot it faster than the formula.',
+      };
+    } },
+  'ap-nth-term': {
+    title:'Arithmetic Progression: nth Term & Sum', unit:'', formula:'aₙ = a + (n−1)d;  Sₙ = n/2 [2a + (n−1)d]',
+    generate(){
+      const a = randInt(2,15), d = randInt(2,9), n = randInt(8,20);
+      const nthTerm = a + (n-1)*d;
+      const sum = (n/2)*(2*a + (n-1)*d);
+      return {
+        question: `Find the ${n}th term and the sum of the first ${n} terms of the AP with first term ${a} and common difference ${d}.`,
+        answer: `${n}th term = ${nthTerm}, Sum = ${sum}`,
+        steps: [
+          `aₙ = a + (n−1)d = ${a} + (${n}−1)(${d}) = ${a} + ${(n-1)*d} = ${nthTerm}`,
+          `Sₙ = n/2 [2a + (n−1)d] = ${n}/2 [2(${a}) + (${n}−1)(${d})]`,
+          `Sₙ = ${n/2} × [${2*a} + ${(n-1)*d}] = ${n/2} × ${2*a+(n-1)*d} = ${sum}`,
+        ],
+        hint:'Find the nth term first using aₙ = a+(n−1)d, then plug the same values into the sum formula.',
+      };
+    } },
+  'gp-nth-term': {
+    title:'Geometric Progression: nth Term', unit:'', formula:'aₙ = ar^(n−1)',
+    generate(){
+      const a = randInt(2,6), r = randFrom([2,3,4]), n = randInt(4,7);
+      const nthTerm = a * Math.pow(r, n-1);
+      return {
+        question: `Find the ${n}th term of the GP with first term ${a} and common ratio ${r}.`,
+        answer: nthTerm,
+        steps: [
+          `aₙ = ar^(n−1) = ${a} × ${r}^(${n}−1) = ${a} × ${r}^${n-1}`,
+          `aₙ = ${a} × ${Math.pow(r,n-1)} = ${nthTerm}`,
+        ],
+        hint:'Multiply the first term by the common ratio raised to the power (n−1), not n.',
+      };
+    } },
+  'permutations-combinations': {
+    title:'Permutations & Combinations', unit:'', formula:'ⁿPᵣ = n!/(n−r)!;  ⁿCᵣ = n!/(r!(n−r)!)',
+    generate(){
+      function fact(x){ let f=1; for(let i=2;i<=x;i++) f*=i; return f; }
+      const n = randInt(6,10), r = randInt(2,4);
+      const nPr = fact(n)/fact(n-r);
+      const nCr = nPr/fact(r);
+      return {
+        question: `In how many ways can ${r} items be selected from ${n} distinct items (a) if order matters, and (b) if order does not matter?`,
+        answer: `Order matters (ⁿPᵣ) = ${nPr}; Order doesn't matter (ⁿCᵣ) = ${nCr}`,
+        steps: [
+          `ⁿPᵣ = n!/(n−r)! = ${n}!/(${n}−${r})! = ${n}!/${n-r}! = ${nPr}`,
+          `ⁿCᵣ = ⁿPᵣ / r! = ${nPr} / ${r}! = ${nPr} / ${fact(r)} = ${nCr}`,
+        ],
+        hint:'Compute the permutation first, then divide by r! to remove the overcounted orderings and get the combination.',
+      };
+    } },
+  'differentiation-power-rule': {
+    title:'Differentiation (Power Rule)', unit:'', formula:'d/dx[axⁿ] = a·n·xⁿ⁻¹',
+    generate(){
+      const a = randInt(2,9), n = randInt(2,6);
+      const coeff = a*n;
+      return {
+        question: `Differentiate y = ${a}x^${n} with respect to x.`,
+        answer: `dy/dx = ${coeff}x^${n-1}`,
+        steps: [
+          `Using the power rule: d/dx[axⁿ] = a·n·xⁿ⁻¹`,
+          `dy/dx = ${a} × ${n} × x^(${n}−1)`,
+          `dy/dx = ${coeff}x^${n-1}`,
+        ],
+        hint:'Multiply the coefficient by the original exponent, then reduce the exponent by 1.',
+      };
+    } },
+  'variance-sd': {
+    title:'Variance & Standard Deviation', unit:'', formula:'Variance = Σ(x−x̄)² / n;  SD = √Variance',
+    generate(){
+      const base = randInt(10,30);
+      const data = Array.from({length:5}, ()=> base + randInt(-8,8));
+      const mean = data.reduce((s,x)=>s+x,0)/data.length;
+      const variance = data.reduce((s,x)=>s+(x-mean)*(x-mean),0)/data.length;
+      const sd = Math.sqrt(variance);
+      return {
+        question: `Find the variance and standard deviation of the data set: {${data.join(', ')}}.`,
+        answer: `Variance ≈ ${variance.toFixed(2)}, SD ≈ ${sd.toFixed(2)}`,
+        steps: [
+          `Mean x̄ = (${data.join(' + ')}) / ${data.length} = ${mean.toFixed(2)}`,
+          `Squared deviations: ${data.map(x=>`(${x}−${mean.toFixed(2)})² = ${((x-mean)*(x-mean)).toFixed(2)}`).join(', ')}`,
+          `Variance = sum of squared deviations / n = ${(variance*data.length).toFixed(2)} / ${data.length} = ${variance.toFixed(2)}`,
+          `SD = √Variance = √${variance.toFixed(2)} ≈ ${sd.toFixed(2)}`,
+        ],
+        hint:'Find the mean first, then square each deviation from it before averaging.',
+      };
+    } },
+  'basic-probability': {
+    title:'Basic Probability', unit:'', formula:'P(E) = favourable outcomes / total outcomes',
+    generate(){
+      const total = randFrom([20,25,30,40,50]);
+      const favourable = randInt(3, Math.floor(total/2));
+      function gcd(a,b){ return b===0?a:gcd(b,a%b); }
+      const g = gcd(favourable, total);
+      return {
+        question: `A bag contains ${total} balls, of which ${favourable} are red. One ball is drawn at random. Find the probability that it is red.`,
+        answer: `${favourable}/${total} = ${(favourable/g)}/${(total/g)}`,
+        steps: [
+          `P(red) = favourable outcomes / total outcomes = ${favourable}/${total}`,
+          g>1 ? `Simplifying by dividing both by ${g}: ${favourable}/${total} = ${favourable/g}/${total/g}` : `This fraction is already in simplest form.`,
+        ],
+        hint:'Always simplify the final probability fraction to its lowest terms.',
+      };
+    } },
+  'matrix-multiplication': {
+    title:'2×2 Matrix Multiplication', unit:'', formula:'(AB)ᵢⱼ = row i of A · column j of B',
+    generate(){
+      const A = [[randInt(1,6),randInt(1,6)],[randInt(1,6),randInt(1,6)]];
+      const B = [[randInt(1,6),randInt(1,6)],[randInt(1,6),randInt(1,6)]];
+      const C = [
+        [A[0][0]*B[0][0]+A[0][1]*B[1][0], A[0][0]*B[0][1]+A[0][1]*B[1][1]],
+        [A[1][0]*B[0][0]+A[1][1]*B[1][0], A[1][0]*B[0][1]+A[1][1]*B[1][1]],
+      ];
+      return {
+        question: `Multiply the matrices A = [[${A[0][0]},${A[0][1]}],[${A[1][0]},${A[1][1]}]] and B = [[${B[0][0]},${B[0][1]}],[${B[1][0]},${B[1][1]}]] to find AB.`,
+        answer: `[[${C[0][0]},${C[0][1]}],[${C[1][0]},${C[1][1]}]]`,
+        steps: [
+          `Row 1 · Column 1: (${A[0][0]}×${B[0][0]}) + (${A[0][1]}×${B[1][0]}) = ${C[0][0]}`,
+          `Row 1 · Column 2: (${A[0][0]}×${B[0][1]}) + (${A[0][1]}×${B[1][1]}) = ${C[0][1]}`,
+          `Row 2 · Column 1: (${A[1][0]}×${B[0][0]}) + (${A[1][1]}×${B[1][0]}) = ${C[1][0]}`,
+          `Row 2 · Column 2: (${A[1][0]}×${B[0][1]}) + (${A[1][1]}×${B[1][1]}) = ${C[1][1]}`,
+          `AB = [[${C[0][0]},${C[0][1]}],[${C[1][0]},${C[1][1]}]]`,
+        ],
+        hint:'Each entry of the product is the dot product of the corresponding row of A and column of B.',
+      };
+    } },
+  'determinant-2x2': {
+    title:'2×2 Determinant & Inverse', unit:'', formula:'|A| = ad − bc;  A⁻¹ = (1/|A|)[[d,−b],[−c,a]]',
+    generate(){
+      const a = randInt(1,8), b = randInt(1,8), c = randInt(1,8);
+      let d = randInt(1,8);
+      let det = a*d - b*c;
+      while(det===0){ d = randInt(1,8); det = a*d - b*c; }
+      const invFrac = det<0 ? `−1/${Math.abs(det)}` : `1/${det}`;
+      return {
+        question: `Find the determinant and, if it exists, the inverse of the matrix A = [[${a},${b}],[${c},${d}]].`,
+        answer: `|A| = ${det}; A⁻¹ = (${invFrac})[[${d},${-b}],[${-c},${a}]]`,
+        steps: [
+          `|A| = ad − bc = (${a})(${d}) − (${b})(${c}) = ${a*d} − ${b*c} = ${det}`,
+          det!==0 ? `Since |A| ≠ 0, the inverse exists: A⁻¹ = (${invFrac}) × [[${d},${-b}],[${-c},${a}]]` : `Since |A| = 0, this matrix is singular and has no inverse.`,
+        ],
+        hint:'For the inverse: swap the leading diagonal entries, negate the other diagonal, then divide everything by the determinant.',
+      };
+    } },
+  'basic-integration': {
+    title:'Indefinite Integration (Power Rule)', unit:'', formula:'∫axⁿdx = a·xⁿ⁺¹/(n+1) + C',
+    generate(){
+      const a = randInt(2,9), n = randInt(1,5);
+      return {
+        question: `Evaluate ∫ ${a}x^${n} dx.`,
+        answer: `${(a/(n+1))}x^${n+1} + C`,
+        steps: [
+          `∫axⁿdx = a·xⁿ⁺¹/(n+1) + C`,
+          `= ${a}·x^(${n}+1)/(${n}+1) + C`,
+          `= ${a}x^${n+1}/${n+1} + C`,
+        ],
+        hint:'Raise the power by 1 and divide the coefficient by the new power — the reverse of the power rule for differentiation.',
+      };
+    } },
+  'definite-integral': {
+    title:'Definite Integration', unit:'', formula:'∫[a to b] xⁿdx = [xⁿ⁺¹/(n+1)] from a to b',
+    generate(){
+      const n = randInt(1,3), upper = randInt(2,5);
+      const value = Math.pow(upper, n+1)/(n+1);
+      return {
+        question: `Evaluate ∫ from 0 to ${upper} of x^${n} dx.`,
+        answer: value.toFixed(2),
+        steps: [
+          `∫x^${n}dx = x^${n+1}/${n+1}`,
+          `Evaluating from 0 to ${upper}: [${upper}^${n+1}/${n+1}] − [0^${n+1}/${n+1}]`,
+          `= ${Math.pow(upper,n+1)}/${n+1} − 0 = ${value.toFixed(2)}`,
+        ],
+        hint:'Find the antiderivative first, then substitute the upper limit and subtract the value at the lower limit.',
+      };
+    } },
+  'conditional-probability': {
+    title:'Conditional Probability', unit:'', formula:'P(A|B) = P(A∩B) / P(B)',
+    generate(){
+      const totalCards = 52;
+      const scenarios = [
+        {a:'a King', b:'a face card', pAandB:4, pB:12},
+        {a:'a red card', b:'a face card', pAandB:6, pB:12},
+        {a:'a Queen', b:'a red card', pAandB:2, pB:26},
+      ];
+      const s = randFrom(scenarios);
+      function gcd(a,b){ return b===0?a:gcd(b,a%b); }
+      const g = gcd(s.pAandB, s.pB);
+      return {
+        question: `A card is drawn at random from a standard deck of 52 cards. Given that the card is ${s.b}, find the probability that it is also ${s.a}.`,
+        answer: `${s.pAandB}/${s.pB} = ${s.pAandB/g}/${s.pB/g}`,
+        steps: [
+          `P(A|B) = P(A∩B) / P(B), where A = "${s.a}" and B = "${s.b}"`,
+          `Restricting attention to only the ${s.pB} cards that are ${s.b}, ${s.pAandB} of them are also ${s.a}`,
+          `P(A|B) = ${s.pAandB}/${s.pB} = ${s.pAandB/g}/${s.pB/g}`,
+        ],
+        hint:'Conditional probability restricts the sample space to only the outcomes where the given condition (B) is already true.',
       };
     } },
 };
@@ -4157,6 +5004,210 @@ function renderEconSubtopicPage(chapter, topic, subtopic){
 
   return `
     <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backEconToTopic()">← ${escapeHtml(topic.name)}</button>
+    <div style="margin-bottom:18px;">
+      <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
+      <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
+    </div>
+    <div class="eng-tabs">${tabsHtml}</div>
+    <div>${body}</div>
+  `;
+}
+
+/* ============================================================
+   MATHEMATICS — Grade > Chapter > Topic > Subtopic, mirroring
+   Economics' structure exactly (same 10-tab topic page, same
+   Learn+Practice subtopic page), reusing all shared engines
+   (InteractiveGraph, Numerical Generator, Memorize/Leitner,
+   Practice Zone auto-grading).
+   ============================================================ */
+function openMathGrade(g){ appState.mathGrade=g; appState.mathChapterId=null; appState.mathTopicId=null; appState.mathSubtopicId=null; renderDashboardBody(); }
+function openMathChapter(id){ appState.mathChapterId=id; appState.mathTopicId=null; appState.mathSubtopicId=null; renderDashboardBody(); }
+function openMathTopic(id){ appState.mathTopicId=id; appState.mathSubtopicId=null; renderDashboardBody(); }
+function openMathSubtopic(id){ appState.mathSubtopicId=id; renderDashboardBody(); }
+function backMathToGrades(){ appState.mathGrade=null; appState.mathChapterId=null; appState.mathTopicId=null; appState.mathSubtopicId=null; renderDashboardBody(); }
+function backMathToChapters(){ appState.mathChapterId=null; appState.mathTopicId=null; appState.mathSubtopicId=null; renderDashboardBody(); }
+function backMathToTopics(){ appState.mathTopicId=null; appState.mathSubtopicId=null; renderDashboardBody(); }
+function backMathToTopic(){ appState.mathSubtopicId=null; renderDashboardBody(); }
+function setMathTopicTab(topicId, tab){ appState.mathTopicTab[topicId]=tab; renderDashboardBody(); }
+
+function mathTopicSubtopicCount(topic){
+  const done = topic.subtopics.filter(s=>learnedItems.has('math-subtopic-'+s.id)).length;
+  return { done, total: topic.subtopics.length };
+}
+function mathAllSubtopics(){ return MATH_CHAPTERS.flatMap(c=>c.topics.flatMap(t=>t.subtopics)); }
+
+function renderMathematics(){
+  if(!appState.mathGrade) return renderMathGradeList();
+  const chapters = MATH_CHAPTERS.filter(c=>c.grade===appState.mathGrade);
+  if(!appState.mathChapterId) return renderMathChapterList(chapters);
+  const chapter = MATH_CHAPTERS.find(c=>c.id===appState.mathChapterId);
+  if(!appState.mathTopicId) return renderMathTopicList(chapter);
+  const topic = chapter.topics.find(t=>t.id===appState.mathTopicId);
+  if(appState.mathSubtopicId){
+    const subtopic = topic.subtopics.find(s=>s.id===appState.mathSubtopicId);
+    return renderMathSubtopicPage(chapter, topic, subtopic);
+  }
+  return renderMathTopicPage(chapter, topic);
+}
+
+function renderMathGradeList(){
+  const tiles = [11,12].map(g=>{
+    const chapters = MATH_CHAPTERS.filter(c=>c.grade===g);
+    const total = chapters.reduce((n,c)=>n+c.topics.reduce((m,t)=>m+t.subtopics.length,0),0);
+    const done = chapters.reduce((n,c)=>n+c.topics.reduce((m,t)=>m+t.subtopics.filter(s=>learnedItems.has('math-subtopic-'+s.id)).length,0),0);
+    const pct = total? Math.round(done/total*100):0;
+    return `<button class="subject-tile" onclick="openMathGrade(${g})">
+      <div class="s-icon" style="background:#FEF3E2;">${g===11?'📘':'📗'}</div>
+      <h3 class="display">Class ${g}</h3>
+      <div class="s-sub" style="margin-top:4px;">${chapters.length} chapters</div>
+      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#D97706;"></div></div>
+      <div class="s-sub">${done} of ${total} subtopics learned</div>
+    </button>`;
+  }).join('');
+  return `
+    <h1 style="font-size:26px;margin-bottom:4px;">Mathematics</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">ISC Mathematics · Grades XI &amp; XII, every chapter in the CISCE syllabus with 2/3/5-mark answers, formulas, interactive graphs and infinite numericals.</p>
+    <div class="subject-grid">${tiles}</div>
+  `;
+}
+
+function renderMathChapterList(chapters){
+  const tiles = chapters.map(c=>{
+    const total = c.topics.reduce((n,t)=>n+t.subtopics.length,0);
+    const done = c.topics.reduce((n,t)=>n+t.subtopics.filter(s=>learnedItems.has('math-subtopic-'+s.id)).length,0);
+    const pct = total? Math.round(done/total*100):0;
+    return `<button class="subject-tile" onclick="openMathChapter('${c.id}')">
+      <div class="s-icon" style="background:#FEF3E2;">${c.icon}</div>
+      <h3 class="display">${escapeHtml(c.name)}</h3>
+      <div class="s-sub" style="margin-top:4px;">${c.topics.length} topics</div>
+      <div class="bar-track" style="margin-top:10px;"><div class="bar-fill" style="width:${pct}%;background:#D97706;"></div></div>
+      <div class="s-sub">${done} of ${total} subtopics learned</div>
+    </button>`;
+  }).join('');
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backMathToGrades()">← Class XI / XII</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">Class ${appState.mathGrade} Mathematics</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a chapter to explore its topics.</p>
+    <div class="subject-grid">${tiles}</div>
+  `;
+}
+
+function renderMathTopicList(chapter){
+  const rows = chapter.topics.map(t=>{
+    const {done,total} = mathTopicSubtopicCount(t);
+    return listRow(t.id, t.name, `${t.subtopics.length} subtopics · ${done}/${total} learned`, done===total && total>0, `openMathTopic('${t.id}')`);
+  }).join('');
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backMathToChapters()">← Class ${chapter.grade} chapters</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;">Pick a topic for its full topper-level toolkit: overview, practice zone, memorize mode, formulas, graphs, numericals, concept map and exam booster.</p>
+    ${rows}
+  `;
+}
+
+function renderMathSubtopicChips(topic){
+  return `<div class="eng-tabs" style="margin-bottom:20px;">${topic.subtopics.map(s=>
+    `<button class="eng-tab ${appState.mathSubtopicId===s.id?'active':''}" onclick="openMathSubtopic('${s.id}')">${learnedItems.has('math-subtopic-'+s.id)?'✓ ':''}${escapeHtml(s.name)}</button>`
+  ).join('')}</div>`;
+}
+
+function renderMathTopicPage(chapter, topic){
+  if(!appState.mathTopicTab[topic.id]) appState.mathTopicTab[topic.id] = 'overview';
+  const tab = appState.mathTopicTab[topic.id];
+  const tabsHtml = ECON_TOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setMathTopicTab('${topic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+
+  let body = '';
+  if(tab==='overview'){
+    body = topic.subtopics.map(s=>`
+      <div class="lesson-card">
+        <h2>📘 ${escapeHtml(s.name)}</h2>
+        ${renderDefBoxes(s)}
+        <div class="tip-box" style="margin-top:14px;margin-bottom:0;"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(s.memoryTrick)}</div></div>
+        <p style="margin-top:12px;font-size:13.5px;line-height:1.6;"><strong>Example: </strong>${escapeHtml(s.example)}</p>
+      </div>
+    `).join('');
+  } else if(tab==='practice'){
+    const qs = MATH_QA_BANK.filter(q=>q.topic===topic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Every question for ${escapeHtml(topic.name)}. Answers save automatically and re-grade whenever you edit them.</p>${renderPracticeSection('math-topic-'+topic.id, qs, {subtopic:true, marks:true})}`;
+  } else if(tab==='memorize'){
+    const widerNames = mathAllSubtopics().map(s=>s.name);
+    const sameTopicNames = topic.subtopics.map(s=>s.name);
+    const cards = topic.subtopics.map(s=>({
+      prompt: `${escapeHtml(s.example)}<br><span style="font-size:13px;color:var(--ink-soft);">This is an example of: <span class="blank">?</span></span>`,
+      answer: s.name,
+      options: buildMcqOptions(s.name, sameTopicNames, widerNames),
+    }));
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Match each real-world example to the concept it illustrates.</p>${renderMemoMode('memo-math-topic-'+topic.id, cards, 'memoAnswer')}`;
+  } else if(tab==='keydefs'){
+    body = topic.subtopics.map(s=>`<div class="lesson-card"><h2>🔑 ${escapeHtml(s.name)}</h2>${renderDefBoxes(s)}</div>`).join('');
+  } else if(tab==='formulas'){
+    const withFormulas = topic.subtopics.filter(s=>s.formulas && s.formulas.length);
+    body = withFormulas.length ? withFormulas.map(s=>`<div style="margin-bottom:6px;"><div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${s.formulas.map(renderFormulaCard).join('')}</div>`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No formulas tagged for this topic.</p>';
+  } else if(tab==='difftables'){
+    const tables = topic.subtopics.filter(s=>s.diffTable);
+    body = tables.length ? tables.map(s=>renderDiffTable(s.diffTable)).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No paired comparison tables for this topic.</p>';
+  } else if(tab==='graphs'){
+    const withGraphs = topic.subtopics.filter(s=>s.graph);
+    body = withGraphs.length ? withGraphs.map(s=>`<div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${renderInteractiveGraph('math-'+s.id, s.graph)}`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No graphs tagged for this topic.</p>';
+  } else if(tab==='numericals'){
+    const withGen = topic.subtopics.filter(s=>s.numericalGen);
+    body = withGen.length ? withGen.map(s=>`<div class="eyebrow" style="margin-bottom:8px;">${escapeHtml(s.name)}</div>${renderNumerical('math-'+s.id, s.numericalGen)}`).join('') : '<p style="color:var(--ink-soft);font-size:13.5px;">No numerical generator tagged for this topic.</p>';
+  } else if(tab==='conceptmap'){
+    body = `<div class="lesson-card"><div class="concept-map">
+      <div class="concept-node center">${escapeHtml(topic.name)}</div>
+      ${topic.subtopics.map(s=>`<span class="concept-arrow">→</span><div class="concept-node">${escapeHtml(s.name)}</div>`).join('')}
+    </div></div>`;
+  } else if(tab==='exambooster'){
+    const tips = topic.subtopics.map(s=>`<div class="device-line"><b>${escapeHtml(s.name)}: </b>${escapeHtml(s.def2)}</div>`).join('');
+    const tricks = topic.subtopics.map(s=>`<span class="char-verb">${escapeHtml(s.memoryTrick)}</span>`).join('');
+    const mistakes = topic.subtopics.filter(s=>s.formulas).flatMap(s=>s.formulas.map(f=>`<div class="device-line"><b>${escapeHtml(f.name)}: </b>${escapeHtml(f.mistakes)}</div>`)).join('');
+    body = `
+      <div class="lesson-card"><h2>⚡ Quick-fire 2-mark definitions</h2>${tips}</div>
+      <div class="lesson-card"><h2>💡 Memory tricks (last-24-hr drill)</h2><div class="char-verbs">${tricks}</div></div>
+      ${mistakes ? `<div class="tip-box"><div class="tip-head">🚫 Common examiner pitfalls</div><div class="tip-body">${mistakes}</div></div>` : ''}
+    `;
+  }
+
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backMathToTopics()">← ${escapeHtml(chapter.name)}</button>
+    <h1 class="display" style="font-size:25px;margin-bottom:4px;">${escapeHtml(topic.name)}</h1>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${topic.subtopics.length} subtopics</p>
+    <div class="eng-tabs">${tabsHtml}</div>
+    ${renderMathSubtopicChips(topic)}
+    <div>${body}</div>
+  `;
+}
+
+const mathSubtopicTabState = {};
+function setMathSubtopicTab(subtopicId, tab){ mathSubtopicTabState[subtopicId] = tab; renderDashboardBody(); }
+
+function renderMathSubtopicPage(chapter, topic, subtopic){
+  const tab = mathSubtopicTabState[subtopic.id] || 'learn';
+  const tabsHtml = SOC_SUBTOPIC_TABS.map(t=>`<button class="eng-tab ${tab===t.id?'active':''}" onclick="setMathSubtopicTab('${subtopic.id}','${t.id}')">${escapeHtml(t.label)}</button>`).join('');
+  const learnedKey = 'math-subtopic-'+subtopic.id;
+  const learned = learnedItems.has(learnedKey);
+
+  let body = '';
+  if(tab==='learn'){
+    body = `
+      ${renderDefBoxes(subtopic)}
+      <div class="tip-box"><div class="tip-head">💡 Memory trick</div><div class="tip-body">${escapeHtml(subtopic.memoryTrick)}</div></div>
+      <div class="lesson-card"><h2>🧩 Worked example</h2><p>${escapeHtml(subtopic.example)}</p></div>
+      ${subtopic.formulas ? subtopic.formulas.map(renderFormulaCard).join('') : ''}
+      ${subtopic.graph ? renderInteractiveGraph('math-'+subtopic.id, subtopic.graph) : ''}
+      ${subtopic.numericalGen ? renderNumerical('math-'+subtopic.id, subtopic.numericalGen) : ''}
+      ${subtopic.diffTable ? renderDiffTable(subtopic.diffTable) : ''}
+      <button class="btn btn-primary mark-learned-btn" ${learned?'disabled':''} onclick="markLearned('${learnedKey}')" style="${learned?'background:var(--green);':''}">
+        ${learned?'✓ Marked as learned':'Mark this subtopic as learned'}
+      </button>
+    `;
+  } else if(tab==='practice'){
+    const qs = MATH_QA_BANK.filter(q=>q.subtopic===subtopic.name);
+    body = `<p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;">Questions for ${escapeHtml(subtopic.name)}.</p>${renderPracticeSection('math-subtopic-'+subtopic.id, qs, {marks:true})}`;
+  }
+
+  return `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="backMathToTopic()">← ${escapeHtml(topic.name)}</button>
     <div style="margin-bottom:18px;">
       <div style="font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-bottom:4px;">Class ${chapter.grade} · ${escapeHtml(chapter.name)} · ${escapeHtml(topic.name)}</div>
       <h1 class="display" style="font-size:25px;">${escapeHtml(subtopic.name)}</h1>
